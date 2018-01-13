@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import styles from './App.less';
-import { Button } from 'antd';
-
+import { inject, observer } from 'mobx-react';
+ 
+@inject('routing')
+@inject('global')
+@observer
 class App extends Component {
   render() {
+    const { global } = this.props;
+    const { location, push, goBack } = this.props.routing;
+ 
     return (
-      <div className={styles.App}>
-        <header className={styles.header}>
-          <img src={logo} className={styles.logo} alt="logo" />
-          <h1 className={styles.title}>Welcome to React</h1>
-        </header>
-        <p className={styles.intro}>
-          To get started, edit <code>src/App.js</code> and save to reload.
-          <Button>test</Button>
-        </p>
+      <div>
+        <span>Current pathname: {location.pathname}</span>
+        <button onClick={() => push('/test')}>Change url</button>
+        <button onClick={() => goBack()}>Go Back</button>
+        <div>{global.number}</div>
+        <button onClick={() => global.inc()}>+</button>
       </div>
     );
   }
