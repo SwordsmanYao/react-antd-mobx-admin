@@ -6,18 +6,18 @@ import { RouterStore, syncHistoryWithStore } from 'mobx-react-router';
 import { Router } from 'react-router';
 
 import './index.less';
-import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import allStores from './stores';
+import Routes from "./Routes";
+
 
 
 const hashHistory = createHashHistory();
 const routingStore = new RouterStore();
 
+
 const stores = {
-  // Key can be whatever you want 
   routing: routingStore,
-  // ...other stores
   ...allStores,
 };
 
@@ -26,7 +26,7 @@ const history = syncHistoryWithStore(hashHistory, routingStore);
 ReactDOM.render(
   <Provider {...stores}>
     <Router history={history}>
-      <App />
+      <Routes />
     </Router>
   </Provider>,
   document.getElementById('root')
