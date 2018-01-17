@@ -2,30 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import createHashHistory from 'history/createHashHistory';
 import { Provider } from 'mobx-react';
-import { RouterStore, syncHistoryWithStore } from 'mobx-react-router';
-import { Router } from 'react-router';
+// react-router-dom 比 react-router多了一些 DOM 类组件，<Link> <BrowserRouter> 等，两个不可同时用
+import { Router } from 'react-router-dom';
 
 import './index.less';
 import registerServiceWorker from './registerServiceWorker';
-import allStores from './stores';
+import stores from './stores';
 import Routes from "./Routes";
 
 
 
 const hashHistory = createHashHistory();
-const routingStore = new RouterStore();
 
-
-const stores = {
-  routing: routingStore,
-  ...allStores,
-};
-
-const history = syncHistoryWithStore(hashHistory, routingStore);
 
 ReactDOM.render(
   <Provider {...stores}>
-    <Router history={history}>
+    <Router history={hashHistory}>
       <Routes />
     </Router>
   </Provider>,

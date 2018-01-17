@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
+import { withRouter } from 'react-router-dom';
 
-@inject('routing')
+@withRouter
 @inject('global')
 @observer
 class Menu extends Component {
   
   render() {
 
-    const { global } = this.props;
-    const { location, push, goBack } = this.props.routing;
-
+    // withRouter 提供的属性：match, location, history
+    const { global, match, location, history } = this.props;
+    console.log('menu', global, match, location, history);
     return (
       <div>
         <span>Current pathname: {location.pathname}</span>		
-        <button onClick={() => push('/basic')}>Change url</button>		
-        <button onClick={() => goBack()}>Go Back</button>
+        <button onClick={() => history.push('/basic')}>Change url</button>		
+        <button onClick={() => history.goBack()}>Go Back</button>
         <div>{global.number}</div>
         <button onClick={() => global.inc()}>+</button>
       </div>
