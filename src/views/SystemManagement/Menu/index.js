@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 
-@withRouter
+// route component 的 props 中已经绑定了路由信息，不用加 @withRouter
+// @withRouter
 @inject('global')
 @observer
 class Menu extends Component {
   
   render() {
 
-    // withRouter 提供的属性：match, location, history
+    // route 提供的属性：match, location, history
     const { global, match, location, history } = this.props;
     console.log('menu', global, match, location, history);
     return (

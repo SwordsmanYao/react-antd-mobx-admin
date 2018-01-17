@@ -185,7 +185,7 @@ module.exports = {
                         minimize: true,
                         sourceMap: shouldUseSourceMap,
                         modules: true,   // 开启 css modules
-                        localIdentName: '[name]__[local]__[hash:base64:5]',
+                        localIdentName: '[name]_[local]_[hash:base64:5]', //css modules 命名规则
                       },
                     },
                     {
