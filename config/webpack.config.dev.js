@@ -166,7 +166,7 @@ module.exports = {
                 options: {
                   importLoaders: 2, // css-loader 作用于 @import 的资源之前需要经过其他 loader 的个数
                   modules: true,   // 开启 css modules
-                  localIdentName: '[name]__[local]__[hash:base64:5]',
+                  localIdentName: '[name]_[local]_[hash:base64:5]', //css modules 命名规则
                 },
               },
               {
