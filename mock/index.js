@@ -16,5 +16,6 @@ var allowCrossDomain = function(req, res, next) {
 app.use(allowCrossDomain);
 
 app.get('/demo/query',demo.query);
+app.post('/demo/add',demo.add);
 
 module.exports = app;

@@ -12,9 +12,9 @@ function query(req, res) {
 }
 
 function add(req, res) {
-  res.send(Mock.mock({
+  res.send({
     Code: 200,
-  }));
+  });
 }
 
 module.exports = {
