@@ -7,7 +7,7 @@ import { inject, observer } from 'mobx-react';
 @inject('global')
 @inject('demo')
 @observer
-class Menu extends Component {
+class Demo extends Component {
   
   componentDidMount() {
     this.props.demo.fetchData();
@@ -16,12 +16,12 @@ class Menu extends Component {
   render() {
 
     // route 提供的属性：match, location, history
-    const { global, match, location, history, demo } = this.props;
-    console.log('menu', global, match, location, history);
+    const { global, location, history, demo } = this.props;
+    // console.log('demo', global, match, location, history);
     return (
       <div>
         <span>Current pathname: {location.pathname}</span>		
-        <button onClick={() => history.push('/basic')}>Change url</button>		
+        <button onClick={() => history.push('/basic/system-management/menu')}>Change url</button>		
         <button onClick={() => history.goBack()}>Go Back</button>
         <div>{global.number}</div>
         <button onClick={() => global.inc()}>+</button>
@@ -36,4 +36,4 @@ class Menu extends Component {
   }
 }
 
-export default Menu;
+export default Demo;

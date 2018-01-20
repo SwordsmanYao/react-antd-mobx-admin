@@ -11,6 +11,11 @@ import asyncComponent from '../components/AsyncComponent';
     /* 严格匹配 */
     exact: true,
   },
+  {
+    path: 'demo',
+    component: asyncComponent(() => import(/* webpackChunkName: "Demo" */ '../views/Demo')),
+    exact: true,
+  },
 ];
 
 export default config;
