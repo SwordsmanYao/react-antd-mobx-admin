@@ -19,4 +19,5 @@ function add(req, res) {
 
 module.exports = {
   query,
+  add,
 }
