@@ -1,5 +1,18 @@
-.logo {
-  height: 32px;
-  background: rgba(255,255,255,.2);
-  margin: 16px;
+@import "~antd/lib/style/themes/default.less";
+
+.sider {
+  .logo {
+    height: 32px;
+    background: rgba(255,255,255,.2);
+    margin: 16px;
+  }
+  :global{
+    .ant-menu-inline-collapsed {
+      width: 64px;
+    }
+    .ant-menu-inline-collapsed > .ant-menu-item, .ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item, .ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title {
+      padding: 0 24px !important;
+    }
+  }
+  
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Provider } from 'mobx-react';
-import mobx from 'mobx';
+import * as mobx from 'mobx';
 // react-router-dom 比 react-router多了一些 DOM 类组件，<Link> <BrowserRouter> 等，两个不可同时用
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 

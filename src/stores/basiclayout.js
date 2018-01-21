@@ -1,11 +1,15 @@
 import { observable, action } from 'mobx';
 
 class BasicLayoutStore {
-  @observable collapsed = false;
+  @observable collapsed = false; // true 折叠
 
   @action
-  toggle() {
+  toggleCollapsed() {
     this.collapsed = !this.collapsed;
+  }
+  @action
+  setCollapsed(collapsed) {
+    this.collapsed = collapsed;
   }
 }
 

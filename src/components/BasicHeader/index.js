@@ -35,7 +35,7 @@ class BasicHeader extends Component {
         <Icon
           className={styles.trigger}
           type={layout.collapsed ? 'menu-unfold' : 'menu-fold'}
-          onClick={() => layout.toggle()}
+          onClick={() => layout.toggleCollapsed()}
         />
         <div className={styles.right}>
           <Dropdown overlay={menu} placement="bottomRight">
