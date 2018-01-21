@@ -1,5 +1,7 @@
 var express = require('express');
 var demo = require('./demo');
+var user = require('./user');
+var menu = require('./menu');
 
 var app = express();
 
@@ -17,5 +19,11 @@ app.use(allowCrossDomain);
 
 app.get('/demo/query',demo.query);
 app.post('/demo/add',demo.add);
+app.post('/Login/SignIn', user.signin);
+app.get('/SysManagement/Menu/tree',menu.tree);
+app.get('/SysManagement/Menu/list',menu.list);
+
+
+
 
 module.exports = app;

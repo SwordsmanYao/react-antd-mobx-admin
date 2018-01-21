@@ -19,7 +19,7 @@ class BasicHeader extends Component {
   }
 
   render() {
-    const { layout } = this.props;
+    const { global } = this.props;
 
     const menu = (
       <Menu selectedKeys={[]} onClick={this.onMenuClick}>
@@ -34,8 +34,8 @@ class BasicHeader extends Component {
       <Header className={styles.header}>
         <Icon
           className={styles.trigger}
-          type={layout.collapsed ? 'menu-unfold' : 'menu-fold'}
-          onClick={() => layout.toggleCollapsed()}
+          type={global.collapsed ? 'menu-unfold' : 'menu-fold'}
+          onClick={() => global.toggleCollapsed()}
         />
         <div className={styles.right}>
           <Dropdown overlay={menu} placement="bottomRight">

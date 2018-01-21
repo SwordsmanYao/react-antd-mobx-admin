@@ -11,13 +11,13 @@ const { SubMenu } = Menu;
 class SiderMenu extends Component {
 
   render() {
-    const { layout } = this.props;
+    const { global } = this.props;
 
     return (
       <Sider
         trigger={null}
         collapsible
-        collapsed={layout.collapsed}
+        collapsed={global.collapsed}
         collapsedWidth={64}
         className={styles.sider}
       >
@@ -27,7 +27,7 @@ class SiderMenu extends Component {
           defaultOpenKeys={['sub1']}
           mode="inline"
           theme="dark"
-          inlineCollapsed={layout.collapsed}
+          inlineCollapsed={global.collapsed}
         >
           <Menu.Item key="1">
             <Icon type="pie-chart" />

@@ -1,9 +1,11 @@
 import global from './global';
-import basiclayout from './basiclayout';
 import demo from './demo';
+import menu from './menu';
+import user from './user';
 
 export default {
   global,
-  basiclayout,
   demo,
+  menu,
+  user,
 }

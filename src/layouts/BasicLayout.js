@@ -12,12 +12,12 @@ import styles from './BasicLayout.less';
 const { Content } = Layout;
 
 
-@inject('basiclayout')
+@inject('global')
 @observer
 class BasicLayout extends Component {
 
   componentDidMount() {
-    const { basiclayout } = this.props;
+    const { global } = this.props;
 
     // 设置媒体查询
     // http://wicky.nillia.ms/enquire.js/
@@ -26,26 +26,30 @@ class BasicLayout extends Component {
       // OPTIONAL
       // If supplied, triggered when a media query matches.
       match : function() {
-        basiclayout.setCollapsed(true);
+        global.setCollapsed(true);
       },
     
       // OPTIONAL
       // If supplied, triggered when the media query transitions
       // *from a matched state to an unmatched state*.
       unmatch : function() {
-        basiclayout.setCollapsed(false);
+        global.setCollapsed(false);
       },
     });
+
+    // 查询菜单数据
+    global.fetchMenu();
+
   }
 
   render() {
-    const { basiclayout, match } = this.props;
+    const { match, global } = this.props;
 
     return (
       <Layout>
-        <SiderMenu layout={basiclayout} />
+        <SiderMenu global={global} />
         <Layout>
-          <BasicHeader layout={basiclayout} />
+          <BasicHeader global={global} />
           <Content className={styles.content}>
             <Switch>
               {
