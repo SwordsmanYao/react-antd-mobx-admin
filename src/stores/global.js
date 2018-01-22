@@ -6,8 +6,10 @@ class GlobalStore {
   @observable collapsed = false;
   // 左侧菜单树数据
   @observable menu = [];
-
+  // 展开的 submenu key 数组
   @observable openKeys = [];
+  // 菜单选中的叶节点 key
+  @observable selectedKeys = [];
 
   /**
    * 含有接口请求等异步操作的 action
@@ -33,12 +35,16 @@ class GlobalStore {
   }
 
   @action
+  setMenu(data) {
+    this.menu = data;
+  }
+  @action
   setOpenKeys(data) {
     this.openKeys = data;
   }
   @action
-  setMenu(data) {
-    this.menu = data;
+  setSelectedKeys(data) {
+    this.selectedKeys = data;
   }
 }
 

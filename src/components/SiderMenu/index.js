@@ -12,20 +12,6 @@ const { SubMenu } = Menu;
 @observer
 class SiderMenu extends Component {
 
-  componentWillMount() {
-    
-  }
-
-  // 获得当前path的数组 eg： pathname:"/system-management/menu" ==> ["system-management", "menu"]
-  getCurrentMenuSelectedKeys() {
-    const { location: { pathname } } = this.props;
-    const keys = pathname.split('/').slice(1);
-    console.log(keys);
-    if (keys.length === 1 && keys[0] === '') {
-      return [this.menus[0].path];
-    }
-    return keys;
-  }
   getMenuItems(menusData, parentPath = '/basic') {
     return menusData.map(item => {
 
@@ -34,7 +20,7 @@ class SiderMenu extends Component {
       if(item.children && item.children.length > 0) {
         return (
           <SubMenu
-            key={item.path}
+            key={item.id.toString()}
             title={
               item.icon ? (
                 <span>
@@ -51,12 +37,9 @@ class SiderMenu extends Component {
         );
       } else {
         return (
-          <Menu.Item key={item.path}>
+          <Menu.Item key={item.id.toString()}>
             <Link
-              to={{
-                pathname: itemPath,
-                search: `?menuID=${item.id}`,
-              }}
+              to={itemPath}
               replace={itemPath === this.props.location.pathname}
             >
               {
@@ -85,8 +68,8 @@ class SiderMenu extends Component {
         {
           global.menu && global.menu.length > 0 &&
           <Menu
-            selectedKeys={this.getCurrentMenuSelectedKeys()}
-            openKeys={global.openKeys.slice()}
+            selectedKeys={global.selectedKeys.slice().map(item => item.toString())}
+            openKeys={global.openKeys.slice().map(item => item.toString())}
             mode="inline"
             theme="dark"
             inlineCollapsed={global.collapsed}
@@ -94,7 +77,8 @@ class SiderMenu extends Component {
               global.setOpenKeys(openKeys);
             }}
             onSelect={({ item, key, selectedKeys }) => {
-              console.log('onSelect', item, key, selectedKeys);
+              console.log('selectedKeys',selectedKeys);
+              global.setSelectedKeys(selectedKeys);
             }}
           >
             {this.getMenuItems(global.menu)}
