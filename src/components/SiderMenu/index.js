@@ -11,34 +11,11 @@ const { SubMenu } = Menu;
 @withRouter
 @observer
 class SiderMenu extends Component {
-/*
-[
-      {
-        id: 245345,
-        name: '系统管理',
-        icon: 'dashboard',
-        path: 'system-management',
-        children: [
-          {
-            id: 131245,
-            name: '菜单管理',
-            path: 'menu',
-          },
-          {
-            id: 25345,
-            name: 'Form',
-            path: 'menuForm',
-          }
-        ],
-      },
-      {
-        id: 234234,
-        name: 'Dashboard',
-        icon: 'dashboard',
-        path: 'table-list',
-      },
-    ]
-*/
+
+  componentWillMount() {
+    
+  }
+
   // 获得当前path的数组 eg： pathname:"/system-management/menu" ==> ["system-management", "menu"]
   getCurrentMenuSelectedKeys() {
     const { location: { pathname } } = this.props;
