@@ -11,24 +11,28 @@ function tree(req, res) {
         name: '系统管理',
         icon: 'dashboard',
         path: 'system-management',
+        hasChildren: true,
         children: [
           {
             id: 131245,
             name: '菜单管理',
             path: 'menu',
+            hasChildren: false,
           },
           {
             id: 25345,
             name: 'Form',
             path: 'menuForm',
+            hasChildren: false,
           }
         ],
       },
       {
         id: 234234,
-        name: 'Dashboard',
+        name: 'demo',
         icon: 'dashboard',
-        path: 'table-list',
+        path: 'demo',
+        hasChildren: false,
       },
     ],
   }));

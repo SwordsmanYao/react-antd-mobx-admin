@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { notification } from 'antd';
 import md5 from 'md5';
+import history from '../history';
 
 const service = axios.create({
   timeout: 15000,
@@ -61,7 +62,7 @@ service.interceptors.response.use(
         sessionStorage.removeItem('token');
 
         // 跳转登录页
-        // routerRedux.push('/user/login');
+        history.push('/login');
       } else if (data.Code !== 200) {
         notification.error({
           message: `Code: ${data.Code}`,

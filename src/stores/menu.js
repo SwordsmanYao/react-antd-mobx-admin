@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, transaction } from 'mobx';
 import { queryMenu, queryMenuList, insertMenu, deleteMenu, queryMenuDetail, updateMenu } from '../services/menu';
 
 class MenuStore {
@@ -100,10 +100,13 @@ class MenuStore {
     const response = await queryMenuList(data);
 
     if (response.Code === 200) {
-      this.menuList = response.Data;
-      // current/pageSize 来自页面
-      // total 来自接口返回
-      this.pagination = {...data,total: response.TotalCount};
+      // 使用 transaction 只会在函数调用结束后触发一次组件渲染
+      transaction(() => {
+        this.menuList = response.Data;
+        // current/pageSize 来自页面
+        // total 来自接口返回
+        this.pagination = {...data,total: response.TotalCount};
+      });
     }
 
     this.loading = false;

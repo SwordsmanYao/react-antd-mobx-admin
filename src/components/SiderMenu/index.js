@@ -1,14 +1,97 @@
 import React, { Component } from 'react';
 import { Menu, Icon, Layout } from 'antd';
 import { observer } from 'mobx-react';
+import { Link, withRouter } from 'react-router-dom';
 
 import styles from './index.less';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
+@withRouter
 @observer
 class SiderMenu extends Component {
+/*
+[
+      {
+        id: 245345,
+        name: '系统管理',
+        icon: 'dashboard',
+        path: 'system-management',
+        children: [
+          {
+            id: 131245,
+            name: '菜单管理',
+            path: 'menu',
+          },
+          {
+            id: 25345,
+            name: 'Form',
+            path: 'menuForm',
+          }
+        ],
+      },
+      {
+        id: 234234,
+        name: 'Dashboard',
+        icon: 'dashboard',
+        path: 'table-list',
+      },
+    ]
+*/
+  // 获得当前path的数组 eg： pathname:"/system-management/menu" ==> ["system-management", "menu"]
+  getCurrentMenuSelectedKeys() {
+    const { location: { pathname } } = this.props;
+    const keys = pathname.split('/').slice(1);
+    console.log(keys);
+    if (keys.length === 1 && keys[0] === '') {
+      return [this.menus[0].path];
+    }
+    return keys;
+  }
+  getMenuItems(menusData, parentPath = '/basic') {
+    return menusData.map(item => {
+
+      const itemPath = `${parentPath}/${item.path || ''}`.replace(/\/+/g, '/');
+
+      if(item.children && item.children.length > 0) {
+        return (
+          <SubMenu
+            key={item.path}
+            title={
+              item.icon ? (
+                <span>
+                  <Icon type={item.icon} />
+                  <span>{item.name}</span>
+                </span>
+              ) : item.name
+            }
+          >
+            {
+              this.getMenuItems(item.children, itemPath)
+            }
+          </SubMenu>
+        );
+      } else {
+        return (
+          <Menu.Item key={item.path}>
+            <Link
+              to={{
+                pathname: itemPath,
+                search: `?menuID=${item.id}`,
+              }}
+              replace={itemPath === this.props.location.pathname}
+            >
+              {
+                item.icon && <Icon type={item.icon} />
+              }
+              <span>{item.name}</span>
+            </Link>
+          </Menu.Item>
+        )
+      }
+    });
+  }
 
   render() {
     const { global } = this.props;
@@ -22,40 +105,25 @@ class SiderMenu extends Component {
         className={styles.sider}
       >
         <div className={styles.logo} />
-        <Menu
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          mode="inline"
-          theme="dark"
-          inlineCollapsed={global.collapsed}
-        >
-          <Menu.Item key="1">
-            <Icon type="pie-chart" />
-            <span>Option 1</span>
-          </Menu.Item>
-          <Menu.Item key="2">
-            <Icon type="desktop" />
-            <span>Option 2</span>
-          </Menu.Item>
-          <Menu.Item key="3">
-            <Icon type="inbox" />
-            <span>Option 3</span>
-          </Menu.Item>
-          <SubMenu key="sub1" title={<span><Icon type="mail" /><span>Navigation One</span></span>}>
-            <Menu.Item key="5">Option 5</Menu.Item>
-            <Menu.Item key="6">Option 6</Menu.Item>
-            <Menu.Item key="7">Option 7</Menu.Item>
-            <Menu.Item key="8">Option 8</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub2" title={<span><Icon type="appstore" /><span>Navigation Two</span></span>}>
-            <Menu.Item key="9">Option 9</Menu.Item>
-            <Menu.Item key="10">Option 10</Menu.Item>
-            <SubMenu key="sub3" title="Submenu">
-              <Menu.Item key="11">Option 11</Menu.Item>
-              <Menu.Item key="12">Option 12</Menu.Item>
-            </SubMenu>
-          </SubMenu>
-        </Menu>
+        {
+          global.menu && global.menu.length > 0 &&
+          <Menu
+            selectedKeys={this.getCurrentMenuSelectedKeys()}
+            openKeys={global.openKeys.slice()}
+            mode="inline"
+            theme="dark"
+            inlineCollapsed={global.collapsed}
+            onOpenChange={(openKeys) => {
+              global.setOpenKeys(openKeys);
+            }}
+            onSelect={({ item, key, selectedKeys }) => {
+              console.log('onSelect', item, key, selectedKeys);
+            }}
+          >
+            {this.getMenuItems(global.menu)}
+          </Menu>
+        }
+        
       </Sider>
     );
   }

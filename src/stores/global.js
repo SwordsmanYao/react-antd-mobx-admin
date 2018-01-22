@@ -2,8 +2,12 @@ import { observable, action } from 'mobx';
 import { queryMenu } from '../services/menu';
 
 class GlobalStore {
-  @observable collapsed = false; // true 折叠
+  // 左侧菜单是否折叠， true 折叠
+  @observable collapsed = false;
+  // 左侧菜单树数据
   @observable menu = [];
+
+  @observable openKeys = [];
 
   /**
    * 含有接口请求等异步操作的 action
@@ -12,7 +16,7 @@ class GlobalStore {
   async fetchMenu() {
     const response = await queryMenu();
     if(response.Code === 200) {
-      this.menu = response.Data;
+      this.setMenu(response.Data);
     }
   }
 
@@ -26,6 +30,15 @@ class GlobalStore {
   @action
   setCollapsed(collapsed) {
     this.collapsed = collapsed;
+  }
+
+  @action
+  setOpenKeys(data) {
+    this.openKeys = data;
+  }
+  @action
+  setMenu(data) {
+    this.menu = data;
   }
 }
 

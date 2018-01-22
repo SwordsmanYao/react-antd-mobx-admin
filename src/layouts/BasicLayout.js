@@ -13,6 +13,7 @@ const { Content } = Layout;
 
 
 @inject('global')
+@inject('user')
 @observer
 class BasicLayout extends Component {
 
@@ -42,14 +43,26 @@ class BasicLayout extends Component {
 
   }
 
+  // 菜单数据的第一个要展示的 path
+  getFirstShow(menusData, parentPath = '') {
+    if (menusData[0].hasChildren && menusData[0].children) {
+      return this.getFirstShow(menusData[0].children, `${parentPath}/${menusData[0].path}`);
+    } else {
+      return {
+        pathname: `${parentPath}/${menusData[0].path}`,
+        search: `?menuID=${menusData[0].id}`,
+      };
+    }
+  }
+
   render() {
-    const { match, global } = this.props;
+    const { match, global, user } = this.props;
 
     return (
       <Layout>
         <SiderMenu global={global} />
         <Layout>
-          <BasicHeader global={global} />
+          <BasicHeader global={global} user={user} />
           <Content className={styles.content}>
             <Switch>
               {
@@ -57,7 +70,14 @@ class BasicLayout extends Component {
                   <Route path={`${match.url}/${item.path}`} key={item.path} exact={item.exact} component={ item.component } />
                 ))
               }
-              <Redirect from={`${match.url}/`} to={`${match.url}/demo`} />
+              {
+                global.menu && global.menu.length > 0 &&
+                <Redirect
+                  from={`${match.url}/`}
+                  to={this.getFirstShow(global.menu,`${match.url}`)}
+                />
+              }
+              
             </Switch>
           </Content>
         </Layout>

@@ -1,4 +1,6 @@
 import { observable, action } from 'mobx';
+import history from '../history';
+
 import { login } from '../services/user';
 
 class UserStore {
@@ -12,7 +14,7 @@ class UserStore {
   @action
   async login(data) {
 
-    this.submitting = true;
+    this.setSubmitting(true);
 
     const response = await login(data);
 
@@ -26,10 +28,12 @@ class UserStore {
       // 将用户信息保存到 sessionStorage 里面
       sessionStorage.setItem('currentUser', JSON.stringify(user));
 
-      this.currentUser =  response.Data;
+      this.setCurrentUser(response.Data);
+
+      history.push('/basic');
     }
     
-    this.submitting = false;
+    this.setSubmitting(false);
   }
 
   /**
@@ -43,12 +47,24 @@ class UserStore {
     // 清空 sessionStorage 的 user 信息和 token
     sessionStorage.removeItem('currentUser');
     sessionStorage.removeItem('token');
+
+    history.push('/login');
   }
 
   @action
   loadCurrentUserFromSession() {
     const user = JSON.parse(sessionStorage.getItem('currentUser'));
     this.currentUser = user;
+  }
+
+  @action
+  setSubmitting(data) {
+    this.submitting = data;
+  }
+
+  @action
+  setCurrentUser(data) {
+    this.currentUser = data;
   }
 }
 
