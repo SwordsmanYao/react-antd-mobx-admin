@@ -115,10 +115,11 @@ class MenuStore {
   /**
    * 不含异步操作的 action
    */
+  @action
   clearCurrentNode() {
     this.currentNode = this.defaultNode;
   }
-
+  @action
   setCurrentNodeField(data) {
     this.currentNode = {
       ...this.currentNode,
