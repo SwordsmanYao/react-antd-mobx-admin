@@ -2,7 +2,7 @@
 
 一个基于 create-react-app、antd、react-router、mobx 的中后台管理模板
 
-###步骤
+### 步骤
  ```
  git clone https://github.com/SwordsmanYao/react-antd-mobx-admin.git
  ``` 
