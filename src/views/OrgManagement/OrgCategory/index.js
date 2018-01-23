@@ -2,24 +2,21 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Layout, Button, Table, Divider, Popconfirm } from 'antd';
 
-import DisplayTree from '@/components/DisplayTree';
-import MenuForm from './form';
+import OrgCategoryForm from './form';
 import styles from './index.less';
 
 
-const { Sider, Content } = Layout;
+const { Content } = Layout;
 
-@inject('menu')
+@inject('orgCategory')
 @observer
-export default class Menu extends Component {
+export default class OrgCategory extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false, // 新建的模态框是否显示
     };
     
-    this.onSelect = this.onSelect.bind(this);
-    this.onExpand = this.onExpand.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
     this.handleNew = this.handleNew.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
@@ -28,33 +25,14 @@ export default class Menu extends Component {
   }
 
   componentWillMount() {
-    const { menu } = this.props;
+    const { orgCategory } = this.props;
 
-    menu.fetchTree();
-    menu.fetchMenuList({
-      ParentID: menu.selectedKeys[0],
-      PageSize: menu.pagination.pageSize,
-      CurrentPage: menu.pagination.current,
+    orgCategory.fetchList({
+      PageSize: orgCategory.pagination.pageSize,
+      CurrentPage: orgCategory.pagination.current,
     });
   }
 
-  // 点击树节点时触发
-  onSelect = (selectedKeys) => {
-    console.log('selected', selectedKeys);
-    const { menu } = this.props;
-
-    menu.setData({
-      selectedKeys: selectedKeys,
-    });
-
-    menu.fetchMenuList({
-      ParentID: selectedKeys[0],
-    });
-  }
-
-  onExpand = (expandedKeys) => {
-    console.log('expandedKeys', expandedKeys);
-  }
 
   // 设置模态框显示/隐藏
   setModalVisible(modalVisible) {
@@ -63,17 +41,17 @@ export default class Menu extends Component {
 
   // 新建
   handleNew = () => {
-    const { menu } = this.props;
-    menu.clearCurrentNode();
+    const { orgCategory } = this.props;
+    orgCategory.clearCurrentNode();
     this.setModalVisible(true);
   }
 
   // 修改
   handleEdit = (record) => {
-    const { menu } = this.props;
+    const { orgCategory } = this.props;
     console.log('record' ,record);
 
-    menu.fetchMenuDetail({
+    orgCategory.fetchDetail({
       UniqueID: record.UniqueID,
     }).then(() => {
       this.setModalVisible(true);
@@ -83,9 +61,9 @@ export default class Menu extends Component {
   }
   // 删除
   handleDelete = (record) => {
-    const { menu } = this.props;
+    const { orgCategory } = this.props;
 
-    menu.deleteMenu({
+    orgCategory.remove({
       UniqueID: record.UniqueID,
     });
   }
@@ -97,7 +75,7 @@ export default class Menu extends Component {
   }
 
   render() {
-    const { menu } = this.props;
+    const { orgCategory } = this.props;
     const { modalVisible } = this.state;
     const { setModalVisible } = this;
     const columns = [{
@@ -105,14 +83,14 @@ export default class Menu extends Component {
       dataIndex: 'Name',
       key: 'Name',
     }, {
-      title: '路径',
-      dataIndex: 'Path',
-      key: 'Path',
-    }, {
       title: '排序',
       dataIndex: 'SortCode',
       key: 'SortCode',
-    }, {
+    },  {
+      title: '描述',
+      dataIndex: 'DescInfo',
+      key: 'DescInfo',
+    },{
       title: '操作',
       key: 'Action',
       width: 120,
@@ -127,7 +105,7 @@ export default class Menu extends Component {
           >编辑
           </a>
           <Divider type="vertical" />
-          <Popconfirm placement="bottom" title="如果有子节点会一同删除，确认要删除这条记录吗？" onConfirm={() => { this.handleDelete(record); }} okText="是" cancelText="否">
+          <Popconfirm placement="bottom" title="确认要删除这条记录吗？" onConfirm={() => { this.handleDelete(record); }} okText="是" cancelText="否">
             <a
               onClick={(e) => {
                 e.preventDefault();
@@ -143,36 +121,20 @@ export default class Menu extends Component {
 
     return (
       <Layout className={styles.layout}>
-        <Sider width={250} style={{ background: '#fff' }}>
-          {
-            menu.treeList && menu.treeList.length > 0 &&
-              <DisplayTree
-                treeList={[{
-                  id: '0',
-                  name: '菜单管理',
-                  children: menu.treeList.slice(),
-                }]}
-                defaultExpandedKeys={['0']}
-                onSelect={this.onSelect}
-                selectedKeys={menu.selectedKeys.slice()}
-                onExpand={this.onExpand}
-              />
-          }
-        </Sider>
-        <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
+        <Content style={{ background: '#fff', padding: 30 }}>
           <div className={styles.toolbar}>
             <Button onClick={this.handleNew}>新建</Button>
-            <MenuForm
-              menu={menu}
+            <OrgCategoryForm
+              orgCategory={orgCategory}
               modalVisible={modalVisible}
               setModalVisible={setModalVisible}
             />
           </div>
           <Table
             bordered
-            loading={menu.loading}
-            pagination={menu.pagination}
-            dataSource={menu.menuList.slice()}
+            loading={orgCategory.loading}
+            pagination={orgCategory.pagination}
+            dataSource={orgCategory.orgCategoryList.slice()}
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}

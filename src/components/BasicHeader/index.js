@@ -10,6 +10,11 @@ const { Header } = Layout;
 @observer
 class BasicHeader extends Component {
 
+  constructor(props) {
+    super(props);
+
+    this.onMenuClick = this.onMenuClick.bind(this);
+  }
   onMenuClick = ({ key }) => {
     if (key === 'logout') {
       const { user } = this.props;

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { notification } from 'antd';
 import md5 from 'md5';
 import history from '../history';
+import globalStore from '../stores/global';
 
 const service = axios.create({
   timeout: 15000,
@@ -29,6 +30,23 @@ service.interceptors.request.use(
       const sign = md5(timestamp + secret);
 
       config.headers.Authorization = `Basic timestamp=${timestamp},token=${token},sign=${sign}`;
+      
+      // 除登录等接口外，其他请求都需要带当前页面的 MenuID
+      if(config.method === 'get') {
+        if(!config.params) {
+          config.params = {};
+        }
+        if(globalStore.selectedKeys.length > 0) {
+          config.params.MenuID = globalStore.selectedKeys[0];
+        }
+      } else {
+        if(!config.data) {
+          config.data = {};
+        }
+        if(globalStore.selectedKeys.length > 0) {
+          config.data.MenuID = globalStore.selectedKeys[0];
+        }
+      }
     }
     return config;
   },

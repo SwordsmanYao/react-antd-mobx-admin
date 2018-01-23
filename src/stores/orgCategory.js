@@ -1,14 +1,10 @@
 import { observable, action } from 'mobx';
-import { queryMenu, queryMenuList, insertMenu, deleteMenu, queryMenuDetail, updateMenu } from '../services/menu';
+import { insert, update, remove, queryList, queryDetail } from '../services/orgCategory';
 
-class MenuStore {
-  // 树结构数据
-  @observable treeList = []; 
-  // 当前选中的树节点id
-  @observable selectedKeys = ['0']; 
+class OrgCategoryStore {
 
   // 列表数据
-  @observable menuList = []; 
+  @observable orgCategoryList = [];
   // 控制列表是否显示加载中
   @observable loading = false; 
   // 列表分页数据
@@ -17,7 +13,7 @@ class MenuStore {
     pageSize: 20,
     total: 20, // 总数,由接口提供
   };
-  
+
   // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
   @observable currentNode = {};
   // currentNode 的默认值，用于 clear 时的数据
@@ -27,11 +23,11 @@ class MenuStore {
     },
   };
 
-  /**
+   /**
    * 含有接口请求等异步操作的 action
    */
   @action
-  async commitMenu(data) {
+  async commit(data) {
 
     this.setData({
       loading: true
@@ -41,15 +37,13 @@ class MenuStore {
 
     // 当有 id 时为编辑，否则为新建
     if(data.UniqueID) {
-      response = await updateMenu(data);
+      response = await update(data);
     } else {
-      response = await insertMenu(data);
+      response = await insert(data);
     }
 
     if(response.Code === 200) {
-      this.fetchMenuList({ ParentID: data.ParentID });
-
-      this.fetchTree();
+      this.fetchList();
     }
 
     this.setData({
@@ -58,16 +52,14 @@ class MenuStore {
   }
 
   @action
-  async deleteMenu(data) {
+  async remove(data) {
     this.setData({
       loading: true
     });
 
-    const response = await deleteMenu(data);
+    const response = await remove(data);
     if(response.Code === 200) {
-      this.fetchMenuList({ ParentID: data.ParentID });
-
-      this.fetchTree();
+      this.fetchList();
     }
 
     this.setData({
@@ -76,10 +68,10 @@ class MenuStore {
   }
 
   @action
-  async fetchMenuDetail(data) {
+  async fetchDetail(data) {
     this.clearCurrentNode();
 
-    const response = await queryMenuDetail(data);
+    const response = await queryDetail(data);
 
     if (response.Code === 200) {
       const data = {};
@@ -95,29 +87,18 @@ class MenuStore {
     }
   }
 
-  // 查询树的数据
   @action
-  async fetchTree() {
-    const response = await queryMenu();
-    if (response.Code === 200) {
-      this.setData({
-        treeList: response.Data
-      });
-    }
-  }
-
-  @action
-  async fetchMenuList(data) {
+  async fetchList(data) {
     this.setData({
       loading: true,
     });
 
-    const response = await queryMenuList(data);
+    const response = await queryList(data);
 
     if (response.Code === 200) {
 
       this.setData({
-        menuList: response.Data,
+        orgCategoryList: response.Data,
         // current/pageSize 来自页面
         // total 来自接口返回
         pagination: {...data,total: response.TotalCount},
@@ -151,6 +132,7 @@ class MenuStore {
       this[item] = data[item];
     });
   }
-}
+} 
 
-export default new MenuStore();
+export default new OrgCategoryStore();
+

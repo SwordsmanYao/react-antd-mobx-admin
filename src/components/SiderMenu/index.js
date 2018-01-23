@@ -12,6 +12,11 @@ const { SubMenu } = Menu;
 @observer
 class SiderMenu extends Component {
 
+  constructor(props) {
+    super(props);
+    this.getMenuItems = this.getMenuItems.bind(this);
+  }
+
   getMenuItems(menusData, parentPath = '/basic') {
     return menusData.map(item => {
 
@@ -74,11 +79,15 @@ class SiderMenu extends Component {
             theme="dark"
             inlineCollapsed={global.collapsed}
             onOpenChange={(openKeys) => {
-              global.setOpenKeys(openKeys);
+              global.setData({
+                openKeys,
+              });
             }}
             onSelect={({ item, key, selectedKeys }) => {
               console.log('selectedKeys',selectedKeys);
-              global.setSelectedKeys(selectedKeys);
+              global.setData({
+                selectedKeys,
+              });
             }}
           >
             {this.getMenuItems(global.menu)}

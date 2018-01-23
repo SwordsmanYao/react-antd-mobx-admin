@@ -23,17 +23,29 @@ class BasicLayout extends Component {
     this.state = {
       firstShow: null,
     }
+
+    this.getMenuOptionsFromPath = this.getMenuOptionsFromPath.bind(this);
+    this.getFirstShow = this.getFirstShow.bind(this);
   }
   componentDidMount() {
     const { global } = this.props;
 
+    let isPad = false;
+
     // 设置媒体查询，自适应屏幕
     enquire.register('screen and (max-width:50em)', {
       match : function() {
-        global.setCollapsed(true);
+        isPad = true;
+        global.setData({
+          collapsed: true,
+          openKeys: [],
+        });
       },
       unmatch : function() {
-        global.setCollapsed(false);
+        isPad = false;
+        global.setData({
+          collapsed: false,
+        });
       },
     });
 
@@ -46,13 +58,17 @@ class BasicLayout extends Component {
       // 匹配：  证明是从 basic 根路径下路由过来的
       // 不匹配：刷新或直接修改 url 进入对应页面，则需要通过路径生成菜单的 openKeys 和 selectedKeys
       if(location.pathname === match.url) {
-        global.setOpenKeys(firstShow.openKeys);
-        global.setSelectedKeys(firstShow.selectedKeys);
+        global.setData({
+          openKeys: isPad ? [] : firstShow.openKeys,
+          selectedKeys: firstShow.selectedKeys,
+        });
       } else {
         const pathArr = location.pathname.split('/').slice(2);
         const menuOptions = this.getMenuOptionsFromPath(global.menu, pathArr);
-        global.setOpenKeys(menuOptions.openKeys);
-        global.setSelectedKeys(menuOptions.selectedKeys);
+        global.setData({
+          openKeys: isPad ? []: menuOptions.openKeys,
+          selectedKeys: menuOptions.selectedKeys,
+        });
       }
     });
   }

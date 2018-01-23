@@ -18,7 +18,9 @@ class GlobalStore {
   async fetchMenu() {
     const response = await queryMenu();
     if(response.Code === 200) {
-      this.setMenu(response.Data);
+      this.setData({
+        menu: response.Data
+      });
     }
   }
 
@@ -27,24 +29,24 @@ class GlobalStore {
    */
   @action
   toggleCollapsed() {
-    this.collapsed = !this.collapsed;
-  }
-  @action
-  setCollapsed(collapsed) {
-    this.collapsed = collapsed;
+    if(!this.collapsed) {
+      this.setData({
+        collapsed: !this.collapsed,
+        openKeys: [], // 折叠动作时把打开的菜单关上
+      });
+    } else {
+      this.setData({
+        collapsed: !this.collapsed,
+      });
+    }
   }
 
   @action
-  setMenu(data) {
-    this.menu = data;
-  }
-  @action
-  setOpenKeys(data) {
-    this.openKeys = data;
-  }
-  @action
-  setSelectedKeys(data) {
-    this.selectedKeys = data;
+  setData(data) {
+    const keys = Object.keys(data);
+    keys.forEach((item) => {
+      this[item] = data[item];
+    });
   }
 }
 

@@ -19,12 +19,21 @@ function tree(req, res) {
             path: 'menu',
             hasChildren: false,
           },
+        ],
+      },
+      {
+        id: 745,
+        name: '组织管理',
+        icon: 'dashboard',
+        path: 'org-management',
+        hasChildren: true,
+        children: [
           {
-            id: 25345,
-            name: 'Form',
-            path: 'menuForm',
+            id: 5547,
+            name: '组织分类管理',
+            path: 'org-category',
             hasChildren: false,
-          }
+          },
         ],
       },
       {

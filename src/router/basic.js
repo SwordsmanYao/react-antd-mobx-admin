@@ -12,6 +12,12 @@ import asyncComponent from '../components/AsyncComponent';
     exact: true,
   },
   {
+    path: 'org-management/org-category',
+    component: asyncComponent(() => import(/* webpackChunkName: "OrgCategory" */ '../views/OrgManagement/OrgCategory')),
+    /* 严格匹配 */
+    exact: true,
+  },
+  {
     path: 'demo',
     component: asyncComponent(() => import(/* webpackChunkName: "Demo" */ '../views/Demo')),
     exact: true,

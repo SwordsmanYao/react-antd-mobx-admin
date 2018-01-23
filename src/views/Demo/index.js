@@ -9,7 +9,7 @@ import { inject, observer } from 'mobx-react';
 class Demo extends Component {
   
   componentDidMount() {
-    this.props.demo.fetchData();
+    // this.props.demo.fetchData();
   }
 
   render() {
@@ -28,6 +28,7 @@ class Demo extends Component {
         {
           demo.data && <div>{demo.message}</div>
         }
+        <button onClick={ () => demo.setGlobalcollapsed() }>跨 store 调用</button>
       </div>
     )
   }

@@ -6,7 +6,7 @@ import { login } from '../services/user';
 class UserStore {
   @observable currentUser = null; // 当前登录用户的信息,也是作为渲染是否登录的依据
   @observable submitting = false; // 登录是否正在提交;
-
+  @observable error = null; //登录请求的错误信息
   /**
    * 含有接口请求等异步操作的 action
    */
@@ -14,8 +14,10 @@ class UserStore {
   @action
   async login(data) {
 
-    this.setSubmitting(true);
-
+    this.setData({
+      submitting: true,
+    });
+    
     const response = await login(data);
 
     if(response.Code === 200) {
@@ -28,12 +30,20 @@ class UserStore {
       // 将用户信息保存到 sessionStorage 里面
       sessionStorage.setItem('currentUser', JSON.stringify(user));
 
-      this.setCurrentUser(response.Data);
+      this.setData({
+        currentUser: response.Data,
+      })
 
       history.push('/basic');
+    } else {
+      this.setData({
+        error: response.Error
+      });
     }
     
-    this.setSubmitting(false);
+    this.setData({
+      submitting: false,
+    });
   }
 
   /**
@@ -42,7 +52,9 @@ class UserStore {
 
   @action
   logout() {
-    this.setCurrentUser(null);
+    this.setData({
+      currentUser: null,
+    });
     
     // 清空 sessionStorage 的 user 信息和 token
     sessionStorage.removeItem('currentUser');
@@ -58,13 +70,11 @@ class UserStore {
   }
 
   @action
-  setSubmitting(data) {
-    this.submitting = data;
-  }
-
-  @action
-  setCurrentUser(data) {
-    this.currentUser = data;
+  setData(data) {
+    const keys = Object.keys(data);
+    keys.forEach((item) => {
+      this[item] = data[item];
+    });
   }
 }
 

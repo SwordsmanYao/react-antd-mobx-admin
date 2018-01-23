@@ -1,5 +1,6 @@
 import { observable, action, computed } from 'mobx';
 import { query } from "../services/demo";
+import global from './global';
 
 class DemoStore {
   @observable data;
@@ -11,16 +12,26 @@ class DemoStore {
   async fetchData() {
     const response = await query();
     if(response.Code === 200) {
-      this.setData(response.Data);
+      this.setData({data: response.Data});
     }
   }
 
   /**
    * 不含异步操作的 action
    */
+
+  @action
+  setGlobalcollapsed(){
+    global.toggleCollapsed();
+  }
+
+  // 
   @action
   setData(data) {
-    this.data = data;
+    const keys = Object.keys(data);
+    keys.forEach((item) => {
+      this[item] = data[item];
+    });
   }
 
   @computed

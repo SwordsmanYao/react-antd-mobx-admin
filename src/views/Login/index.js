@@ -1,19 +1,25 @@
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router-dom';
-import { Form, Icon, Input, Checkbox, Button } from 'antd';
+import { Form, Icon, Input, Checkbox, Button, Alert } from 'antd';
 import { inject, observer } from 'mobx-react';
 import styles from './index.less';
 import logo from '@/assets/logo.svg';
 
 const FormItem = Form.Item;
 
-
-@Form.create()
 @inject('user')
+@Form.create()
 @observer
 export default class Login extends Component {
   
+  constructor(props) {
+    super(props);
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.renderMessage = this.renderMessage.bind(this);
+  }
+
   handleSubmit = (e) => {
     const { form, user } = this.props;
     e.preventDefault();
@@ -24,6 +30,17 @@ export default class Login extends Component {
           user.login(values);
         }
       }
+    );
+  }
+
+  renderMessage = (message) => {
+    return (
+      <Alert
+        style={{ marginBottom: 24 }}
+        message={message}
+        type="error"
+        showIcon
+      />
     );
   }
 
@@ -47,11 +64,11 @@ export default class Login extends Component {
           </div>
           <div className={styles.main}>
             <Form onSubmit={this.handleSubmit}>
-              {/* {
-                user.status === 'error' &&
+              {
+                user.error &&
                 user.submitting === false &&
-                this.renderMessage('账户或密码错误')
-              } */}
+                this.renderMessage(user.error.Message)
+              }
               <FormItem>
                 {getFieldDecorator('LoginName', {
                   rules: [{
