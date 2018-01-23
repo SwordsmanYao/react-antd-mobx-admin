@@ -2,6 +2,19 @@
 
 一个基于 create-react-app、antd、react-router、mobx 的中后台管理模板
 
+###步骤
+ ```
+ git clone https://github.com/SwordsmanYao/react-antd-mobx-admin.git
+ ``` 
+ ```
+ cd react-antd-mobx-admin
+ yarn (or npm i)
+ ```
+ ```
+ yarn mock (or npm run mock)
+ yarn start (or npm run start)
+ ```
+
 ### mobx 使用注意事项
  * 延迟对象属性地解引用
  * 不要吝啬使用 @observer，子组件只要用到 mobx 管理的数据就要加上 @observer
