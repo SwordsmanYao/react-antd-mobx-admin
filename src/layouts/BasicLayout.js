@@ -105,7 +105,7 @@ class BasicLayout extends Component {
     const { firstShow } = this.state;
 
     return (
-      <Layout>
+      <Layout className={styles.layout}>
         <DevTools/>
         {
           // 在没跳转到子路由之前不渲染菜单栏，避免没有 menuID 引发错误

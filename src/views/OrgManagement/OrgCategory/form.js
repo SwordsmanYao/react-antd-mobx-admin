@@ -9,22 +9,21 @@ const { TextArea } = Input;
   onFieldsChange(props, changedFields) {
     const { orgCategory } = props;
     console.log('onFieldsChange', changedFields);
+
     orgCategory.setCurrentNodeField(changedFields);
   },
   mapPropsToFields(props) {
-    console.log('mapPropsToFields', props.orgCategory.currentNode.Name);
-    const { orgCategory }  = props;
-    return {
-      Name: Form.createFormField({
-        ...orgCategory.currentNode.Name,
-      }),
-      SortCode: Form.createFormField({
-        ...orgCategory.currentNode.SortCode,
-      }),
-      Description: Form.createFormField({
-        ...orgCategory.currentNode.Description,
-      }),
-    };
+    const { currentNode }  = props.orgCategory;
+    console.log('mapPropsToFields', currentNode);
+
+    let fields = {};
+    Object.keys(currentNode).forEach( key => {
+      fields[key] = Form.createFormField({
+        ...currentNode[key],
+      });
+    });
+
+    return fields;
   },
 })
 @observer
@@ -77,7 +76,10 @@ export default class MenuForm extends Component {
 
     return (
       <Modal
-        title="菜单"
+        title="组织类别"
+        okText="确定"
+        cancelText="取消"
+        width="750px"
         visible={modalVisible}
         onOk={this.handleSubmit}
         onCancel={() => setModalVisible(false)}
@@ -117,7 +119,7 @@ export default class MenuForm extends Component {
                 {...formItemLayout}
                 label="描述"
               >
-                {getFieldDecorator('Description')(
+                {getFieldDecorator('DescInfo')(
                   <TextArea autosize />,
                 )}
               </FormItem>

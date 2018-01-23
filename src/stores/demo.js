@@ -28,9 +28,8 @@ class DemoStore {
   // 
   @action
   setData(data) {
-    const keys = Object.keys(data);
-    keys.forEach((item) => {
-      this[item] = data[item];
+    Object.keys(data).forEach((key) => {
+      this[key] = data[key];
     });
   }
 

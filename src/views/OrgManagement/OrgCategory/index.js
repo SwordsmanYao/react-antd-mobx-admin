@@ -20,7 +20,7 @@ export default class OrgCategory extends Component {
     this.setModalVisible = this.setModalVisible.bind(this);
     this.handleNew = this.handleNew.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
     this.handleTableChange = this.handleTableChange.bind(this);
   }
 
@@ -60,7 +60,7 @@ export default class OrgCategory extends Component {
     
   }
   // 删除
-  handleDelete = (record) => {
+  handleRemove = (record) => {
     const { orgCategory } = this.props;
 
     orgCategory.remove({
@@ -105,7 +105,13 @@ export default class OrgCategory extends Component {
           >编辑
           </a>
           <Divider type="vertical" />
-          <Popconfirm placement="bottom" title="确认要删除这条记录吗？" onConfirm={() => { this.handleDelete(record); }} okText="是" cancelText="否">
+          <Popconfirm
+            placement="bottom" 
+            title="确认要删除这条记录吗？" 
+            onConfirm={() => { this.handleRemove(record); }} 
+            okText="是" 
+            cancelText="否"
+          >
             <a
               onClick={(e) => {
                 e.preventDefault();
@@ -134,7 +140,7 @@ export default class OrgCategory extends Component {
             bordered
             loading={orgCategory.loading}
             pagination={orgCategory.pagination}
-            dataSource={orgCategory.orgCategoryList.slice()}
+            dataSource={orgCategory.list.slice()}
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}

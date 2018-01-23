@@ -23,7 +23,7 @@ export default class Menu extends Component {
     this.setModalVisible = this.setModalVisible.bind(this);
     this.handleNew = this.handleNew.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
     this.handleTableChange = this.handleTableChange.bind(this);
   }
 
@@ -31,7 +31,7 @@ export default class Menu extends Component {
     const { menu } = this.props;
 
     menu.fetchTree();
-    menu.fetchMenuList({
+    menu.fetchList({
       ParentID: menu.selectedKeys[0],
       PageSize: menu.pagination.pageSize,
       CurrentPage: menu.pagination.current,
@@ -47,7 +47,7 @@ export default class Menu extends Component {
       selectedKeys: selectedKeys,
     });
 
-    menu.fetchMenuList({
+    menu.fetchList({
       ParentID: selectedKeys[0],
     });
   }
@@ -73,7 +73,7 @@ export default class Menu extends Component {
     const { menu } = this.props;
     console.log('record' ,record);
 
-    menu.fetchMenuDetail({
+    menu.fetchDetail({
       UniqueID: record.UniqueID,
     }).then(() => {
       this.setModalVisible(true);
@@ -82,10 +82,10 @@ export default class Menu extends Component {
     
   }
   // 删除
-  handleDelete = (record) => {
+  handleRemove = (record) => {
     const { menu } = this.props;
 
-    menu.deleteMenu({
+    menu.remove({
       UniqueID: record.UniqueID,
     });
   }
@@ -127,7 +127,13 @@ export default class Menu extends Component {
           >编辑
           </a>
           <Divider type="vertical" />
-          <Popconfirm placement="bottom" title="如果有子节点会一同删除，确认要删除这条记录吗？" onConfirm={() => { this.handleDelete(record); }} okText="是" cancelText="否">
+          <Popconfirm 
+            placement="bottom" 
+            title="如果有子节点会一同删除，确认要删除这条记录吗？" 
+            onConfirm={() => { this.handleRemove(record); }} 
+            okText="是" 
+            cancelText="否"
+          >
             <a
               onClick={(e) => {
                 e.preventDefault();
@@ -172,7 +178,7 @@ export default class Menu extends Component {
             bordered
             loading={menu.loading}
             pagination={menu.pagination}
-            dataSource={menu.menuList.slice()}
+            dataSource={menu.list.slice()}
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}

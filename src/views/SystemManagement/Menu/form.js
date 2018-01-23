@@ -14,31 +14,17 @@ const { Option } = Select;
     menu.setCurrentNodeField(changedFields);
   },
   mapPropsToFields(props) {
-    console.log('mapPropsToFields', props.menu.currentNode.Name);
-    const { menu }  = props;
-    return {
-      Name: Form.createFormField({
-        ...menu.currentNode.Name,
-      }),
-      Path: Form.createFormField({
-        ...menu.currentNode.Path,
-      }),
-      SortCode: Form.createFormField({
-        ...menu.currentNode.SortCode,
-      }),
-      IconName: Form.createFormField({
-        ...menu.currentNode.IconName,
-      }),
-      Category: Form.createFormField({
-        ...menu.currentNode.Category,
-      }),
-      Description: Form.createFormField({
-        ...menu.currentNode.Description,
-      }),
-      IsDisplayed: Form.createFormField({
-        ...menu.currentNode.IsDisplayed,
-      }),
-    };
+    const { currentNode }  = props.menu;
+    console.log('mapPropsToFields', currentNode);
+
+    let fields = {};
+    Object.keys(currentNode).forEach( key => {
+      fields[key] = Form.createFormField({
+        ...currentNode[key],
+      });
+    });
+
+    return fields;
   },
   onValuesChange(_, values) {
     console.log(values);
@@ -69,7 +55,7 @@ export default class MenuForm extends Component {
           data.UniqueID = menu.currentNode.UniqueID.value;
         }
 
-        menu.commitMenu(data);
+        menu.commit(data);
         setModalVisible(false);        
       }
     });
@@ -96,6 +82,9 @@ export default class MenuForm extends Component {
     return (
       <Modal
         title="菜单"
+        okText="确定"
+        cancelText="取消"
+        width="750px"
         visible={modalVisible}
         onOk={this.handleSubmit}
         onCancel={() => setModalVisible(false)}

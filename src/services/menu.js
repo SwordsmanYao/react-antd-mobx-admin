@@ -3,14 +3,14 @@ import request from '../utils/request';
 const api = window.PUBLIC_ENV_CONFIG.API;
 
 // 菜单树
-export function queryMenu() {
+export function queryMenuTree() {
   return request({
     url: `${api}/SysManagement/Menu/tree`,
     method: 'get',
   });
 }
 
-export function insertMenu(params) {
+export function insert(params) {
   return request({
     url: `${api}/SysManagement/Menu/Insert`,
     method: 'post',
@@ -18,7 +18,7 @@ export function insertMenu(params) {
   });
 }
 
-export function updateMenu(params) {
+export function update(params) {
   return request({
     url: `${api}/SysManagement/Menu/Update`,
     method: 'post',
@@ -26,7 +26,7 @@ export function updateMenu(params) {
   });
 }
 
-export function deleteMenu(params) {
+export function remove(params) {
   return request({
     url: `${api}/SysManagement/Menu/Delete`,
     method: 'post',
@@ -35,14 +35,14 @@ export function deleteMenu(params) {
 }
 
 // 列表数据
-export function queryMenuList(params) {
+export function queryList(params) {
   return request({
     url: `${api}/SysManagement/Menu/List`,
     params,
   });
 }
 
-export function queryMenuDetail(params) {
+export function queryDetail(params) {
   return request({
     url: `${api}/SysManagement/Menu/Detail`,
     params,

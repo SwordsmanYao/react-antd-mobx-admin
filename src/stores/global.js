@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx';
-import { queryMenu } from '../services/menu';
+import { queryMenuTree } from '../services/menu';
 
 class GlobalStore {
   // 左侧菜单是否折叠， true 折叠
@@ -16,7 +16,7 @@ class GlobalStore {
    */
   @action
   async fetchMenu() {
-    const response = await queryMenu();
+    const response = await queryMenuTree();
     if(response.Code === 200) {
       this.setData({
         menu: response.Data
@@ -43,9 +43,8 @@ class GlobalStore {
 
   @action
   setData(data) {
-    const keys = Object.keys(data);
-    keys.forEach((item) => {
-      this[item] = data[item];
+    Object.keys(data).forEach((key) => {
+      this[key] = data[key];
     });
   }
 }

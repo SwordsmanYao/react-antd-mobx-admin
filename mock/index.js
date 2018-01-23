@@ -23,7 +23,9 @@ app.post('/demo/add',demo.add);
 app.post('/Login/SignIn', user.signin);
 app.get('/SysManagement/Menu/tree',menu.tree);
 app.get('/SysManagement/Menu/list',menu.list);
-app.get('OrgManagement/OrgCategory/list',orgCategory.list);
+app.get('/SysManagement/Menu/detail',menu.detail);
+app.get('/OrgManagement/OrgCategory/list',orgCategory.list);
+app.get('/OrgManagement/OrgCategory/detail',orgCategory.detail);
 
 
 

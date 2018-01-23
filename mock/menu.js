@@ -87,7 +87,25 @@ function list(req, res) {
   }));
 }
 
+function detail(req, res) {
+
+  res.send(Mock.mock({
+    Code: 200,
+    Data: {
+      UniqueID: 234234,
+      Name: 'Dashboard',
+      Path: 'table-list',
+      SortCode: 300,
+      ParentID: 0,
+      MenuID: 0,
+      IsDisplayed: 1,
+      Category: 1,
+    },  
+  }));
+}
+
 module.exports = {
   tree,
-  list
+  list,
+  detail,
 }

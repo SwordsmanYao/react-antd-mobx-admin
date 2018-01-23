@@ -4,7 +4,7 @@ import { insert, update, remove, queryList, queryDetail } from '../services/orgC
 class OrgCategoryStore {
 
   // 列表数据
-  @observable orgCategoryList = [];
+  @observable list = [];
   // 控制列表是否显示加载中
   @observable loading = false; 
   // 列表分页数据
@@ -17,11 +17,7 @@ class OrgCategoryStore {
   // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
   @observable currentNode = {};
   // currentNode 的默认值，用于 clear 时的数据
-  defaultNode = {
-    IsDisplayed: {
-      value: 1,
-    },
-  };
+  defaultNode = {};
 
    /**
    * 含有接口请求等异步操作的 action
@@ -76,9 +72,8 @@ class OrgCategoryStore {
     if (response.Code === 200) {
       const data = {};
       // 将数据格式化，以适应组件
-      const keys = Object.keys(response.Data);
-      keys.forEach((item) => {
-        data[item] = { value: response.Data[item] };
+      Object.keys(response.Data).forEach((key) => {
+        data[key] = { value: response.Data[key] };
       });
       // this.currentNode = data;
       this.setData({
@@ -98,7 +93,7 @@ class OrgCategoryStore {
     if (response.Code === 200) {
 
       this.setData({
-        orgCategoryList: response.Data,
+        list: response.Data,
         // current/pageSize 来自页面
         // total 来自接口返回
         pagination: {...data,total: response.TotalCount},
@@ -127,9 +122,8 @@ class OrgCategoryStore {
 
   @action
   setData(data) {
-    const keys = Object.keys(data);
-    keys.forEach((item) => {
-      this[item] = data[item];
+    Object.keys(data).forEach((key) => {
+      this[key] = data[key];
     });
   }
 } 

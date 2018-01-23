@@ -28,6 +28,19 @@ function list(req, res) {
   }));
 }
 
+function detail(req, res) {
+  res.send(Mock.mock({
+    Code: 200,
+    Data: {
+      UniqueID: 234234,
+      Name: 'Dashboard',
+      SortCode: 300,
+      DescInfo: 'adsfasf',
+    },
+  }));
+}
+
 module.exports = {
-  list
+  list,
+  detail
 }

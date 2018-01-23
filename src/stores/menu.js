@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx';
-import { queryMenu, queryMenuList, insertMenu, deleteMenu, queryMenuDetail, updateMenu } from '../services/menu';
+import { queryMenuTree, queryList, insert, remove, queryDetail, update } from '../services/menu';
 
 class MenuStore {
   // 树结构数据
@@ -8,7 +8,7 @@ class MenuStore {
   @observable selectedKeys = ['0']; 
 
   // 列表数据
-  @observable menuList = []; 
+  @observable list = []; 
   // 控制列表是否显示加载中
   @observable loading = false; 
   // 列表分页数据
@@ -31,7 +31,7 @@ class MenuStore {
    * 含有接口请求等异步操作的 action
    */
   @action
-  async commitMenu(data) {
+  async commit(data) {
 
     this.setData({
       loading: true
@@ -41,13 +41,13 @@ class MenuStore {
 
     // 当有 id 时为编辑，否则为新建
     if(data.UniqueID) {
-      response = await updateMenu(data);
+      response = await update(data);
     } else {
-      response = await insertMenu(data);
+      response = await insert(data);
     }
 
     if(response.Code === 200) {
-      this.fetchMenuList({ ParentID: data.ParentID });
+      this.fetchList({ ParentID: data.ParentID });
 
       this.fetchTree();
     }
@@ -58,14 +58,14 @@ class MenuStore {
   }
 
   @action
-  async deleteMenu(data) {
+  async remove(data) {
     this.setData({
       loading: true
     });
 
-    const response = await deleteMenu(data);
+    const response = await remove(data);
     if(response.Code === 200) {
-      this.fetchMenuList({ ParentID: data.ParentID });
+      this.fetchList({ ParentID: data.ParentID });
 
       this.fetchTree();
     }
@@ -76,17 +76,16 @@ class MenuStore {
   }
 
   @action
-  async fetchMenuDetail(data) {
+  async fetchDetail(data) {
     this.clearCurrentNode();
 
-    const response = await queryMenuDetail(data);
+    const response = await queryDetail(data);
 
     if (response.Code === 200) {
       const data = {};
       // 将数据格式化，以适应组件
-      const keys = Object.keys(response.Data);
-      keys.forEach((item) => {
-        data[item] = { value: response.Data[item] };
+      Object.keys(response.Data).forEach((key) => {
+        data[key] = { value: response.Data[key] };
       });
       // this.currentNode = data;
       this.setData({
@@ -98,7 +97,7 @@ class MenuStore {
   // 查询树的数据
   @action
   async fetchTree() {
-    const response = await queryMenu();
+    const response = await queryMenuTree();
     if (response.Code === 200) {
       this.setData({
         treeList: response.Data
@@ -107,17 +106,17 @@ class MenuStore {
   }
 
   @action
-  async fetchMenuList(data) {
+  async fetchList(data) {
     this.setData({
       loading: true,
     });
 
-    const response = await queryMenuList(data);
+    const response = await queryList(data);
 
     if (response.Code === 200) {
 
       this.setData({
-        menuList: response.Data,
+        list: response.Data,
         // current/pageSize 来自页面
         // total 来自接口返回
         pagination: {...data,total: response.TotalCount},
@@ -146,9 +145,8 @@ class MenuStore {
 
   @action
   setData(data) {
-    const keys = Object.keys(data);
-    keys.forEach((item) => {
-      this[item] = data[item];
+    Object.keys(data).forEach((key) => {
+      this[key] = data[key];
     });
   }
 }
