@@ -27,7 +27,6 @@ export function remove(params) {
   });
 }
 
-// 列表数据
 export function queryList(params) {
   return request({
     url: `${api}/OrgManagement/OrgCategory/List`,
