@@ -40,7 +40,20 @@ function detail(req, res) {
   }));
 }
 
+function textValue(req, res) {
+  res.send(Mock.mock({
+    Code: 200,
+    Data: [
+      {"text":"集团","value":"1"},
+      {"text":"子公司","value":"2"},
+      {"text":"门店","value":"3"},
+      {"text":"部门","value":"4"}
+    ],
+  }));
+}
+
 module.exports = {
   list,
-  detail
+  detail,
+  textValue
 }

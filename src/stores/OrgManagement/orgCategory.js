@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx';
-import { insert, update, remove, queryList, queryDetail } from '../services/orgCategory';
+import { insert, update, remove, queryList, queryDetail } from '@/services/OrgManagement/orgCategory';
 
 class OrgCategoryStore {
 

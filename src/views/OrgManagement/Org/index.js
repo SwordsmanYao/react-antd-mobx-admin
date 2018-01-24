@@ -3,15 +3,15 @@ import { inject, observer } from 'mobx-react';
 import { Layout, Button, Table, Divider, Popconfirm } from 'antd';
 
 import DisplayTree from '@/components/DisplayTree';
-import MenuForm from './form';
+import OrgForm from './form';
 import styles from './index.less';
 
 
 const { Sider, Content } = Layout;
 
-@inject('menu')
+@inject('org')
 @observer
-export default class Menu extends Component {
+export default class Org extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,26 +28,26 @@ export default class Menu extends Component {
   }
 
   componentWillMount() {
-    const { menu } = this.props;
+    const { org } = this.props;
 
-    menu.fetchTree();
-    menu.fetchList({
-      ParentID: menu.selectedKeys[0],
-      PageSize: menu.pagination.pageSize,
-      CurrentPage: menu.pagination.current,
+    org.fetchTree();
+    org.fetchList({
+      ParentID: org.selectedKeys[0],
+      PageSize: org.pagination.pageSize,
+      CurrentPage: org.pagination.current,
     });
   }
 
   // 点击树节点时触发
   onSelect = (selectedKeys) => {
     console.log('selected', selectedKeys);
-    const { menu } = this.props;
+    const { org } = this.props;
 
-    menu.setData({
+    org.setData({
       selectedKeys: selectedKeys,
     });
 
-    menu.fetchList({
+    org.fetchList({
       ParentID: selectedKeys[0],
     });
   }
@@ -63,17 +63,17 @@ export default class Menu extends Component {
 
   // 新建
   handleNew = () => {
-    const { menu } = this.props;
-    menu.clearCurrentNode();
+    const { org } = this.props;
+    org.clearCurrentNode();
     this.setModalVisible(true);
   }
 
   // 修改
   handleEdit = (record) => {
-    const { menu } = this.props;
+    const { org } = this.props;
     console.log('record' ,record);
 
-    menu.fetchDetail({
+    org.fetchDetail({
       UniqueID: record.UniqueID,
     }).then(() => {
       this.setModalVisible(true);
@@ -83,9 +83,9 @@ export default class Menu extends Component {
   }
   // 删除
   handleRemove = (record) => {
-    const { menu } = this.props;
+    const { org } = this.props;
 
-    menu.remove({
+    org.remove({
       UniqueID: record.UniqueID,
     });
   }
@@ -97,17 +97,13 @@ export default class Menu extends Component {
   }
 
   render() {
-    const { menu } = this.props;
+    const { org } = this.props;
     const { modalVisible } = this.state;
     const { setModalVisible } = this;
     const columns = [{
       title: '名称',
-      dataIndex: 'Name',
+      dataIndex: 'FullName',
       key: 'Name',
-    }, {
-      title: '路径',
-      dataIndex: 'Path',
-      key: 'Path',
     }, {
       title: '排序',
       dataIndex: 'SortCode',
@@ -151,16 +147,16 @@ export default class Menu extends Component {
       <Layout className={styles.layout}>
         <Sider width={230} style={{ background: '#fff' }}>
           {
-            menu.treeList && menu.treeList.length > 0 &&
+            org.treeList && org.treeList.length > 0 &&
               <DisplayTree
                 treeList={[{
                   id: '0',
-                  name: '菜单管理',
-                  children: menu.treeList.slice(),
+                  name: '组织机构',
+                  children: org.treeList.slice(),
                 }]}
                 defaultExpandedKeys={['0']}
                 onSelect={this.onSelect}
-                selectedKeys={menu.selectedKeys.slice()}
+                selectedKeys={org.selectedKeys.slice()}
                 onExpand={this.onExpand}
               />
           }
@@ -168,17 +164,17 @@ export default class Menu extends Component {
         <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
           <div className={styles.toolbar}>
             <Button onClick={this.handleNew}>新建</Button>
-            <MenuForm
-              menu={menu}
+            <OrgForm
+              org={org}
               modalVisible={modalVisible}
               setModalVisible={setModalVisible}
             />
           </div>
           <Table
             bordered
-            loading={menu.loading}
-            pagination={menu.pagination}
-            dataSource={menu.list.slice()}
+            loading={org.loading}
+            pagination={org.pagination}
+            dataSource={org.list.slice()}
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}

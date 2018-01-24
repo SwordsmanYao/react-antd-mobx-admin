@@ -1,8 +1,9 @@
 var express = require('express');
 var demo = require('./demo');
 var user = require('./user');
-var menu = require('./menu');
-var orgCategory = require('./orgCategory');
+var menu = require('./SystemManagement/menu');
+var orgCategory = require('./OrgManagement/orgCategory');
+var org = require('./OrgManagement/org');
 
 var app = express();
 
@@ -26,6 +27,10 @@ app.get('/SysManagement/Menu/list',menu.list);
 app.get('/SysManagement/Menu/detail',menu.detail);
 app.get('/OrgManagement/OrgCategory/list',orgCategory.list);
 app.get('/OrgManagement/OrgCategory/detail',orgCategory.detail);
+app.get('/OrgManagement/OrgCategory/TextValue',orgCategory.textValue);
+app.get('/OrgManagement/Org/tree',org.tree);
+app.get('/OrgManagement/Org/list',org.list);
+app.get('/OrgManagement/Org/detail',org.detail);
 
 
 

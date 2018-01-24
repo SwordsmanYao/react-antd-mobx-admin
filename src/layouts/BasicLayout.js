@@ -109,26 +109,32 @@ class BasicLayout extends Component {
         <DevTools/>
         {
           // 在没跳转到子路由之前不渲染菜单栏，避免没有 menuID 引发错误
-          location.pathname !== `${match.url}` && <SiderMenu global={global} />
+          location.pathname !== `${match.url}` && 
+          <SiderMenu global={global} />
         }
         <Layout>
           <BasicHeader global={global} user={user} />
-          <Content className={styles.content}>
-            <Switch>
-              {
-                basicRouter.map(item => (
-                  <Route path={`${match.url}/${item.path}`} key={item.path} exact={item.exact} component={ item.component } />
-                ))
-              }
-              {
-                firstShow &&
-                <Redirect
-                  from={`${match.url}`}
-                  to={firstShow.pathname}
-                />
-              }
-            </Switch>
-          </Content>
+          {
+            // 有 MenuID 再渲染 content 部分，避免请求时没有 MenuID
+            global.selectedKeys && global.selectedKeys.length > 0 &&
+            <Content className={styles.content}>
+              <Switch>
+                {
+                  basicRouter.map(item => (
+                    <Route path={`${match.url}/${item.path}`} key={item.path} exact={item.exact} component={ item.component } />
+                  ))
+                }
+                {
+                  firstShow &&
+                  <Redirect
+                    from={`${match.url}`}
+                    to={firstShow.pathname}
+                  />
+                }
+              </Switch>
+            </Content>
+          }
+          
         </Layout>
       </Layout>
     );

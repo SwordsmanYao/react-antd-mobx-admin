@@ -144,6 +144,12 @@ export default class OrgCategory extends Component {
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}
+            locale={{
+              filterTitle: '筛选',
+              filterConfirm: '确定',
+              filterReset: '重置',
+              emptyText: '暂无数据',
+            }}
           />
         </Content>
       </Layout>

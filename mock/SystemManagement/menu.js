@@ -7,14 +7,14 @@ function tree(req, res) {
     Code: 200,
     Data: [
       {
-        id: 245345,
+        id: 1,
         name: '系统管理',
         icon: 'dashboard',
         path: 'system-management',
         hasChildren: true,
         children: [
           {
-            id: 131245,
+            id: 11,
             name: '菜单管理',
             path: 'menu',
             hasChildren: false,
@@ -22,22 +22,28 @@ function tree(req, res) {
         ],
       },
       {
-        id: 745,
+        id: 2,
         name: '组织管理',
         icon: 'dashboard',
         path: 'org-management',
         hasChildren: true,
         children: [
           {
-            id: 5547,
-            name: '组织分类管理',
+            id: 21,
+            name: '机构类别',
             path: 'org-category',
+            hasChildren: false,
+          },
+          {
+            id: 22,
+            name: '机构管理',
+            path: 'org',
             hasChildren: false,
           },
         ],
       },
       {
-        id: 234234,
+        id: 3,
         name: 'demo',
         icon: 'dashboard',
         path: 'demo',

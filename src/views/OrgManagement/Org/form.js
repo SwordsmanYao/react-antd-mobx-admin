@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Form, Row, Col, Input, Modal } from 'antd';
+import { Form, Row, Col, Input, Select, Modal } from 'antd';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
+const { Option } = Select;
 
 @Form.create({
   onFieldsChange(props, changedFields) {
-    const { orgCategory } = props;
+    const { org } = props;
     console.log('onFieldsChange', changedFields);
-
-    orgCategory.setCurrentNodeField(changedFields);
+    org.setCurrentNodeField(changedFields);
   },
   mapPropsToFields(props) {
-    const { currentNode }  = props.orgCategory;
+    const { currentNode }  = props.org;
     console.log('mapPropsToFields', currentNode);
 
     let fields = {};
@@ -25,9 +25,12 @@ const { TextArea } = Input;
 
     return fields;
   },
+  onValuesChange(_, values) {
+    console.log(values);
+  },
 })
 @observer
-export default class MenuForm extends Component {
+export default class OrgForm extends Component {
   
   constructor(props) {
     super(props);
@@ -35,9 +38,14 @@ export default class MenuForm extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    const { org } = this.props;
+    org.fetchCategoryTextValue();
+  }
+
   // 表单提交
   handleSubmit = (e) => {
-    const { form, orgCategory, setModalVisible } = this.props;
+    const { form, org, setModalVisible } = this.props;
 
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
@@ -45,12 +53,13 @@ export default class MenuForm extends Component {
         console.log('values', values);
         const data = {
           ...values,
+          ParentID: org.selectedKeys[0],
         };
-        if (orgCategory.currentNode.UniqueID && orgCategory.currentNode.UniqueID.value) {
-          data.UniqueID = orgCategory.currentNode.UniqueID.value;
+        if (org.currentNode.UniqueID && org.currentNode.UniqueID.value) {
+          data.UniqueID = org.currentNode.UniqueID.value;
         }
 
-        orgCategory.commit(data);
+        org.commit(data);
         setModalVisible(false);        
       }
     });
@@ -61,7 +70,7 @@ export default class MenuForm extends Component {
 
     const { getFieldDecorator } = this.props.form;
 
-    const { modalVisible, setModalVisible } = this.props;
+    const { modalVisible, setModalVisible, org } = this.props;
 
     const formItemLayout = {
       labelCol: {
@@ -76,7 +85,7 @@ export default class MenuForm extends Component {
 
     return (
       <Modal
-        title="机构类别"
+        title="机构管理"
         okText="确定"
         cancelText="取消"
         width="750px"
@@ -91,7 +100,7 @@ export default class MenuForm extends Component {
                 {...formItemLayout}
                 label="名称"
               >
-                {getFieldDecorator('Name', {
+                {getFieldDecorator('FullName', {
                   rules: [{
                     required: true, message: '请输入名称',
                   }],
@@ -111,6 +120,26 @@ export default class MenuForm extends Component {
                   }],
                 })(
                   <Input />,
+                )}
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <FormItem
+                {...formItemLayout}
+                label="机构类别"
+              >
+                {getFieldDecorator('CategoryID', {
+                  rules: [{
+                    required: true, message: '请选择机构类别',
+                  }],
+                })(
+                  <Select>
+                    {
+                      org.categoryTextValue.map(item => (
+                        <Option value={parseInt(item.value, 10)} key={item.value}>{item.text}</Option>
+                      ))
+                    }
+                  </Select>,
                 )}
               </FormItem>
             </Col>

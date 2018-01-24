@@ -1,7 +1,7 @@
 import { observable, action } from 'mobx';
-import { queryMenuTree, queryList, insert, remove, queryDetail, update } from '../services/menu';
+import { queryCategoryTextValue, queryTree, queryList, insert, remove, queryDetail, update } from '@/services/OrgManagement/org';
 
-class MenuStore {
+class OrgStore {
   // 树结构数据
   @observable treeList = []; 
   // 当前选中的树节点id
@@ -26,6 +26,8 @@ class MenuStore {
       value: 1,
     },
   };
+
+  @observable categoryTextValue = [];
 
   /**
    * 含有接口请求等异步操作的 action
@@ -85,7 +87,10 @@ class MenuStore {
       const data = {};
       // 将数据格式化，以适应组件
       Object.keys(response.Data).forEach((key) => {
-        data[key] = { value: response.Data[key] };
+        data[key] = {
+          name: key, 
+          value: response.Data[key],
+        };
       });
       // this.currentNode = data;
       this.setData({
@@ -97,7 +102,7 @@ class MenuStore {
   // 查询树的数据
   @action
   async fetchTree() {
-    const response = await queryMenuTree();
+    const response = await queryTree();
     if (response.Code === 200) {
       this.setData({
         treeList: response.Data
@@ -122,10 +127,21 @@ class MenuStore {
         pagination: {...data,total: response.TotalCount},
       });
     }
-
+    
     this.setData({
       loading: false,
     });
+  }
+
+  @action
+  async fetchCategoryTextValue() {
+    const response = await queryCategoryTextValue();
+
+    if(response.Code === 200) {
+      this.setData({
+        categoryTextValue: response.Data,
+      });
+    }
   }
 
   /**
@@ -151,4 +167,4 @@ class MenuStore {
   }
 }
 
-export default new MenuStore();
+export default new OrgStore();

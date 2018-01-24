@@ -1,18 +1,24 @@
-import request from '../utils/request';
+import request from '@/utils/request';
 
 const api = window.PUBLIC_ENV_CONFIG.API;
 
-// 菜单树
-export function queryMenuTree() {
+export function queryCategoryTextValue() {
   return request({
-    url: `${api}/SysManagement/Menu/tree`,
+    url: `${api}/OrgManagement/OrgCategory/TextValue`,
+    method: 'get',
+  });
+}
+
+export function queryTree() {
+  return request({
+    url: `${api}/OrgManagement/Org/tree`,
     method: 'get',
   });
 }
 
 export function insert(params) {
   return request({
-    url: `${api}/SysManagement/Menu/Insert`,
+    url: `${api}/OrgManagement/Org/Insert`,
     method: 'post',
     data: params,
   });
@@ -20,7 +26,7 @@ export function insert(params) {
 
 export function update(params) {
   return request({
-    url: `${api}/SysManagement/Menu/Update`,
+    url: `${api}/OrgManagement/Org/Update`,
     method: 'post',
     data: params,
   });
@@ -28,7 +34,7 @@ export function update(params) {
 
 export function remove(params) {
   return request({
-    url: `${api}/SysManagement/Menu/Delete`,
+    url: `${api}/OrgManagement/Org/Delete`,
     method: 'post',
     data: params,
   });
@@ -36,14 +42,14 @@ export function remove(params) {
 
 export function queryList(params) {
   return request({
-    url: `${api}/SysManagement/Menu/List`,
+    url: `${api}/OrgManagement/Org/List`,
     params,
   });
 }
 
 export function queryDetail(params) {
   return request({
-    url: `${api}/SysManagement/Menu/Detail`,
+    url: `${api}/OrgManagement/Org/Detail`,
     params,
   });
 }
