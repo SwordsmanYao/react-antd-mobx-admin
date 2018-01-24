@@ -19,7 +19,6 @@ export default class Menu extends Component {
     };
     
     this.onSelect = this.onSelect.bind(this);
-    this.onExpand = this.onExpand.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
     this.handleNew = this.handleNew.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
@@ -43,19 +42,12 @@ export default class Menu extends Component {
     console.log('selected', selectedKeys);
     const { menu } = this.props;
 
-    menu.setSelectedKeys(selectedKeys);
+    menu.setData({
+      selectedKeys,
+    });
 
     menu.fetchList({
       ParentID: selectedKeys[0],
-    });
-  }
-
-  onExpand = (expandedKeys) => {
-    console.log('expandedKeys', expandedKeys);
-    const { menu } = this.props;
-
-    menu.setData({
-      expandedKeys: expandedKeys,
     });
   }
 
@@ -161,16 +153,18 @@ export default class Menu extends Component {
                   name: '菜单管理',
                   children: menu.treeList.slice(),
                 }]}
+                defaultExpandedKeys={[0]}
                 onSelect={this.onSelect}
                 selectedKeys={menu.selectedKeys.slice()}
-                onExpand={this.onExpand}
-                expandedKeys={menu.expandedKeys.slice()}
               />
           }
         </Sider>
         <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
           <div className={styles.toolbar}>
-            <Button onClick={this.handleNew}>新建</Button>
+            <Button 
+              onClick={this.handleNew}
+              loading={menu.newBtnLoading}
+            >新建</Button>
             <MenuForm
               menu={menu}
               modalVisible={modalVisible}

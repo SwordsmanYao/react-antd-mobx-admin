@@ -19,7 +19,6 @@ export default class Org extends Component {
     };
     
     this.onSelect = this.onSelect.bind(this);
-    this.onExpand = this.onExpand.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
     this.handleNew = this.handleNew.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
@@ -50,10 +49,6 @@ export default class Org extends Component {
     org.fetchList({
       ParentID: selectedKeys[0],
     });
-  }
-
-  onExpand = (expandedKeys) => {
-    console.log('expandedKeys', expandedKeys);
   }
 
   // 设置模态框显示/隐藏
@@ -157,13 +152,15 @@ export default class Org extends Component {
                 defaultExpandedKeys={['0']}
                 onSelect={this.onSelect}
                 selectedKeys={org.selectedKeys.slice()}
-                onExpand={this.onExpand}
               />
           }
         </Sider>
         <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
           <div className={styles.toolbar}>
-            <Button onClick={this.handleNew}>新建</Button>
+            <Button 
+              onClick={this.handleNew} 
+              loading={org.newBtnLoading}
+            >新建</Button>
             <OrgForm
               org={org}
               modalVisible={modalVisible}

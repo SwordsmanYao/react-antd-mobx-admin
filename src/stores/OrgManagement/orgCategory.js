@@ -18,6 +18,8 @@ class OrgCategoryStore {
   @observable currentNode = {};
   // currentNode 的默认值，用于 clear 时的数据
   defaultNode = {};
+  // 新建按钮的是否显示加载中
+  @observable newBtnLoading = false;
 
    /**
    * 含有接口请求等异步操作的 action
@@ -26,7 +28,7 @@ class OrgCategoryStore {
   async commit(data) {
 
     this.setData({
-      loading: true
+      newBtnLoading: true,
     });
 
     let response = null;
@@ -38,29 +40,21 @@ class OrgCategoryStore {
       response = await insert(data);
     }
 
+    this.setData({
+      newBtnLoading: false,
+    });
+
     if(response.Code === 200) {
       this.fetchList();
     }
-
-    this.setData({
-      loading: false
-    });
   }
 
   @action
   async remove(data) {
-    this.setData({
-      loading: true
-    });
-
     const response = await remove(data);
     if(response.Code === 200) {
       this.fetchList();
     }
-
-    this.setData({
-      loading: false
-    });
   }
 
   @action

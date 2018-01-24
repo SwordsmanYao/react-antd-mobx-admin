@@ -27,6 +27,8 @@ class MenuStore {
       value: 1,
     },
   };
+  // 新建按钮的是否显示加载中
+  @observable newBtnLoading = false;
 
   /**
    * 含有接口请求等异步操作的 action
@@ -35,7 +37,7 @@ class MenuStore {
   async commit(data) {
 
     this.setData({
-      loading: true
+      newBtnLoading: true,
     });
 
     let response = null;
@@ -47,22 +49,19 @@ class MenuStore {
       response = await insert(data);
     }
 
+    this.setData({
+      newBtnLoading: false,
+    });
+
     if(response.Code === 200) {
       this.fetchList({ ParentID: data.ParentID });
 
       this.fetchTree();
     }
-
-    this.setData({
-      loading: false
-    });
   }
 
   @action
   async remove(data) {
-    this.setData({
-      loading: true
-    });
 
     const response = await remove(data);
     if(response.Code === 200) {
@@ -70,10 +69,6 @@ class MenuStore {
 
       this.fetchTree();
     }
-
-    this.setData({
-      loading: false
-    });
   }
 
   @action
@@ -142,14 +137,6 @@ class MenuStore {
       ...this.currentNode,
       ...data,
     }
-  }
-  @action
-  setSelectedKeys(data) {
-    if(this.expandedKeys.indexOf(data[0]) === -1) {
-      this.expandedKeys = [...this.expandedKeys, ...data];
-    }
-
-    this.selectedKeys = data;
   }
 
   @action

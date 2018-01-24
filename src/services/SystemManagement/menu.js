@@ -6,7 +6,6 @@ const api = window.PUBLIC_ENV_CONFIG.API;
 export function queryTree() {
   return request({
     url: `${api}/SysManagement/Menu/tree`,
-    method: 'get',
   });
 }
 

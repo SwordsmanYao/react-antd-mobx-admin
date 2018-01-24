@@ -21,12 +21,10 @@ class OrgStore {
   // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
   @observable currentNode = {};
   // currentNode 的默认值，用于 clear 时的数据
-  defaultNode = {
-    IsDisplayed: {
-      value: 1,
-    },
-  };
-
+  defaultNode = {};
+  // 新建按钮的是否显示加载中
+  @observable newBtnLoading = false;
+  // 组织类别下拉列表数据
   @observable categoryTextValue = [];
 
   /**
@@ -36,7 +34,7 @@ class OrgStore {
   async commit(data) {
 
     this.setData({
-      loading: true
+      newBtnLoading: true,
     });
 
     let response = null;
@@ -48,33 +46,26 @@ class OrgStore {
       response = await insert(data);
     }
 
+    this.setData({
+      newBtnLoading: false,
+    });
+
     if(response.Code === 200) {
+
       this.fetchList({ ParentID: data.ParentID });
 
       this.fetchTree();
     }
-
-    this.setData({
-      loading: false
-    });
   }
 
   @action
   async remove(data) {
-    this.setData({
-      loading: true
-    });
-
     const response = await remove(data);
     if(response.Code === 200) {
       this.fetchList({ ParentID: data.ParentID });
 
       this.fetchTree();
     }
-
-    this.setData({
-      loading: false
-    });
   }
 
   @action

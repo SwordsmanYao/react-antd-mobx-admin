@@ -129,7 +129,10 @@ export default class OrgCategory extends Component {
       <Layout className={styles.layout}>
         <Content style={{ background: '#fff', padding: 30 }}>
           <div className={styles.toolbar}>
-            <Button onClick={this.handleNew}>新建</Button>
+            <Button 
+              onClick={this.handleNew}
+              loading={orgCategory.newBtnLoading}
+            >新建</Button>
             <OrgCategoryForm
               orgCategory={orgCategory}
               modalVisible={modalVisible}

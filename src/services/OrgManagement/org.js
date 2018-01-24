@@ -5,14 +5,12 @@ const api = window.PUBLIC_ENV_CONFIG.API;
 export function queryCategoryTextValue() {
   return request({
     url: `${api}/OrgManagement/OrgCategory/TextValue`,
-    method: 'get',
   });
 }
 
 export function queryTree() {
   return request({
     url: `${api}/OrgManagement/Org/tree`,
-    method: 'get',
   });
 }
 

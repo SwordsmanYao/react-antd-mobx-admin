@@ -8,7 +8,7 @@ import asyncComponent from '../components/AsyncComponent';
     path: 'system-management/menu',
     /* webpackChunkName 指定打包后模块文件名称，如果省略，webpack 将使用数字作为默认名称 */
     component: asyncComponent(() => import(/* webpackChunkName: "menu" */ '../views/SystemManagement/Menu')),
-    /* 严格匹配 */
+    /* 是否严格匹配 */
     exact: true,
   },
   {
