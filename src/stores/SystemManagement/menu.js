@@ -6,6 +6,7 @@ class MenuStore {
   @observable treeList = []; 
   // 当前选中的树节点id
   @observable selectedKeys = ['0']; 
+  @observable expandedKeys = ['0'];
 
   // 列表数据
   @observable list = []; 
@@ -141,6 +142,14 @@ class MenuStore {
       ...this.currentNode,
       ...data,
     }
+  }
+  @action
+  setSelectedKeys(data) {
+    if(this.expandedKeys.indexOf(data[0]) === -1) {
+      this.expandedKeys = [...this.expandedKeys, ...data];
+    }
+
+    this.selectedKeys = data;
   }
 
   @action

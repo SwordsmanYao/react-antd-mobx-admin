@@ -43,9 +43,7 @@ export default class Menu extends Component {
     console.log('selected', selectedKeys);
     const { menu } = this.props;
 
-    menu.setData({
-      selectedKeys: selectedKeys,
-    });
+    menu.setSelectedKeys(selectedKeys);
 
     menu.fetchList({
       ParentID: selectedKeys[0],
@@ -54,6 +52,11 @@ export default class Menu extends Component {
 
   onExpand = (expandedKeys) => {
     console.log('expandedKeys', expandedKeys);
+    const { menu } = this.props;
+
+    menu.setData({
+      expandedKeys: expandedKeys,
+    });
   }
 
   // 设置模态框显示/隐藏
@@ -158,10 +161,10 @@ export default class Menu extends Component {
                   name: '菜单管理',
                   children: menu.treeList.slice(),
                 }]}
-                defaultExpandedKeys={['0']}
                 onSelect={this.onSelect}
                 selectedKeys={menu.selectedKeys.slice()}
                 onExpand={this.onExpand}
+                expandedKeys={menu.expandedKeys.slice()}
               />
           }
         </Sider>
