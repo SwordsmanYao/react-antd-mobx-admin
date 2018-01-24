@@ -1,13 +1,12 @@
-import global from './global';
-import demo from './demo';
-import menu from './menu';
-import user from './user';
-import orgCategory from './orgCategory';
 
-export default {
-  global,
-  demo,
-  menu,
-  user,
-  orgCategory,
-}
+const context = require.context('./', false, /\.js$/);
+const keys = context.keys().filter(item => item !== './index.js');
+
+let stores = {};
+
+keys.forEach(key => {
+  const name = key.replace('./' , '').replace('.js', '');
+  stores[name] = context(key).default;
+});
+
+export default stores;
