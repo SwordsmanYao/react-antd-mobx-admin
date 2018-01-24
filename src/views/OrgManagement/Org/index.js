@@ -9,7 +9,7 @@ import styles from './index.less';
 
 const { Sider, Content } = Layout;
 
-@inject('Org')
+@inject('org')
 @observer
 export default class Org extends Component {
   constructor(props) {
