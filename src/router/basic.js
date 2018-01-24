@@ -7,23 +7,23 @@ import asyncComponent from '../components/AsyncComponent';
   {
     path: 'system-management/menu',
     /* webpackChunkName 指定打包后模块文件名称，如果省略，webpack 将使用数字作为默认名称 */
-    component: asyncComponent(() => import(/* webpackChunkName: "SystemManagementMenu" */ '../views/SystemManagement/Menu')),
+    component: asyncComponent(() => import(/* webpackChunkName: "menu" */ '../views/SystemManagement/Menu')),
     /* 严格匹配 */
     exact: true,
   },
   {
     path: 'org-management/org-category',
-    component: asyncComponent(() => import(/* webpackChunkName: "OrgCategory" */ '../views/OrgManagement/OrgCategory')),
+    component: asyncComponent(() => import(/* webpackChunkName: "orgCategory" */ '../views/OrgManagement/OrgCategory')),
     exact: true,
   },
   {
     path: 'org-management/org',
-    component: asyncComponent(() => import(/* webpackChunkName: "Org" */ '../views/OrgManagement/Org')),
+    component: asyncComponent(() => import(/* webpackChunkName: "org" */ '../views/OrgManagement/Org')),
     exact: true,
   },
   {
     path: 'demo',
-    component: asyncComponent(() => import(/* webpackChunkName: "Demo" */ '../views/Demo')),
+    component: asyncComponent(() => import(/* webpackChunkName: "demo" */ '../views/Demo')),
     exact: true,
   },
 ];
