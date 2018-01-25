@@ -58,8 +58,6 @@ export default class Org extends Component {
 
   // 新建
   handleNew = () => {
-    const { org } = this.props;
-    org.clearCurrentNode();
     this.setModalVisible(true);
   }
 

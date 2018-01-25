@@ -36,6 +36,7 @@ export default class OrgForm extends Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.afterClose = this.afterClose.bind(this);
   }
 
   componentDidMount() {
@@ -63,6 +64,11 @@ export default class OrgForm extends Component {
         setModalVisible(false);        
       }
     });
+  }
+
+  afterClose = () => {
+    const { org } = this.props;
+    org.clearCurrentNode();
   }
   
 
@@ -92,6 +98,7 @@ export default class OrgForm extends Component {
         visible={modalVisible}
         onOk={this.handleSubmit}
         onCancel={() => setModalVisible(false)}
+        afterClose={this.afterClose}
       >
         <Form>
           <Row gutter={24} >

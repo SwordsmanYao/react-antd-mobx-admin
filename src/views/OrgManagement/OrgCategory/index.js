@@ -41,8 +41,6 @@ export default class OrgCategory extends Component {
 
   // 新建
   handleNew = () => {
-    const { orgCategory } = this.props;
-    orgCategory.clearCurrentNode();
     this.setModalVisible(true);
   }
 

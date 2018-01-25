@@ -1,4 +1,6 @@
 import { observable, action } from 'mobx';
+import { message } from 'antd';
+
 import { insert, update, remove, queryList, queryDetail } from '@/services/OrgManagement/orgCategory';
 
 class OrgCategoryStore {
@@ -45,6 +47,9 @@ class OrgCategoryStore {
     });
 
     if(response.Code === 200) {
+
+      message.success('提交成功');
+
       this.fetchList();
     }
   }
@@ -53,13 +58,15 @@ class OrgCategoryStore {
   async remove(data) {
     const response = await remove(data);
     if(response.Code === 200) {
+
+      message.success('删除成功');
+
       this.fetchList();
     }
   }
 
   @action
   async fetchDetail(data) {
-    this.clearCurrentNode();
 
     const response = await queryDetail(data);
 

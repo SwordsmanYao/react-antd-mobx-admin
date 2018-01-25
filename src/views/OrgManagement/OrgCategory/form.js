@@ -33,6 +33,7 @@ export default class MenuForm extends Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.afterClose = this.afterClose.bind(this);
   }
 
   // 表单提交
@@ -54,6 +55,11 @@ export default class MenuForm extends Component {
         setModalVisible(false);        
       }
     });
+  }
+
+  afterClose = () => {
+    const { orgCategory } = this.props;
+    orgCategory.clearCurrentNode();
   }
   
 
@@ -83,6 +89,7 @@ export default class MenuForm extends Component {
         visible={modalVisible}
         onOk={this.handleSubmit}
         onCancel={() => setModalVisible(false)}
+        afterClose={this.afterClose}
       >
         <Form>
           <Row gutter={24} >

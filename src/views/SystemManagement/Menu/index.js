@@ -58,8 +58,6 @@ export default class Menu extends Component {
 
   // 新建
   handleNew = () => {
-    const { menu } = this.props;
-    menu.clearCurrentNode();
     this.setModalVisible(true);
   }
 
@@ -153,7 +151,7 @@ export default class Menu extends Component {
                   name: '菜单管理',
                   children: menu.treeList.slice(),
                 }]}
-                defaultExpandedKeys={[0]}
+                defaultExpandedKeys={['0']}
                 onSelect={this.onSelect}
                 selectedKeys={menu.selectedKeys.slice()}
               />
