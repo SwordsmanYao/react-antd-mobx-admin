@@ -19,6 +19,26 @@ function tree(req, res) {
             path: 'menu',
             hasChildren: false,
           },
+          {
+            id: 12,
+            name: '系统日志',
+            path: 'log',
+            hasChildren: true,
+            children: [
+              {
+                id: 121,
+                name: '操作日志',
+                path: 'operation-log',
+                hasChildren: false,
+              },
+              {
+                id: 122,
+                name: '异常日志',
+                path: 'exception-log',
+                hasChildren: false,
+              },
+            ]
+          },
         ],
       },
       {

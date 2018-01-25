@@ -22,6 +22,16 @@ import asyncComponent from '../components/AsyncComponent';
     exact: true,
   },
   {
+    path: 'system-management/log/operation-log',
+    component: asyncComponent(() => import(/* webpackChunkName: "operationLog" */ '../views/SystemManagement/OperationLog')),
+    exact: true,
+  },
+  {
+    path: 'system-management/log/exception-log',
+    component: asyncComponent(() => import(/* webpackChunkName: "exceptionLog" */ '../views/SystemManagement/ExceptionLog')),
+    exact: true,
+  },
+  {
     path: 'demo',
     component: asyncComponent(() => import(/* webpackChunkName: "demo" */ '../views/Demo')),
     exact: true,
