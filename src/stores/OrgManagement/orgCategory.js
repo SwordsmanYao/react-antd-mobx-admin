@@ -16,12 +16,14 @@ class OrgCategoryStore {
     total: 20, // 总数,由接口提供
   };
 
-  // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
-  @observable currentNode = {};
   // currentNode 的默认值，用于 clear 时的数据
   defaultNode = {};
+  // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
+  @observable currentNode = this.defaultNode;
   // 新建按钮的是否显示加载中
   @observable newBtnLoading = false;
+  // 后端返回的错误校验信息
+  @observable error = null;
 
    /**
    * 含有接口请求等异步操作的 action
@@ -31,6 +33,7 @@ class OrgCategoryStore {
 
     this.setData({
       newBtnLoading: true,
+      error: null,
     });
 
     let response = null;
@@ -51,6 +54,10 @@ class OrgCategoryStore {
       message.success('提交成功');
 
       this.fetchList();
+    } else if(response.Code === 101) {
+      this.setData({
+        error: response.Error,
+      });
     }
   }
 
@@ -76,7 +83,7 @@ class OrgCategoryStore {
       Object.keys(response.Data).forEach((key) => {
         data[key] = { value: response.Data[key] };
       });
-      // this.currentNode = data;
+
       this.setData({
         currentNode: {...data},
       });
@@ -112,6 +119,7 @@ class OrgCategoryStore {
   @action
   clearCurrentNode() {
     this.currentNode = this.defaultNode;
+    this.error = null;
   }
   @action
   setCurrentNodeField(data) {

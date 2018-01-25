@@ -51,8 +51,25 @@ export default class MenuForm extends Component {
           data.UniqueID = orgCategory.currentNode.UniqueID.value;
         }
 
-        orgCategory.commit(data);
-        setModalVisible(false);        
+        orgCategory.commit(data).then(() => {
+          // 设置服务器返回的错误校验信息
+          if(orgCategory.error) {
+
+            const { ModelState } = orgCategory.error;
+
+            let fields = {};
+            Object.keys(ModelState).forEach(key => {
+              fields[key] = {
+                value: values[key],
+                errors: [new Error(ModelState[key])],
+              }
+            });
+
+            form.setFields(fields);
+          } else {
+            setModalVisible(false);
+          }
+        });      
       }
     });
   }
@@ -114,7 +131,7 @@ export default class MenuForm extends Component {
               >
                 {getFieldDecorator('SortCode', {
                   rules: [{
-                    required: true, message: '请输入数字格式排序代码', pattern: /^[0-9]*$/,
+                    message: '请输入数字格式排序代码', pattern: /^[0-9]*$/,
                   }],
                 })(
                   <Input />,
