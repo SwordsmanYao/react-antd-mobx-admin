@@ -12,6 +12,8 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
+const fs = require('fs');
+const lessToJs = require('less-vars-to-js');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -49,6 +51,10 @@ const extractTextPluginOptions = shouldUseRelativeAssetPaths
   function resolve (dir) {
     return path.join(__dirname, '..', dir)
   }
+
+  // 自定义主题
+const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname,'../theme/theme.less'),'utf8'));
+
 
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
@@ -216,6 +222,9 @@ module.exports = {
                     },
                     {
                       loader: require.resolve('less-loader'), // compiles Less to CSS
+                      options: {
+                        modifyVars: themeVariables, // 自定义主题
+                      },
                     },
                   ],
                 },
@@ -268,6 +277,9 @@ module.exports = {
                     },
                     {
                       loader: require.resolve('less-loader'), // compiles Less to CSS
+                      options: {
+                        modifyVars: themeVariables, // 自定义主题
+                      },
                     },
                   ],
                 },

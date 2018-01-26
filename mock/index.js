@@ -4,6 +4,7 @@ var user = require('./user');
 var menu = require('./SystemManagement/menu');
 var orgCategory = require('./OrgManagement/orgCategory');
 var org = require('./OrgManagement/org');
+var operationLog = require('./SystemManagement/operationLog');
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.get('/OrgManagement/OrgCategory/TextValue',orgCategory.textValue);
 app.get('/OrgManagement/Org/tree',org.tree);
 app.get('/OrgManagement/Org/list',org.list);
 app.get('/OrgManagement/Org/detail',org.detail);
+app.get('/SysManagement/OperationLog/List',operationLog.list);
 
 
 

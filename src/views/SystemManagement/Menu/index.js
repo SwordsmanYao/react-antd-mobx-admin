@@ -37,6 +37,12 @@ export default class Menu extends Component {
     });
   }
 
+  handleTableChange = (pagination, filters, sorter) => {
+    console.log('pagination', pagination);
+    console.log('filters', filters);
+    console.log('sorter', sorter);
+  }
+
   // 点击树节点时触发
   onSelect = (selectedKeys) => {
     console.log('selected', selectedKeys);

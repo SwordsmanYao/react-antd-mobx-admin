@@ -1,79 +1,94 @@
 import React, { Component } from 'react';
-// import { inject, observer } from 'mobx-react';
-import { Table } from 'antd';
+import { inject, observer } from 'mobx-react';
+import { Table, Popconfirm } from 'antd';
+import moment from 'moment';
 
-const data = [{
-  key: '1',
-  name: 'John Brown',
-  age: 32,
-  address: 'New York Park',
-}, {
-  key: '2',
-  name: 'Jim Green',
-  age: 40,
-  address: 'London Park',
-},{
-  key: '3',
-  name: 'John Brown',
-  age: 32,
-  address: 'New York Park',
-}, {
-  key: '4',
-  name: 'Jim Green',
-  age: 40,
-  address: 'London Park',
-},{
-  key: '5',
-  name: 'John Brown',
-  age: 32,
-  address: 'New York Park',
-}, {
-  key: '6',
-  name: 'Jim Green',
-  age: 40,
-  address: 'London Park',
-}];
+import styles from './index.less';
 
-// @inject('demo')
-// @observer
+
+@inject('operationLog')
+@observer
 class OperationLog extends Component {
   
+
+  componentWillMount() {
+    const { operationLog } = this.props;
+
+    operationLog.fetchList({
+      PageSize: operationLog.pagination.pageSize,
+      CurrentPage: operationLog.pagination.current,
+    });
+  }
+
+  // 删除
+  handleRemove = (Params) => {
+    const { operationLog } = this.props;
+
+    operationLog.remove({
+      Params,
+    });
+  }
+
   render() {
 
+    const { operationLog } = this.props;
+
     const columns = [
-      { title: '', width: 50, dataIndex: 'key', key:'key', fixed: 'left'},
-      { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
-      { title: 'Age', width: 100, dataIndex: 'age', key: 'age' },
-      { title: 'Column 1', dataIndex: 'address', key: '1' },
-      { title: 'Column 2', dataIndex: 'address', key: '2' },
-      { title: 'Column 3', dataIndex: 'address', key: '3' },
-      { title: 'Column 4', dataIndex: 'address', key: '4' },
-      { title: 'Column 5', dataIndex: 'address', key: '5' },
-      { title: 'Column 6', dataIndex: 'address', key: '6' },
-      { title: 'Column 7', dataIndex: 'address', key: '7' },
-      { title: 'Column 8', dataIndex: 'address', key: '8' },
+      { title: '操作人', dataIndex: 'LM_OperateUser', key: 'LM_OperateUser', width: 100, fixed: 'left'  },
+      { title: '操作时间', dataIndex: 'LM_OperateTime', key: 'LM_OperateTime', width: 160, render: (text, row, index) => { return new moment(text).format('YYYY-MM-DD HH:mm:ss') }},
+      { title: '入口菜单', dataIndex: 'LM_Menu', key: 'LM_Menu', width: 100},
+      { title: '操作类型', dataIndex: 'LM_OperateType', key: 'LM_OperateType', width: 100 },
+      { title: '请求IP', dataIndex: 'LM_IPAddress', key: 'LM_IPAddress', width: 100 },
+      { title: '请求的地址', dataIndex: 'LM_URL', key: 'LM_URL', width: 600 },
+      { title: 'http方法', dataIndex: 'LM_HttpMethod', key: 'LM_HttpMethod', width: 100 },
+      { title: '操作结果', dataIndex: 'LM_Result', key: 'LM_Result', width: 100 },
+      { title: '操作描述', dataIndex: 'LM_Description', key: 'LM_Description', width: 100 },
       {
-        title: 'Action',
+        title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 100,
-        render: () => <a>action</a>,
+        width: 60,
+        render: (text, record) => (
+          <span>
+            <Popconfirm
+              placement="bottom" 
+              title="确认要删除这条记录吗？" 
+              onConfirm={() => { this.handleRemove([record.UniqueID]); }} 
+              okText="是" 
+              cancelText="否"
+            >
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >删除
+              </a>
+            </Popconfirm>
+          </span>
+        ),
       },
     ];
 
     return (
-      <Table
-        columns={columns}
-        dataSource={data}
-        scroll={{ x: 1300, y: 1000 }}
-        size="small"
-        locale={{
-          filterTitle: '筛选',
-          filterConfirm: '确定',
-          filterReset: '重置',
-          emptyText: '暂无数据',
-        }}
-      />
+      <div className={styles.content}>
+        <Table
+          loading={operationLog.loading}
+          pagination={{
+            showSizeChanger: true, 
+            showQuickJumper: true,
+            showTotal: (total, range) => `共 ${total} 条`,
+            ...operationLog.pagination,
+          }}
+          dataSource={operationLog.list.slice()}
+          columns={columns}
+          rowKey="UniqueID"
+          onChange={this.handleTableChange}
+          scroll={{ x: 1600, y: document.body.scrollHeight - 190 }}
+          size="small"
+        />
+      </div>
+      
     );
   }
 }

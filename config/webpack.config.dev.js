@@ -11,6 +11,8 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
+const fs = require('fs');
+const lessToJs = require('less-vars-to-js');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -25,6 +27,9 @@ const env = getClientEnvironment(publicUrl);
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
+
+// 自定义主题
+const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname,'../theme/theme.less'),'utf8'));
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
@@ -197,6 +202,9 @@ module.exports = {
               },
               {
                 loader: require.resolve('less-loader'), // compiles Less to CSS
+                options: {
+                  modifyVars: themeVariables, // 自定义主题
+                },
               },
             ],
           },
@@ -234,6 +242,9 @@ module.exports = {
               },
               {
                 loader: require.resolve('less-loader'), // compiles Less to CSS
+                options: {
+                  modifyVars: themeVariables, // 自定义主题
+                },
               },
             ],
           },
