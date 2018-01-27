@@ -5,6 +5,9 @@ import * as mobx from 'mobx';
 import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import { LocaleProvider } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+
 
 import stores from './stores';
 import routerConfig from "./router";
@@ -12,6 +15,9 @@ import history from './history';
 
 // mobx 启用严格模式，强制所有的状态修改都必须由 action 来完成
 mobx.useStrict(true);
+
+// 全局设置 locale
+moment.locale('zh-cn');
 
 class App extends Component {
 

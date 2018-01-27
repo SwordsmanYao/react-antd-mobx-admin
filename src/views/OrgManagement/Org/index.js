@@ -155,7 +155,8 @@ export default class Org extends Component {
         </Sider>
         <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
           <div className={styles.toolbar}>
-            <Button 
+            <Button
+              icon="plus"
               onClick={this.handleNew} 
               loading={org.newBtnLoading}
             >新建</Button>

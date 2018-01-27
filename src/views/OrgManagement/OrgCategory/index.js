@@ -127,7 +127,8 @@ export default class OrgCategory extends Component {
       <Layout className={styles.layout}>
         <Content style={{ background: '#fff', padding: 30 }}>
           <div className={styles.toolbar}>
-            <Button 
+            <Button
+              icon="plus"
               onClick={this.handleNew}
               loading={orgCategory.newBtnLoading}
             >新建</Button>

@@ -165,7 +165,8 @@ export default class Menu extends Component {
         </Sider>
         <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
           <div className={styles.toolbar}>
-            <Button 
+            <Button
+              icon="plus"
               onClick={this.handleNew}
               loading={menu.newBtnLoading}
             >新建</Button>

@@ -5,9 +5,25 @@
     .ant-table-pagination.ant-pagination {
       float: left !important;
     }
-    .ant-table-thead > tr > th, .ant-table-tbody > tr > td {
-      padding-top: 1px !important;
-      padding-bottom:1px !important;
+    .ant-table-tbody > tr > td {
+      padding-top: 2px !important;
+      padding-bottom:2px !important;
+    }
+    .ant-table-thead > tr > th.ant-table-selection-column, .ant-table-tbody > tr > td.ant-table-selection-column {
+      text-align: center;
+      min-width: 32px;
+      width: 32px;
+    }
   }
+
+  .toolbar {
+    margin-bottom: 12px;
+    > *:not(:last-child) {
+      margin-right: 10px;
+    }
   }
+  .tableAlert {
+    margin-bottom: 12px;
+  }
+  
 }
