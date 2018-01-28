@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Table, Button, Alert } from 'antd';
+import { Table, Alert, Modal } from 'antd';
 import moment from 'moment';
 
 import styles from './index.less';
 import OperationLogSearch from './search';
 
+const { confirm } = Modal;
 
 @inject('operationLog')
 @observer
@@ -20,12 +21,14 @@ export default class OperationLog extends Component {
       formValues: {},
     }
 
+    this.handleSearch = this.handleSearch.bind(this);
+    this.resetFormValues = this.resetFormValues.bind(this);
+    this.cleanSelectedKeys = this.cleanSelectedKeys.bind(this);
+    this.handleRemoveChecked = this.handleRemoveChecked.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
     this.handleTableChange = this.handleTableChange.bind(this);
     this.onSelectionChange = this.onSelectionChange.bind(this);
     this.getCheckboxProps = this.getCheckboxProps.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-    this.resetFormValues = this.resetFormValues.bind(this);
   }
 
   componentWillMount() {
@@ -61,21 +64,36 @@ export default class OperationLog extends Component {
     });
   }
 
-  cleanSelectedKeys = () => {
+  // 清空选中条目
+  cleanSelectedKeys = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     this.setState({
       selectedRowKeys: [],
     });
   }
 
   // 批量删除选中条目
-  handleRemoveChecked = () => {
+  handleRemoveChecked = (e) => {
+
+    e.preventDefault();
+    e.stopPropagation();
+
     const { selectedRows } = this.state;
-    let ids = '';
-    selectedRows.forEach(item => {
-      ids += `,${item.UniqueID}`;
+
+    confirm({
+      title: `确认要删除这 ${selectedRows.length} 条记录吗?`,
+      content: '',
+      onOk: () => {
+        let ids = '';
+        selectedRows.forEach(item => {
+          ids += `,${item.UniqueID}`;
+        });
+        ids = ids.substr(1);
+        this.handleRemove(ids);
+      },
     });
-    ids = ids.substr(1);
-    this.handleRemove(ids);
   }
 
   // 删除
@@ -144,18 +162,14 @@ export default class OperationLog extends Component {
         />
 
         <div className={styles.toolbar}>
-          <Button
-            icon="delete"
-            onClick={this.handleRemoveChecked}
-            disabled={selectedRowKeys.length <= 0}
-          >删除</Button>
         </div>
         <div className={styles.tableAlert}>
           <Alert
             message={(
               <div>
                 已选择 <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a> 项
-                <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }}>清空</a>
+                <a onClick={this.handleRemoveChecked} style={{ marginLeft: 24 }} disabled={selectedRowKeys.length <= 0}>删除</a>
+                <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }} disabled={selectedRowKeys.length <= 0}>清空</a>
               </div>
             )}
             type="info"

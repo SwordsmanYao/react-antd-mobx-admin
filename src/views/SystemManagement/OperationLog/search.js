@@ -16,14 +16,20 @@ export default class OperationLogSearch extends Component {
     this.state = {
       expandForm: false,
     }
+
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleFormReset = this.handleFormReset.bind(this);
+    this.toggleForm = this.toggleForm.bind(this);
   }
 
 
   handleSearch = (e) => {
 
+    e.preventDefault();
+    e.stopPropagation();
+
     const { handleSearch, form } = this.props;
 
-    e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
