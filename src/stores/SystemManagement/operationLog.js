@@ -15,6 +15,14 @@ class OperationLogStore {
     pageSize: 20,
     total: 20, // 总数,由接口提供
   };
+  // 被选择行的行标识
+  @observable selectedRowKeys = [];
+  // 查询表单数据，在查询时赋值
+  @observable searchFormValues = {};
+  // table 排序字段
+  @observable orderField = null;
+  // 是否降序
+  @observable isDesc = false;
 
 
   /**
@@ -28,7 +36,11 @@ class OperationLogStore {
       message.success('删除成功');
 
       this.fetchList();
+
+      return true;
     }
+
+    return false;
   }
 
   @action
@@ -37,7 +49,13 @@ class OperationLogStore {
       loading: true,
     });
 
-    const response = await queryList(data);
+    const reqData = {
+      CurrentPage: this.pagination.current,
+      PageSize: this.pagination.pageSize,
+      ...data,
+    };
+
+    const response = await queryList(reqData);
 
     if (response.Code === 200) {
 
@@ -46,10 +64,12 @@ class OperationLogStore {
         // current/pageSize 来自页面
         // total 来自接口返回
         pagination: {
-          current: data.CurrentPage,
-          pageSize: data.PageSize,
+          current: reqData.CurrentPage,
+          pageSize: reqData.PageSize,
           total: response.TotalCount,
         },
+        orderField: reqData.OrderField || null,
+        isDesc: reqData.IsDesc || false,
       });
     }
 

@@ -28,7 +28,7 @@ export default class OperationLogSearch extends Component {
     e.preventDefault();
     e.stopPropagation();
 
-    const { handleSearch, form } = this.props;
+    const { form, operationLog } = this.props;
 
     form.validateFields((err, values) => {
       if (!err) {
@@ -43,16 +43,27 @@ export default class OperationLogSearch extends Component {
           }
         });
 
-        handleSearch(values);
+        operationLog.setData({
+          searchFormValues: values,
+        });
+
+        operationLog.fetchList({
+          CurrentPage: 1,
+          ...values,
+        });
       }
     });
   }
 
   // 重置
   handleFormReset = () => {
-    const { form, resetFormValues } = this.props;
+    const { form, operationLog } = this.props;
+    
     form.resetFields();
-    resetFormValues();
+
+    operationLog.setData({
+      searchFormValues: {},
+    });
   }
 
   // 展开、关闭
