@@ -1,7 +1,7 @@
 import { observable, action } from 'mobx';
 import { message } from 'antd';
 
-import { queryList, remove } from '@/services/SystemManagement/operationLog';
+import { queryList, remove, queryOperateType } from '@/services/SystemManagement/operationLog';
 
 class OperationLogStore {
 
@@ -23,6 +23,8 @@ class OperationLogStore {
   @observable orderField = null;
   // 是否降序
   @observable isDesc = false;
+  // 操作类型下拉框数据
+  @observable operateTypeTextValue = [];
 
 
   /**
@@ -76,6 +78,17 @@ class OperationLogStore {
     this.setData({
       loading: false,
     });
+  }
+
+  @action
+  async fetchOperateTypeTextValue() {
+    const response = await queryOperateType();
+
+    if(response.Code === 200) {
+      this.setData({
+        operateTypeTextValue: response.Data,
+      });
+    }
   }
 
   /**

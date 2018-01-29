@@ -14,10 +14,7 @@ const { Sider, Content } = Layout;
 export default class Org extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      modalVisible: false, // 新建的模态框是否显示
-    };
-    
+
     this.onSelect = this.onSelect.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
     this.handleNew = this.handleNew.bind(this);
@@ -53,7 +50,10 @@ export default class Org extends Component {
 
   // 设置模态框显示/隐藏
   setModalVisible(modalVisible) {
-    this.setState({ modalVisible });
+    const { org } = this.props;
+    org.setData({
+      modalVisible,
+    });
   }
 
   // 新建
@@ -91,7 +91,6 @@ export default class Org extends Component {
 
   render() {
     const { org } = this.props;
-    const { modalVisible } = this.state;
     const { setModalVisible } = this;
     const columns = [{
       title: '名称',
@@ -162,7 +161,7 @@ export default class Org extends Component {
             >新建</Button>
             <OrgForm
               org={org}
-              modalVisible={modalVisible}
+              modalVisible={org.modalVisible}
               setModalVisible={setModalVisible}
             />
           </div>

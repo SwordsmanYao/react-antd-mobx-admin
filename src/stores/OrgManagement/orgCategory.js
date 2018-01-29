@@ -24,6 +24,8 @@ class OrgCategoryStore {
   @observable newBtnLoading = false;
   // 后端返回的错误校验信息
   @observable error = null;
+  // 新建的模态框是否显示
+  @observable modalVisible = false; 
 
    /**
    * 含有接口请求等异步操作的 action

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Form, Button, Icon, Input, DatePicker } from 'antd';
+import { Form, Button, Icon, Input, DatePicker, Select } from 'antd';
 
 import styles from './search.less';
 
 const FormItem = Form.Item;
+const { Option } = Select;
 
 @Form.create()
 @observer
@@ -76,6 +77,7 @@ export default class OperationLogSearch extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { operationLog } = this.props;
     const { expandForm } = this.state;
 
     return (
@@ -101,15 +103,21 @@ export default class OperationLogSearch extends Component {
               </FormItem>
               <FormItem label="操作类型">
                 {getFieldDecorator('LM_OperateType')(
-                  <Input placeholder="" />
+                  <Select placeholder="请选择操作类型" allowClear>
+                  {
+                    operationLog.operateTypeTextValue.map(item => (
+                      <Option value={parseInt(item.value, 10)} key={item.value}>{item.text}</Option>
+                    ))
+                  }
+                </Select>,
                 )}
               </FormItem>
             </span>
           }
           <div className={styles.buttons}>
             <Button type="primary" htmlType="submit">查询</Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-            <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
+            <Button style={{ marginLeft: 12 }} onClick={this.handleFormReset}>重置</Button>
+            <a style={{ marginLeft: 12 }} onClick={this.toggleForm}>
               { expandForm ? <span>收起 <Icon type="up" /></span> : <span>展开 <Icon type="down" /></span> }
             </a>
           </div>

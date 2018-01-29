@@ -25,8 +25,8 @@ export default class OperationLog extends Component {
 
   componentWillMount() {
     const { operationLog } = this.props;
-
     operationLog.fetchList();
+    operationLog.fetchOperateTypeTextValue();
   }
 
   // 清空选中条目
@@ -34,14 +34,15 @@ export default class OperationLog extends Component {
     e.preventDefault();
     e.stopPropagation();
     
-    this.setState({
+    const { operationLog } = this.props;
+
+    operationLog.setData({
       selectedRowKeys: [],
     });
   }
 
   // 批量删除选中条目
   handleRemoveChecked = (e) => {
-
     e.preventDefault();
     e.stopPropagation();
 
@@ -74,13 +75,11 @@ export default class OperationLog extends Component {
 
   // 表格分页、排序等的回调函数
   handleTableChange = (pagination, filters, sorter) => {
-
     const { operationLog } = this.props;
 
     // 排序
     const sorterData = {};
     if(sorter.field) {
-
       sorterData.OrderField = sorter.field;
       if(sorter.order === 'descend') {
         sorterData.IsDesc = true;
@@ -108,7 +107,7 @@ export default class OperationLog extends Component {
   // 指定哪些不可被勾选
   getCheckboxProps = record => ({
     disabled: record.name === 'Disabled User', // Column configuration not to be checked
-  })
+  }) 
 
   render() {
 
@@ -230,7 +229,7 @@ export default class OperationLog extends Component {
             onChange: this.onSelectionChange,
             getCheckboxProps: this.getCheckboxProps,
           }}
-          scroll={{ x: 1600, y: document.body.scrollHeight - 310 }}
+          scroll={{ x: 1600, y: window.innerHeight - 310 }}
           size="small"
         />
       </div>

@@ -14,9 +14,6 @@ const { Sider, Content } = Layout;
 export default class Menu extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      modalVisible: false, // 新建的模态框是否显示
-    };
     
     this.onSelect = this.onSelect.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
@@ -59,7 +56,10 @@ export default class Menu extends Component {
 
   // 设置模态框显示/隐藏
   setModalVisible(modalVisible) {
-    this.setState({ modalVisible });
+    const { menu } = this.props;
+    menu.setData({
+      modalVisible,
+    });
   }
 
   // 新建
@@ -97,7 +97,6 @@ export default class Menu extends Component {
 
   render() {
     const { menu } = this.props;
-    const { modalVisible } = this.state;
     const { setModalVisible } = this;
     const columns = [{
       title: '名称',
@@ -172,7 +171,7 @@ export default class Menu extends Component {
             >新建</Button>
             <MenuForm
               menu={menu}
-              modalVisible={modalVisible}
+              modalVisible={menu.modalVisible}
               setModalVisible={setModalVisible}
             />
           </div>

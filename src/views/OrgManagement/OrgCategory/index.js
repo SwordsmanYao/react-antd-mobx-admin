@@ -13,10 +13,7 @@ const { Content } = Layout;
 export default class OrgCategory extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      modalVisible: false, // 新建的模态框是否显示
-    };
-    
+
     this.setModalVisible = this.setModalVisible.bind(this);
     this.handleNew = this.handleNew.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
@@ -36,7 +33,11 @@ export default class OrgCategory extends Component {
 
   // 设置模态框显示/隐藏
   setModalVisible(modalVisible) {
-    this.setState({ modalVisible });
+    const { orgCategory } = this.props;
+
+    orgCategory.setData({
+      modalVisible,
+    });
   }
 
   // 新建
@@ -74,7 +75,6 @@ export default class OrgCategory extends Component {
 
   render() {
     const { orgCategory } = this.props;
-    const { modalVisible } = this.state;
     const { setModalVisible } = this;
     const columns = [{
       title: '名称',
@@ -134,7 +134,7 @@ export default class OrgCategory extends Component {
             >新建</Button>
             <OrgCategoryForm
               orgCategory={orgCategory}
-              modalVisible={modalVisible}
+              modalVisible={orgCategory.modalVisible}
               setModalVisible={setModalVisible}
             />
           </div>

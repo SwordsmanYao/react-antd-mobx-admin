@@ -28,7 +28,9 @@ class OrgStore {
   @observable newBtnLoading = false;
   // 后端返回的错误校验信息
   @observable error = null;
-  // 组织类别下拉列表数据
+  // 新建的模态框是否显示
+  @observable modalVisible = false; 
+  // 组织类别下拉框数据
   @observable categoryTextValue = [];
 
   /**

@@ -33,6 +33,7 @@ app.get('/OrgManagement/Org/tree',org.tree);
 app.get('/OrgManagement/Org/list',org.list);
 app.get('/OrgManagement/Org/detail',org.detail);
 app.get('/SysManagement/OperationLog/List',operationLog.list);
+app.get('/SysManagement/OperationLog/OperateType',operationLog.operateType);
 
 
 
