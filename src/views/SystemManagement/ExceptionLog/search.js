@@ -43,6 +43,7 @@ export default class ExceptionLogSearch extends Component {
           }
         });
 
+        // 修改 store 数据
         exceptionLog.setData({
           searchFormValues: values,
           pagination: {
@@ -51,6 +52,7 @@ export default class ExceptionLogSearch extends Component {
           },
         });
 
+        // 排序数据
         let orderData = {};
         if(exceptionLog.orderField) {
           orderData = {
@@ -59,6 +61,7 @@ export default class ExceptionLogSearch extends Component {
           }
         }
 
+        // 发起请求
         exceptionLog.fetchList({
           CurrentPage: 1,
           PageSize: exceptionLog.pagination.pageSize,

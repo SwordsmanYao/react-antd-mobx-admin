@@ -80,7 +80,7 @@ export default class OperationLog extends Component {
   handleTableChange = (pagination, filters, sorter) => {
     const { operationLog } = this.props;
 
-    // 排序
+    // 排序数据
     const sorterData = {};
     if(sorter.field) {
       sorterData.OrderField = sorter.field;
@@ -91,6 +91,7 @@ export default class OperationLog extends Component {
       }
     }
 
+    // 修改 store 数据
     operationLog.setData({
       pagination: {
         ...operationLog.pagination,
@@ -101,6 +102,7 @@ export default class OperationLog extends Component {
       isDesc: sorterData.IsDesc || false,
     });
 
+    // 发起请求
     operationLog.fetchList({
       CurrentPage: pagination.current,
       PageSize: pagination.pageSize,

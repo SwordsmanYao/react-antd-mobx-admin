@@ -31,11 +31,6 @@ import asyncComponent from '../components/AsyncComponent';
     component: asyncComponent(() => import(/* webpackChunkName: "exceptionLog" */ '../views/SystemManagement/ExceptionLog')),
     exact: true,
   },
-  {
-    path: 'demo',
-    component: asyncComponent(() => import(/* webpackChunkName: "demo" */ '../views/Demo')),
-    exact: true,
-  },
 ];
 
 export default config;

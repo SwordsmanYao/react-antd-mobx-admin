@@ -44,6 +44,7 @@ export default class OperationLogSearch extends Component {
           }
         });
 
+        // 修改 store 数据
         operationLog.setData({
           searchFormValues: values,
           pagination: {
@@ -52,6 +53,7 @@ export default class OperationLogSearch extends Component {
           },
         });
 
+        // 排序数据
         let orderData = {};
         if(operationLog.orderField) {
           orderData = {
@@ -60,6 +62,7 @@ export default class OperationLogSearch extends Component {
           }
         }
 
+        // 发起请求
         operationLog.fetchList({
           CurrentPage: 1,
           PageSize: operationLog.pagination.pageSize,

@@ -67,13 +67,7 @@ service.interceptors.response.use(
       }
 
       if (data.Code === 101) { // 数据校验失败
-        // 暂时放在这里处理，后面要放在校验信息显示上
         // 展示 data.Error.ModelState 里面的校验数据
-        // data.Error.ModelState[0].key 字段 data.Error.ModelState[0].value 错误描述
-        // notification.error({
-        //   message: `Code: ${data.Code}, ${response.url}`,
-        //   description: data.statusText,
-        // });
       } else if (data.Code === 100 || data.Code === 104) {
         // 清空 localstorage 的 user 信息和 token
         sessionStorage.removeItem('currentUser');
