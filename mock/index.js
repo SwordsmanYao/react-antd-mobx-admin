@@ -1,5 +1,4 @@
 var express = require('express');
-var demo = require('./demo');
 var user = require('./user');
 var menu = require('./SystemManagement/menu');
 var orgCategory = require('./OrgManagement/orgCategory');
@@ -21,8 +20,7 @@ var allowCrossDomain = function(req, res, next) {
 
 app.use(allowCrossDomain);
 
-app.get('/demo/query',demo.query);
-app.post('/demo/add',demo.add);
+
 app.post('/Login/SignIn', user.signin);
 app.get('/SysManagement/Menu/tree',menu.tree);
 app.get('/SysManagement/Menu/list',menu.list);
