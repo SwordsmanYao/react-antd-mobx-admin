@@ -37,7 +37,20 @@ class OperationLogStore {
 
       message.success('删除成功');
 
-      this.fetchList();
+      let orderData = {};
+      if(this.orderField) {
+        orderData = {
+          OrderField: this.orderField,
+          IsDesc: this.isDesc,
+        }
+      }
+      
+      this.fetchList({
+        CurrentPage: this.pagination.current,
+        PageSize: this.pagination.pageSize,
+        ...this.searchFormValues,
+        ...orderData,
+      });
 
       return true;
     }
@@ -51,27 +64,15 @@ class OperationLogStore {
       loading: true,
     });
 
-    const reqData = {
-      CurrentPage: this.pagination.current,
-      PageSize: this.pagination.pageSize,
-      ...data,
-    };
-
-    const response = await queryList(reqData);
+    const response = await queryList(data);
 
     if (response.Code === 200) {
-
       this.setData({
         list: response.Data,
-        // current/pageSize 来自页面
-        // total 来自接口返回
         pagination: {
-          current: reqData.CurrentPage,
-          pageSize: reqData.PageSize,
+          ...this.pagination,
           total: response.TotalCount,
         },
-        orderField: reqData.OrderField || null,
-        isDesc: reqData.IsDesc || false,
       });
     }
 

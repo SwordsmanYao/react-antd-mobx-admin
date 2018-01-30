@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Form, Button, Icon, Input, DatePicker, Select } from 'antd';
+import { Form, Button, Icon, Input, DatePicker } from 'antd';
 
 import styles from './search.less';
 
 const FormItem = Form.Item;
-const { Option } = Select;
 
 @Form.create()
 @observer
-export default class OperationLogSearch extends Component {
+export default class ExceptionLogSearch extends Component {
 
   constructor(props) {
     super(props);
@@ -29,7 +28,7 @@ export default class OperationLogSearch extends Component {
     e.preventDefault();
     e.stopPropagation();
 
-    const { form, operationLog } = this.props;
+    const { form, exceptionLog } = this.props;
 
     form.validateFields((err, values) => {
       if (!err) {
@@ -44,25 +43,25 @@ export default class OperationLogSearch extends Component {
           }
         });
 
-        operationLog.setData({
+        exceptionLog.setData({
           searchFormValues: values,
           pagination: {
-            ...operationLog.pagination,
+            ...exceptionLog.pagination,
             current: 1, //刷新时重置页码
           },
         });
 
         let orderData = {};
-        if(operationLog.orderField) {
+        if(exceptionLog.orderField) {
           orderData = {
-            OrderField: operationLog.orderField,
-            IsDesc: operationLog.isDesc,
+            OrderField: exceptionLog.orderField,
+            IsDesc: exceptionLog.isDesc,
           }
         }
 
-        operationLog.fetchList({
+        exceptionLog.fetchList({
           CurrentPage: 1,
-          PageSize: operationLog.pagination.pageSize,
+          PageSize: exceptionLog.pagination.pageSize,
           ...orderData,
           ...values,
         });
@@ -72,11 +71,11 @@ export default class OperationLogSearch extends Component {
 
   // 重置
   handleFormReset = () => {
-    const { form, operationLog } = this.props;
+    const { form, exceptionLog } = this.props;
     
     form.resetFields();
 
-    operationLog.setData({
+    exceptionLog.setData({
       searchFormValues: {},
     });
   }
@@ -91,7 +90,6 @@ export default class OperationLogSearch extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { operationLog } = this.props;
     const { expandForm } = this.state;
 
     return (
@@ -113,17 +111,6 @@ export default class OperationLogSearch extends Component {
               <FormItem label="操作者">
                 {getFieldDecorator('LM_OperateUser')(
                   <Input placeholder="请输入操作者" />
-                )}
-              </FormItem>
-              <FormItem label="操作类型">
-                {getFieldDecorator('LM_OperateType')(
-                  <Select placeholder="请选择操作类型" allowClear>
-                  {
-                    operationLog.operateTypeTextValue.map(item => (
-                      <Option value={parseInt(item.value, 10)} key={item.value}>{item.text}</Option>
-                    ))
-                  }
-                </Select>,
                 )}
               </FormItem>
             </span>

@@ -25,7 +25,10 @@ export default class OperationLog extends Component {
 
   componentWillMount() {
     const { operationLog } = this.props;
-    operationLog.fetchList();
+    operationLog.fetchList({
+      CurrentPage: operationLog.pagination.current,
+      PageSize: operationLog.pagination.pageSize,
+    });
     operationLog.fetchOperateTypeTextValue();
   }
 
@@ -87,6 +90,16 @@ export default class OperationLog extends Component {
         sorterData.IsDesc = false;
       }
     }
+
+    operationLog.setData({
+      pagination: {
+        ...operationLog.pagination,
+        current: pagination.current,
+        pageSize: pagination.pageSize,
+      },
+      orderField: sorterData.OrderField || null,
+      isDesc: sorterData.IsDesc || false,
+    });
 
     operationLog.fetchList({
       CurrentPage: pagination.current,
