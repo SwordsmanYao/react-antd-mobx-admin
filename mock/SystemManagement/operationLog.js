@@ -9,10 +9,15 @@ function operateType(req, res) {
   res.send(Mock.mock({
     Code: 200,
     Data: [
-      {"text":"fefsdfds","value":"1"},
-      {"text":"dsgsdfg","value":"2"},
-      {"text":"dafgsdfg","value":"3"},
-      {"text":"fdg","value":"4"}
+      {"text":"登录","value":"1"},
+      {"text":"登出","value":"2"},
+      {"text":"新增","value":"3"},
+      {"text":"删除","value":"4"},
+      {"text":"修改","value":"5"},
+      {"text":"访问","value":"6"},
+      {"text":"导入","value":"7"},
+      {"text":"导出","value":"8"},
+      {"text":"打印","value":"9"}
     ],
   }));
 }

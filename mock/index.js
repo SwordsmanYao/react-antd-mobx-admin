@@ -5,6 +5,7 @@ var menu = require('./SystemManagement/menu');
 var orgCategory = require('./OrgManagement/orgCategory');
 var org = require('./OrgManagement/org');
 var operationLog = require('./SystemManagement/operationLog');
+var exceptionLog = require('./SystemManagement/exceptionLog');
 
 var app = express();
 
@@ -34,6 +35,8 @@ app.get('/OrgManagement/Org/list',org.list);
 app.get('/OrgManagement/Org/detail',org.detail);
 app.get('/SysManagement/OperationLog/List',operationLog.list);
 app.get('/SysManagement/OperationLog/OperateType',operationLog.operateType);
+app.get('/SysManagement/ExceptionLog/List',exceptionLog.list);
+
 
 
 

@@ -139,14 +139,14 @@ export default class OperationLog extends Component {
         title: '操作人',
         dataIndex: 'LM_OperateUser',
         key: 'LM_OperateUser',
-        width: 100,
+        width: 80,
         fixed: 'left',
       },
       { 
         title: '操作时间', 
         dataIndex: 'LM_OperateTime', 
         key: 'LM_OperateTime', 
-        width: 160, 
+        width: 150, 
         sorter: true, 
         sortOrder: operationLog.orderField === 'LM_OperateTime' && (operationLog.isDesc ? 'descend' : 'ascend'), 
         fixed: 'left', 
@@ -242,7 +242,7 @@ export default class OperationLog extends Component {
             onChange: this.onSelectionChange,
             getCheckboxProps: this.getCheckboxProps,
           }}
-          scroll={{ x: 1600, y: window.innerHeight - 310 }}
+          scroll={{ x: 1600, y: window.innerHeight - 290 }}
           size="small"
         />
       </div>

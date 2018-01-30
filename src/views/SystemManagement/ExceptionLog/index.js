@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import styles from './index.less';
 import ExceptionLogSearch from './search';
+import CopyToClipboard from '@/components/CopyToClipboard';
 
 const { confirm } = Modal;
 
@@ -139,14 +140,14 @@ export default class ExceptionLog extends Component {
         title: '操作人',
         dataIndex: 'LM_OperateUser',
         key: 'LM_OperateUser',
-        width: 100,
+        width: 80,
         fixed: 'left',
       },
       { 
         title: '操作时间', 
         dataIndex: 'LM_OperateTime', 
         key: 'LM_OperateTime', 
-        width: 160, 
+        width: 150, 
         sorter: true, 
         sortOrder: exceptionLog.orderField === 'LM_OperateTime' && (exceptionLog.isDesc ? 'descend' : 'ascend'), 
         fixed: 'left', 
@@ -196,18 +197,40 @@ export default class ExceptionLog extends Component {
         key: 'LM_Source', 
         width: 200,
       },
-      // { 
-      //   title: '异常跟踪', 
-      //   dataIndex: 'LM_StackTrace', 
-      //   key: 'LM_StackTrace', 
-      //   width: 1000,
-      // },
-      // { 
-      //   title: '请求的数据', 
-      //   dataIndex: 'LM_Data', 
-      //   key: 'LM_Data', 
-      //   width: 100,
-      // },
+      { 
+        title: '异常跟踪', 
+        dataIndex: 'LM_StackTrace', 
+        key: 'LM_StackTrace', 
+        width:400,
+        render: (text, row, index) => { 
+          let showData = text;
+          if(text && text.length > 100) {
+            showData = `${text.substr(0, 100)}...`;
+          }
+          return (
+            <CopyToClipboard text={text}>
+              <span>{showData}</span>
+            </CopyToClipboard>
+          ); 
+        },
+      },
+      { 
+        title: '请求的数据', 
+        dataIndex: 'LM_Data', 
+        key: 'LM_Data', 
+        width: 400,
+        render: (text, row, index) => { 
+          let showData = text;
+          if(text && text.length > 100) {
+            showData = `${text.substr(0, 100)}...`;
+          }
+          return (
+            <CopyToClipboard text={text}>
+              <span>{showData}</span>
+            </CopyToClipboard>
+          ); 
+        },
+      },
 
     ];
 
@@ -248,7 +271,7 @@ export default class ExceptionLog extends Component {
             onChange: this.onSelectionChange,
             getCheckboxProps: this.getCheckboxProps,
           }}
-          scroll={{ x: 1910, y: window.innerHeight - 310 }}
+          scroll={{ x: 2680, y: window.innerHeight - 290 }}
           size="small"
         />
       </div>
