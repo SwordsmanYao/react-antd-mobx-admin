@@ -17,13 +17,13 @@ class BasicHeader extends Component {
   }
   onMenuClick = ({ key }) => {
     if (key === 'logout') {
-      const { user } = this.props;
-      user.logout();
+      const { currentUser } = this.props;
+      currentUser.logout();
     }
   }
 
   render() {
-    const { global, user } = this.props;
+    const { global, currentUser } = this.props;
 
     const menu = (
       <Menu selectedKeys={[]} onClick={this.onMenuClick}>
@@ -45,7 +45,7 @@ class BasicHeader extends Component {
           <Dropdown overlay={menu} placement="bottomRight">
             <div className={`${styles.user} ${styles.action}`}>
               <Avatar className={styles.avatar} icon="user" />
-              <span>{user.currentUser.UserName}</span>
+              <span>{currentUser.currentUser.UserName}</span>
             </div>
           </Dropdown>
           

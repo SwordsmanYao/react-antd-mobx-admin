@@ -51,28 +51,29 @@ export default class OperationLog extends Component {
 
     const { operationLog } = this.props;
 
-    this.handleRemove(operationLog.selectedRowKeys);
+    
+    confirm({
+      title: `确认要删除这 ${operationLog.selectedRowKeys.length} 条记录吗?`,
+      content: '',
+      onOk: () => {
+        this.handleRemove(operationLog.selectedRowKeys);
+      },
+    });
   }
 
   // 删除
   handleRemove = (Params) => {
     const { operationLog } = this.props;
 
-    confirm({
-      title: `确认要删除这 ${Params.length} 条记录吗?`,
-      content: '',
-      onOk: () => {
-        operationLog.remove({
-          Params,
-        }).then(result => {
-          if(result) {
-            // 在选中条目中清除已经删除的
-            operationLog.setData({
-              selectedRowKeys: operationLog.selectedRowKeys.filter(item => (Params.indexOf(item) === -1)),
-            });
-          }
+    operationLog.remove({
+      Params,
+    }).then(result => {
+      if(result) {
+        // 在选中条目中清除已经删除的
+        operationLog.setData({
+          selectedRowKeys: operationLog.selectedRowKeys.filter(item => (Params.indexOf(item) === -1)),
         });
-      },
+      }
     });
   }
 

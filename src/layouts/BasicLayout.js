@@ -14,7 +14,7 @@ const { Content } = Layout;
 
 
 @inject('global')
-@inject('user')
+@inject('currentUser')
 @observer
 class BasicLayout extends Component {
 
@@ -101,7 +101,7 @@ class BasicLayout extends Component {
   }
 
   render() {
-    const { match, global, user, location } = this.props;
+    const { match, global, currentUser, location } = this.props;
     const { firstShow } = this.state;
 
     return (
@@ -113,7 +113,7 @@ class BasicLayout extends Component {
           <SiderMenu global={global} />
         }
         <Layout>
-          <BasicHeader global={global} user={user} />
+          <BasicHeader global={global} currentUser={currentUser} />
           {
             // 有 MenuID 再渲染 content 部分，避免请求时没有 MenuID
             global.selectedKeys && global.selectedKeys.length > 0 &&

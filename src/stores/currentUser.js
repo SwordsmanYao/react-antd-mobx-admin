@@ -1,9 +1,9 @@
 import { observable, action } from 'mobx';
 import history from '../history';
 
-import { login } from '../services/user';
+import { login } from '../services/currentUser';
 
-class UserStore {
+class CurrentUserStore {
   @observable currentUser = null; // 当前登录用户的信息,也是作为渲染是否登录的依据
   @observable submitting = false; // 登录是否正在提交;
   @observable error = null; //登录请求的错误信息
@@ -77,4 +77,4 @@ class UserStore {
   }
 }
 
-export default new UserStore();
+export default new CurrentUserStore();

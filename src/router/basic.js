@@ -12,6 +12,16 @@ import asyncComponent from '../components/AsyncComponent';
     exact: true,
   },
   {
+    path: 'system-management/log/operation-log',
+    component: asyncComponent(() => import(/* webpackChunkName: "operationLog" */ '../views/SystemManagement/OperationLog')),
+    exact: true,
+  },
+  {
+    path: 'system-management/log/exception-log',
+    component: asyncComponent(() => import(/* webpackChunkName: "exceptionLog" */ '../views/SystemManagement/ExceptionLog')),
+    exact: true,
+  },
+  {
     path: 'org-management/org-category',
     component: asyncComponent(() => import(/* webpackChunkName: "orgCategory" */ '../views/OrgManagement/OrgCategory')),
     exact: true,
@@ -22,13 +32,8 @@ import asyncComponent from '../components/AsyncComponent';
     exact: true,
   },
   {
-    path: 'system-management/log/operation-log',
-    component: asyncComponent(() => import(/* webpackChunkName: "operationLog" */ '../views/SystemManagement/OperationLog')),
-    exact: true,
-  },
-  {
-    path: 'system-management/log/exception-log',
-    component: asyncComponent(() => import(/* webpackChunkName: "exceptionLog" */ '../views/SystemManagement/ExceptionLog')),
+    path: 'org-management/user',
+    component: asyncComponent(() => import(/* webpackChunkName: "user" */ '../views/OrgManagement/User')),
     exact: true,
   },
 ];

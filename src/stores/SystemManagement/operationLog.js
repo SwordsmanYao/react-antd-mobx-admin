@@ -51,10 +51,9 @@ class OperationLogStore {
         ...this.searchFormValues,
         ...orderData,
       });
-
+      
       return true;
     }
-
     return false;
   }
 

@@ -21,7 +21,6 @@ export default class ExceptionLog extends Component {
     this.handleRemove = this.handleRemove.bind(this);
     this.handleTableChange = this.handleTableChange.bind(this);
     this.onSelectionChange = this.onSelectionChange.bind(this);
-    this.getCheckboxProps = this.getCheckboxProps.bind(this);
   }
 
   componentWillMount() {
@@ -51,28 +50,29 @@ export default class ExceptionLog extends Component {
 
     const { exceptionLog } = this.props;
 
-    this.handleRemove(exceptionLog.selectedRowKeys);
+    
+    confirm({
+      title: `确认要删除这 ${exceptionLog.selectedRowKeys.length} 条记录吗?`,
+      content: '',
+      onOk: () => {
+        this.handleRemove(exceptionLog.selectedRowKeys);
+      },
+    });
   }
 
   // 删除
   handleRemove = (Params) => {
     const { exceptionLog } = this.props;
 
-    confirm({
-      title: `确认要删除这 ${Params.length} 条记录吗?`,
-      content: '',
-      onOk: () => {
-        exceptionLog.remove({
-          Params,
-        }).then(result => {
-          if(result) {
-            // 在选中条目中清除已经删除的
-            exceptionLog.setData({
-              selectedRowKeys: exceptionLog.selectedRowKeys.filter(item => (Params.indexOf(item) === -1)),
-            });
-          }
+    exceptionLog.remove({
+      Params,
+    }).then(result => {
+      if(result) {
+        // 在选中条目中清除已经删除的
+        exceptionLog.setData({
+          selectedRowKeys: exceptionLog.selectedRowKeys.filter(item => (Params.indexOf(item) === -1)),
         });
-      },
+      }
     });
   }
 
@@ -119,10 +119,6 @@ export default class ExceptionLog extends Component {
       selectedRowKeys,
     });
   }
-  // 指定哪些不可被勾选
-  getCheckboxProps = record => ({
-    disabled: record.name === 'Disabled User', // Column configuration not to be checked
-  }) 
 
   render() {
 
@@ -270,7 +266,6 @@ export default class ExceptionLog extends Component {
           rowSelection={{
             selectedRowKeys: exceptionLog.selectedRowKeys,
             onChange: this.onSelectionChange,
-            getCheckboxProps: this.getCheckboxProps,
           }}
           scroll={{ x: 2680, y: window.innerHeight - 290 }}
           size="small"

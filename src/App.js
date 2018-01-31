@@ -23,7 +23,7 @@ class App extends Component {
 
   componentWillMount() {
     // 在页面刷新后从 session 中取出当前用户信息
-    stores.user.loadCurrentUserFromSession();
+    stores.currentUser.loadCurrentUserFromSession();
   }
 
   render() {
@@ -37,7 +37,7 @@ class App extends Component {
                   <Route path={item.path} key={item.path} exact={item.exact} component={ item.component } />
                 ))
               }
-              <Redirect from="/" to={stores.user.currentUser ? '/basic' : '/login'} />
+              <Redirect from="/" to={stores.currentUser.currentUser ? '/basic' : '/login'} />
             </Switch>
           </Router>
         </LocaleProvider>

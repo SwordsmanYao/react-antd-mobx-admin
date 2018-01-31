@@ -8,7 +8,7 @@ import logo from '@/assets/logo.svg';
 
 const FormItem = Form.Item;
 
-@inject('user')
+@inject('currentUser')
 @Form.create()
 @observer
 export default class Login extends Component {
@@ -21,13 +21,13 @@ export default class Login extends Component {
   }
 
   handleSubmit = (e) => {
-    const { form, user } = this.props;
+    const { form, currentUser } = this.props;
     e.preventDefault();
     form.validateFields({ force: true },
       (err, values) => {
         if (!err) {
           console.log(values);
-          user.login(values);
+          currentUser.login(values);
         }
       }
     );
@@ -46,7 +46,7 @@ export default class Login extends Component {
 
   render() {
 
-    const { form, user } = this.props;
+    const { form, currentUser } = this.props;
 
     const { getFieldDecorator } = form;
 
@@ -65,9 +65,9 @@ export default class Login extends Component {
           <div className={styles.main}>
             <Form onSubmit={this.handleSubmit}>
               {
-                user.error &&
-                user.submitting === false &&
-                this.renderMessage(user.error.Message)
+                currentUser.error &&
+                currentUser.submitting === false &&
+                this.renderMessage(currentUser.error.Message)
               }
               <FormItem>
                 {getFieldDecorator('LoginName', {
@@ -103,7 +103,7 @@ export default class Login extends Component {
                 })(
                   <Checkbox className={styles.autoLogin}>记住密码</Checkbox>
                 )}
-                <Button size="large" loading={user.submitting} className={styles.submit} type="primary" htmlType="submit">
+                <Button size="large" loading={currentUser.submitting} className={styles.submit} type="primary" htmlType="submit">
                   登录
                 </Button>
               </FormItem>

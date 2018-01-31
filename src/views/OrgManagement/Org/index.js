@@ -95,7 +95,7 @@ export default class Org extends Component {
     const columns = [{
       title: '名称',
       dataIndex: 'FullName',
-      key: 'Name',
+      key: 'FullName',
     }, {
       title: '排序',
       dataIndex: 'SortCode',

@@ -60,6 +60,12 @@ function tree(req, res) {
             path: 'org',
             hasChildren: false,
           },
+          {
+            id: 23,
+            name: '用户管理',
+            path: 'user',
+            hasChildren: false,
+          },
         ],
       },
       {

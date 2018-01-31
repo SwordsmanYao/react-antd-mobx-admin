@@ -1,10 +1,11 @@
 var express = require('express');
-var user = require('./user');
+var currentUser = require('./currentUser');
 var menu = require('./SystemManagement/menu');
 var orgCategory = require('./OrgManagement/orgCategory');
 var org = require('./OrgManagement/org');
 var operationLog = require('./SystemManagement/operationLog');
 var exceptionLog = require('./SystemManagement/exceptionLog');
+var user = require('./OrgManagement/user');
 
 var app = express();
 
@@ -21,7 +22,7 @@ var allowCrossDomain = function(req, res, next) {
 app.use(allowCrossDomain);
 
 
-app.post('/Login/SignIn', user.signin);
+app.post('/Login/SignIn', currentUser.signin);
 app.get('/SysManagement/Menu/tree',menu.tree);
 app.get('/SysManagement/Menu/list',menu.list);
 app.get('/SysManagement/Menu/detail',menu.detail);
@@ -34,6 +35,7 @@ app.get('/OrgManagement/Org/detail',org.detail);
 app.get('/SysManagement/OperationLog/List',operationLog.list);
 app.get('/SysManagement/OperationLog/OperateType',operationLog.operateType);
 app.get('/SysManagement/ExceptionLog/List',exceptionLog.list);
+app.get('/OrgManagement/User/List',user.list);
 
 
 
