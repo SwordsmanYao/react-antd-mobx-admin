@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Form, Row, Col, Input, Modal, Radio, DatePicker } from 'antd';
+import { Form, Row, Col, Input, Modal, Radio, DatePicker, message } from 'antd';
 
 import styles from './form.less';
 
@@ -11,12 +11,10 @@ const RadioGroup = Radio.Group;
 @Form.create({
   onFieldsChange(props, changedFields) {
     const { user } = props;
-    console.log('onFieldsChange', changedFields);
     user.setCurrentNodeField(changedFields);
   },
   mapPropsToFields(props) {
     const { currentNode }  = props.user;
-    console.log('mapPropsToFields', currentNode);
 
     let fields = {};
     Object.keys(currentNode).forEach( key => {
@@ -26,9 +24,6 @@ const RadioGroup = Radio.Group;
     });
 
     return fields;
-  },
-  onValuesChange(_, values) {
-    console.log(values);
   },
 })
 @observer
@@ -72,10 +67,13 @@ export default class UserForm extends Component {
           data.LoginPwd = values.LoginPwd;
         }
 
-        user.commit(data).then(() => {
-          // 设置服务器返回的错误校验信息
-          if(user.error) {
+        user.commit(data).then((status) => {
+          if(status) {
+            message.success('提交成功');
+            setModalVisible(false);
 
+          } else if(user.error) {
+            // 设置服务器返回的错误校验信息
             const { ModelState } = user.error;
 
             let fields = {};
@@ -88,9 +86,8 @@ export default class UserForm extends Component {
             });
 
             form.setFields(fields);
-          } else {
-            setModalVisible(false);
-          }
+          } 
+          
         }); 
       }
     });
@@ -106,7 +103,7 @@ export default class UserForm extends Component {
 
     const { getFieldDecorator } = this.props.form;
 
-    const { modalVisible, setModalVisible } = this.props;
+    const { modalVisible, setModalVisible, user } = this.props;
 
     const formItemLayout = {
       labelCol: {
@@ -146,20 +143,23 @@ export default class UserForm extends Component {
                 )}
               </FormItem>
             </Col>
-            <Col span={12}>
-              <FormItem
-                {...formItemLayout}
-                label="密码"
-              >
-                {getFieldDecorator('LoginPwd', {
-                  rules: [{
-                    required: true, message: '请输入密码', max: 48,
-                  }],
-                })(
-                  <Input type="password" />,
-                )}
-              </FormItem>
-            </Col>
+            {
+              !user.currentNode.UniqueID && 
+              <Col span={12}>
+                <FormItem
+                  {...formItemLayout}
+                  label="密码"
+                >
+                  {getFieldDecorator('LoginPwd', {
+                    rules: [{
+                      required: true, message: '请输入密码', max: 48,
+                    }],
+                  })(
+                    <Input type="password" />,
+                  )}
+                </FormItem>
+              </Col>
+            }
             <Col span={12}>
               <FormItem
                 {...formItemLayout}
@@ -177,7 +177,7 @@ export default class UserForm extends Component {
             <Col span={12}>
               <FormItem
                 {...formItemLayout}
-                label="手机号码"
+                label="手机"
               >
                 {getFieldDecorator('MobilePhone', {
                   rules: [{

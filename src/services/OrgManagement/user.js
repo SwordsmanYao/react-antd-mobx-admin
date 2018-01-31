@@ -2,9 +2,11 @@ import request from '@/utils/request';
 
 const api = window.PUBLIC_ENV_CONFIG.API;
 
-export function queryOrgTextValue() {
+export function resetPwd(params) {
   return request({
-    url: `${api}/OrgManagement/Org/TextValue`,
+    url: `${api}/OrgManagement/User/ResetPwd`,
+    method: 'post',
+    data: params,
   });
 }
 
@@ -41,13 +43,6 @@ export function remove(params) {
 export function queryList(params) {
   return request({
     url: `${api}/OrgManagement/User/List`,
-    params,
-  });
-}
-
-export function queryDetail(params) {
-  return request({
-    url: `${api}/OrgManagement/User/Detail`,
     params,
   });
 }

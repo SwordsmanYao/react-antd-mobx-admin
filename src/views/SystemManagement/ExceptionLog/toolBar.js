@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Form, Button, Icon, Input, DatePicker } from 'antd';
 
-import styles from './search.less';
+import styles from './toolBar.less';
 
 const FormItem = Form.Item;
 
 @Form.create()
 @observer
-export default class ExceptionLogSearch extends Component {
+export default class ExceptionLogToolBar extends Component {
 
   constructor(props) {
     super(props);
@@ -96,7 +96,7 @@ export default class ExceptionLogSearch extends Component {
     const { expandForm } = this.state;
 
     return (
-      <div className={styles.searchForm}>
+      <div className={styles.toolBar}>
         <Form onSubmit={this.handleSearch} layout="inline">
           <FormItem label="操作时间">
             {getFieldDecorator('LM_OperateStartTime')(

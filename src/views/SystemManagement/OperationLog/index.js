@@ -4,7 +4,7 @@ import { Table, Alert, Modal, Badge } from 'antd';
 import moment from 'moment';
 
 import styles from './index.less';
-import OperationLogSearch from './search';
+import OperationLogToolBar from './toolBar';
 
 const { confirm } = Modal;
 
@@ -211,7 +211,7 @@ export default class OperationLog extends Component {
     return (
       <div className={styles.content}>
         
-        <OperationLogSearch operationLog={operationLog} />
+        <OperationLogToolBar operationLog={operationLog} />
 
         <div className={styles.toolbar}>
         </div>

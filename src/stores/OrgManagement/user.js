@@ -1,7 +1,7 @@
 import { observable, action } from 'mobx';
 import { message } from 'antd';
 
-import { queryOrgTextValue, queryTree, queryList, insert, remove, queryDetail, update } from '@/services/OrgManagement/user';
+import { queryTree, queryList, insert, remove, update, resetPwd } from '@/services/OrgManagement/user';
 
 class UserStore {
   // 树结构数据
@@ -40,6 +40,11 @@ class UserStore {
   @observable modalVisible = false; 
   // 组织类别下拉框数据
   @observable orgTextValue = [];
+
+  // 需要修改密码的用户信息
+  @observable resetPwdUser = null;
+  // 修改密码后端返回的错误校验信息
+  @observable pwdError = null;
 
   /**
    * 含有接口请求等异步操作的 action
@@ -120,26 +125,6 @@ class UserStore {
     return false;
   }
 
-  @action
-  async fetchDetail(data) {
-
-    const response = await queryDetail(data);
-
-    if (response.Code === 200) {
-      const data = {};
-      // 将数据格式化，以适应组件
-      Object.keys(response.Data).forEach((key) => {
-        data[key] = {
-          name: key, 
-          value: response.Data[key],
-        };
-      });
-
-      this.setData({
-        currentNode: {...data},
-      });
-    }
-  }
 
   // 查询树的数据
   @action
@@ -178,14 +163,18 @@ class UserStore {
     });
   }
 
+  // 重置密码
   @action
-  async fetchOrgTextValue() {
-    const response = await queryOrgTextValue();
+  async resetPwd(data) {
+    const response = await resetPwd(data);
 
     if(response.Code === 200) {
+      return true;
+    } else {
       this.setData({
-        orgTextValue: response.Data,
+        pwdError: response.Error,
       });
+      return false;
     }
   }
 

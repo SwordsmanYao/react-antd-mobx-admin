@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Button, Table, Divider, Popconfirm, Alert, Modal } from 'antd';
+import { Layout, Table, Divider, Popconfirm, Alert, Modal } from 'antd';
+import moment from 'moment';
 
 import DisplayTree from '@/components/DisplayTree';
 import UserForm from './form';
+import UserToolBar from './toolBar';
+import PwdForm from './pwdForm';
 import styles from './index.less';
 
 
@@ -15,7 +18,10 @@ const { confirm } = Modal;
 export default class User extends Component {
   constructor(props) {
     super(props);
-    
+    this.state = {
+      pwdModalVisible: false,
+    }
+
     this.onSelect = this.onSelect.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
     this.handleNew = this.handleNew.bind(this);
@@ -33,8 +39,8 @@ export default class User extends Component {
     user.fetchTree().then((tree) => {
       if(tree && tree.length > 0) {
         user.setData({
-          selectedKeys: [tree[0].id],
-          expandedKeys: [tree[0].id],
+          selectedKeys: [tree[0].id.toString()],
+          expandedKeys: [tree[0].id.toString()],
         });
         user.fetchList({
           OrganizationID: user.selectedKeys[0],
@@ -43,7 +49,12 @@ export default class User extends Component {
         });
       }
     });
-    
+  }
+
+  setPwdModalVisible = (pwdModalVisible) => {
+    this.setState({
+      pwdModalVisible,
+    });
   }
 
   // 点击树节点时触发
@@ -92,7 +103,11 @@ export default class User extends Component {
     const { user } = this.props;
     console.log('record' ,record);
 
-    user.setCurrentNode(record);
+    const data = {...record};
+    if(data.DateOfBirth) {
+      data.DateOfBirth = moment(data.DateOfBirth);
+    }
+    user.setCurrentNode(data);
     this.setModalVisible(true);    
   }
 
@@ -101,9 +116,9 @@ export default class User extends Component {
     e.preventDefault();
     e.stopPropagation();
     
-    const { operationLog } = this.props;
+    const { user } = this.props;
 
-    operationLog.setData({
+    user.setData({
       selectedRowKeys: [],
     });
   }
@@ -139,6 +154,11 @@ export default class User extends Component {
         });
       }
     });
+  }
+
+  // 重置密码
+  handleResetPwd = (record) => {
+    this.setPwdModalVisible(true);
   }
 
   // 表格分页、排序等的回调函数
@@ -188,7 +208,6 @@ export default class User extends Component {
 
   render() {
     const { user } = this.props;
-    const { setModalVisible } = this;
     const columns = [{
       title: '登录名',
       dataIndex: 'LoginName',
@@ -212,7 +231,7 @@ export default class User extends Component {
     }, {
       title: '操作',
       key: 'Action',
-      width: 120,
+      width: 150,
       render: (text, record) => (
         <span>
           <a
@@ -239,7 +258,15 @@ export default class User extends Component {
             >删除
             </a>
           </Popconfirm>
-
+          <Divider type="vertical" />
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              this.handleResetPwd(record);
+            }}
+          >重置密码
+          </a>
         </span>
       ),
     }];
@@ -258,18 +285,20 @@ export default class User extends Component {
           }
         </Sider>
         <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
-          <div className={styles.toolbar}>
-            <Button
-              icon="plus"
-              onClick={this.handleNew} 
-              loading={user.newBtnLoading}
-            >新建</Button>
-            <UserForm
-              user={user}
-              modalVisible={user.modalVisible}
-              setModalVisible={setModalVisible}
-            />
-          </div>
+          <UserToolBar 
+            user={user}
+            handleNew={this.handleNew}
+           />
+          <UserForm
+            user={user}
+            modalVisible={user.modalVisible}
+            setModalVisible={this.setModalVisible}
+          />
+          <PwdForm
+            user={user}
+            pwdModalVisible={this.state.pwdModalVisible}
+            setPwdModalVisible={this.setPwdModalVisible}
+          />
           <div className={styles.tableAlert}>
             <Alert
               message={(

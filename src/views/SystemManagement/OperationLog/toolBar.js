@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Form, Button, Icon, Input, DatePicker, Select } from 'antd';
 
-import styles from './search.less';
+import styles from './toolBar.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
 @Form.create()
 @observer
-export default class UserSearch extends Component {
+export default class OperationLogToolBar extends Component {
 
   constructor(props) {
     super(props);
@@ -29,7 +29,7 @@ export default class UserSearch extends Component {
     e.preventDefault();
     e.stopPropagation();
 
-    const { form, user } = this.props;
+    const { form, operationLog } = this.props;
 
     form.validateFields((err, values) => {
       if (!err) {
@@ -45,28 +45,27 @@ export default class UserSearch extends Component {
         });
 
         // 修改 store 数据
-        user.setData({
+        operationLog.setData({
           searchFormValues: values,
           pagination: {
-            ...user.pagination,
+            ...operationLog.pagination,
             current: 1, //刷新时重置页码
           },
         });
 
         // 排序数据
         let orderData = {};
-        if(user.orderField) {
+        if(operationLog.orderField) {
           orderData = {
-            OrderField: user.orderField,
-            IsDesc: user.isDesc,
+            OrderField: operationLog.orderField,
+            IsDesc: operationLog.isDesc,
           }
         }
 
         // 发起请求
-        user.fetchList({
-          OrganizationID: user.selectedKeys[0],
+        operationLog.fetchList({
           CurrentPage: 1,
-          PageSize: user.pagination.pageSize,
+          PageSize: operationLog.pagination.pageSize,
           ...orderData,
           ...values,
         });
@@ -76,11 +75,11 @@ export default class UserSearch extends Component {
 
   // 重置
   handleFormReset = () => {
-    const { form, user } = this.props;
+    const { form, operationLog } = this.props;
     
     form.resetFields();
 
-    user.setData({
+    operationLog.setData({
       searchFormValues: {},
     });
   }
@@ -95,11 +94,11 @@ export default class UserSearch extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { user } = this.props;
+    const { operationLog } = this.props;
     const { expandForm } = this.state;
 
     return (
-      <div className={styles.searchForm}>
+      <div className={styles.toolBar}>
         <Form onSubmit={this.handleSearch} layout="inline">
           <FormItem label="操作时间">
             {getFieldDecorator('LM_OperateStartTime')(
@@ -123,7 +122,7 @@ export default class UserSearch extends Component {
                 {getFieldDecorator('LM_OperateType')(
                   <Select placeholder="请选择操作类型" allowClear>
                   {
-                    user.operateTypeTextValue.map(item => (
+                    operationLog.operateTypeTextValue.map(item => (
                       <Option value={parseInt(item.value, 10)} key={item.value}>{item.text}</Option>
                     ))
                   }

@@ -4,7 +4,7 @@ import { Table, Alert, Modal } from 'antd';
 import moment from 'moment';
 
 import styles from './index.less';
-import ExceptionLogSearch from './search';
+import ExceptionLogToolBar from './toolBar';
 import CopyToClipboard from '@/components/CopyToClipboard';
 
 const { confirm } = Modal;
@@ -234,7 +234,7 @@ export default class ExceptionLog extends Component {
     return (
       <div className={styles.content}>
         
-        <ExceptionLogSearch exceptionLog={exceptionLog} />
+        <ExceptionLogToolBar exceptionLog={exceptionLog} />
 
         <div className={styles.toolbar}>
         </div>
