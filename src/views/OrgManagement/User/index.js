@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Table, Divider, Popconfirm, Alert, Modal } from 'antd';
+import { Layout, Table, Divider, Popconfirm, Alert, Modal, message } from 'antd';
 import moment from 'moment';
 
 import DisplayTree from '@/components/DisplayTree';
 import UserForm from './form';
 import UserToolBar from './toolBar';
 import PwdForm from './pwdForm';
+import RoleSelect from './roleSelect';
+
 import styles from './index.less';
 
 
@@ -19,7 +21,10 @@ export default class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // 修改密码框是否显示
       pwdModalVisible: false,
+      // 修改角色框是否显示
+      roleModalVisible: false,
     }
 
     this.onSelect = this.onSelect.bind(this);
@@ -54,6 +59,12 @@ export default class User extends Component {
   setPwdModalVisible = (pwdModalVisible) => {
     this.setState({
       pwdModalVisible,
+    });
+  }
+
+  setRoleModalVisible = (roleModalVisible) => {
+    this.setState({
+      roleModalVisible,
     });
   }
 
@@ -158,7 +169,37 @@ export default class User extends Component {
 
   // 重置密码
   handleResetPwd = (record) => {
+    const { user } = this.props;
+
     this.setPwdModalVisible(true);
+    user.setData({
+      currentResetPwdUser: record,
+    });
+  }
+
+  // 启用/禁用用户
+  handleEnableUser = (record, Params) => {
+    const { user } = this.props;
+     user.setStatus({
+      UniqueID: record.UniqueID,
+      Params,
+     }).then(() => {
+      message.success('操作成功');
+     }).catch(() => {
+      message.error('操作失败');
+     });
+  }
+
+  // 设置成员角色
+  handleRoleEdit = (record) => {
+    const { user } = this.props;
+    user.getMemberRole({
+      UniqueID: record.UniqueID,
+    });
+    user.setData({
+      currentSetRoleUser: record,
+    });
+    this.setRoleModalVisible(true);
   }
 
   // 表格分页、排序等的回调函数
@@ -231,7 +272,7 @@ export default class User extends Component {
     }, {
       title: '操作',
       key: 'Action',
-      width: 150,
+      width: 300,
       render: (text, record) => (
         <span>
           <a
@@ -244,9 +285,9 @@ export default class User extends Component {
           </a>
           <Divider type="vertical" />
           <Popconfirm 
-            placement="bottom" 
+            placement="bottomLeft"
             title="确认要删除这条记录吗？" 
-            onConfirm={() => { this.handleRemove(record); }} 
+            onConfirm={() => { this.handleRemove([record.UniqueID]); }} 
             okText="是" 
             cancelText="否"
           >
@@ -266,6 +307,47 @@ export default class User extends Component {
               this.handleResetPwd(record);
             }}
           >重置密码
+          </a>
+          <Divider type="vertical" />
+          <Popconfirm 
+            placement="bottomLeft"
+            title="确认要启用该用户吗？" 
+            onConfirm={() => { this.handleEnableUser(record, [1]); }} 
+            okText="是" 
+            cancelText="否"
+          >
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >启用
+            </a>
+          </Popconfirm>
+          <Divider type="vertical" />
+          <Popconfirm 
+            placement="bottomLeft"
+            title="确认要禁用该用户吗？" 
+            onConfirm={() => { this.handleEnableUser(record, [0]); }} 
+            okText="是" 
+            cancelText="否"
+          >
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >禁用
+            </a>
+          </Popconfirm>
+          <Divider type="vertical" />
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              this.handleRoleEdit(record);
+            }}
+          >角色
           </a>
         </span>
       ),
@@ -289,15 +371,24 @@ export default class User extends Component {
             user={user}
             handleNew={this.handleNew}
            />
-          <UserForm
-            user={user}
-            modalVisible={user.modalVisible}
-            setModalVisible={this.setModalVisible}
-          />
+          {
+            // 需要密码字段在编辑时不显示，这里是为了让form重新挂载，否则表单域中仍然有密码字段
+            user.modalVisible &&
+            <UserForm
+              user={user}
+              modalVisible={user.modalVisible}
+              setModalVisible={this.setModalVisible}
+            />
+          }
           <PwdForm
             user={user}
             pwdModalVisible={this.state.pwdModalVisible}
             setPwdModalVisible={this.setPwdModalVisible}
+          />
+          <RoleSelect
+            user={user}
+            roleModalVisible={this.state.roleModalVisible}
+            setRoleModalVisible={this.setRoleModalVisible}
           />
           <div className={styles.tableAlert}>
             <Alert

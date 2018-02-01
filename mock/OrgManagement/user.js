@@ -7,6 +7,13 @@ function list(req, res) {
   ));
 }
 
+function role(req, res) {
+  res.send(Mock.mock(
+    {"Code":200,"Data":[{"Name":"超级管理员","IsMemberRole":true,"UniqueID":1,"MenuID":0},{"Name":"aa","DescInfo":"aa","IsMemberRole":false,"UniqueID":2,"MenuID":0}]}
+  ));
+}
+
 module.exports = {
   list,
+  role,
 }

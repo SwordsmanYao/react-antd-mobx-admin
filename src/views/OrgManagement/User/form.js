@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Form, Row, Col, Input, Modal, Radio, DatePicker, message } from 'antd';
+import { Form, Row, Col, Input, Modal, Radio, DatePicker } from 'antd';
 
 import styles from './form.less';
 
@@ -62,17 +62,14 @@ export default class UserForm extends Component {
         };
         if (user.currentNode.UniqueID && user.currentNode.UniqueID.value) {
           data.UniqueID = user.currentNode.UniqueID.value;
+          data.Employee.UniqueID = user.currentNode.EmployeeID.value;
         }
         if (values.LoginPwd) {
           data.LoginPwd = values.LoginPwd;
         }
 
-        user.commit(data).then((status) => {
-          if(status) {
-            message.success('提交成功');
-            setModalVisible(false);
-
-          } else if(user.error) {
+        user.commit(data).then(() => {
+          if(user.error) {
             // 设置服务器返回的错误校验信息
             const { ModelState } = user.error;
 
@@ -86,8 +83,9 @@ export default class UserForm extends Component {
             });
 
             form.setFields(fields);
-          } 
-          
+          } else {
+            setModalVisible(false);
+          }
         }); 
       }
     });
@@ -143,7 +141,7 @@ export default class UserForm extends Component {
                 )}
               </FormItem>
             </Col>
-            {
+           {
               !user.currentNode.UniqueID && 
               <Col span={12}>
                 <FormItem

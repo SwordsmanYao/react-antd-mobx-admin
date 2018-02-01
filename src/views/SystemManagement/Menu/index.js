@@ -176,7 +176,7 @@ export default class Menu extends Component {
             />
           </div>
           <Table
-            bordered
+            size="small"
             loading={menu.loading}
             pagination={menu.pagination}
             dataSource={menu.list.slice()}

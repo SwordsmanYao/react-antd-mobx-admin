@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Form, Button, Icon, Input, DatePicker } from 'antd';
+import { Form, Button, Icon, Input } from 'antd';
 
 import styles from './toolBar.less';
 
@@ -34,14 +34,14 @@ export default class UserToolBar extends Component {
       if (!err) {
         console.log('Received values of form: ', values);
 
-        // 格式化查询参数
-        Object.keys(values).forEach(key => {
-          if(values[key]) {
-            if(key === 'LM_OperateStartTime' || key === 'LM_OperateEndTime') {
-              values[key] = values[key].format('YYYY-MM-DD');
-            }
-          }
-        });
+        // // 格式化查询参数
+        // Object.keys(values).forEach(key => {
+        //   if(values[key]) {
+        //     if(key === 'LM_OperateStartTime' || key === 'LM_OperateEndTime') {
+        //       values[key] = values[key].format('YYYY-MM-DD');
+        //     }
+        //   }
+        // });
 
         // 修改 store 数据
         user.setData({
@@ -107,22 +107,22 @@ export default class UserToolBar extends Component {
               loading={user.newBtnLoading}
             >新建</Button>
           </div>
-          <FormItem label="操作时间">
-            {getFieldDecorator('LM_OperateStartTime')(
-              <DatePicker placeholder="操作起始时间" />
+          <FormItem label="登录名">
+            {getFieldDecorator('LoginName')(
+              <Input placeholder="请输入登录名" />
             )}
           </FormItem>
-          <FormItem colon={false}>
-            {getFieldDecorator('LM_OperateEndTime')(
-              <DatePicker placeholder="操作结束时间" />
+          <FormItem label="姓名">
+            {getFieldDecorator('FullName')(
+              <Input placeholder="请输入姓名" />
             )}
           </FormItem>
           {
             expandForm && 
             <span>
-              <FormItem label="操作者">
-                {getFieldDecorator('LM_OperateUser')(
-                  <Input placeholder="请输入操作者" />
+              <FormItem label="手机">
+                {getFieldDecorator('MobilePhone')(
+                  <Input placeholder="请输入手机号码" />
                 )}
               </FormItem>
             </span>

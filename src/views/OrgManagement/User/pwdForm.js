@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Form, Row, Col, Input, Modal, message } from 'antd';
 
-import styles from './form.less';
-
 const FormItem = Form.Item;
 
 @Form.create()
 @observer
-export default class UserForm extends Component {
+export default class PwdForm extends Component {
   
   constructor(props) {
     super(props);
@@ -26,8 +24,8 @@ export default class UserForm extends Component {
       if (!err) {
         console.log('values', values);
         user.resetPwd({
-          UniqueID: user.resetPwdUser.UniqueID,
-          LoginName: user.resetPwdUser.LoginName,
+          UniqueID: user.currentResetPwdUser.UniqueID,
+          LoginName: user.currentResetPwdUser.LoginName,
           NewPassword: values.NewPassword,
         }).then((status) => {
 
@@ -63,7 +61,7 @@ export default class UserForm extends Component {
     resetFields();
 
     user.setData({
-      resetPwdUser: null,
+      currentResetPwdUser: null,
     });
   }
   
@@ -93,7 +91,7 @@ export default class UserForm extends Component {
         onCancel={() => setPwdModalVisible(false)}
         afterClose={this.afterClose}
       >
-        <Form className={styles.form}>
+        <Form>
           <Row gutter={24} >
             <Col span={12}>
               <FormItem

@@ -165,8 +165,8 @@ export default class Org extends Component {
               setModalVisible={setModalVisible}
             />
           </div>
-          <Table
-            bordered
+          <Table 
+            size="small"
             loading={org.loading}
             pagination={org.pagination}
             dataSource={org.list.slice()}

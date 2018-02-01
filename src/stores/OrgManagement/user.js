@@ -1,7 +1,7 @@
 import { observable, action } from 'mobx';
 import { message } from 'antd';
 
-import { queryTree, queryList, insert, remove, update, resetPwd } from '@/services/OrgManagement/user';
+import { queryTree, queryList, insert, remove, update, resetPwd, setStatus, getMemberRole, setMemberRole } from '@/services/OrgManagement/user';
 
 class UserStore {
   // 树结构数据
@@ -42,9 +42,16 @@ class UserStore {
   @observable orgTextValue = [];
 
   // 需要修改密码的用户信息
-  @observable resetPwdUser = null;
+  @observable currentResetPwdUser = null;
   // 修改密码后端返回的错误校验信息
   @observable pwdError = null;
+
+  // 成员角色列表数据
+  @observable memberRole = null;
+  // 需要设置角色的用户
+  @observable currentSetRoleUser = null;
+  // 被选择角色的行标识
+  @observable roleSelectedRowKeys = [];
 
   /**
    * 含有接口请求等异步操作的 action
@@ -178,6 +185,66 @@ class UserStore {
     }
   }
 
+  // 启用/禁用
+  @action
+  async setStatus(data) {
+    const response = await setStatus(data);
+
+    if(response.Code === 200) {
+      let orderData = {};
+      if(this.orderField) {
+        orderData = {
+          OrderField: this.orderField,
+          IsDesc: this.isDesc,
+        }
+      }
+      
+      this.fetchList({
+        OrganizationID: this.selectedKeys[0],
+        CurrentPage: this.pagination.current,
+        PageSize: this.pagination.pageSize,
+        ...this.searchFormValues,
+        ...orderData,
+      });
+    } else {
+      return await Promise.reject();
+    }
+  }
+
+  // 获取成员角色
+  @action
+  async getMemberRole(data) {
+    const response = await getMemberRole(data);
+
+    if(response.Code === 200) {
+      const roleSelectedRowKeys = 
+      response.Data
+      .filter(item => item.IsMemberRole)
+      .map(item => {
+        return item.UniqueID;
+      });
+
+      this.setData({
+        memberRole: response.Data,
+        roleSelectedRowKeys,
+      });
+    } else {
+      // response.Error.Message
+      return await Promise.reject(response.Error);
+    }
+  }
+
+  // 修改成员角色
+  @action
+  async setMemberRole(data) {
+    const response = await setMemberRole(data);
+
+    if(response.Code !== 200) {
+      // response.Error.Message
+      return await Promise.reject(response.Error);
+    }
+  }
+  
   /**
    * 不含异步操作的 action
    */

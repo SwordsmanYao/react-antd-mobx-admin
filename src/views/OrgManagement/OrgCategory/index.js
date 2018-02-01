@@ -139,7 +139,7 @@ export default class OrgCategory extends Component {
             />
           </div>
           <Table
-            bordered
+            size="small"
             loading={orgCategory.loading}
             pagination={orgCategory.pagination}
             dataSource={orgCategory.list.slice()}
