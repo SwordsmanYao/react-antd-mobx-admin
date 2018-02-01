@@ -1,5 +1,4 @@
 import { observable, action } from 'mobx';
-import { message } from 'antd';
 
 import { queryList, remove, queryOperateType } from '@/services/SystemManagement/operationLog';
 
@@ -35,8 +34,6 @@ class OperationLogStore {
     const response = await remove(data);
     if(response.Code === 200) {
 
-      message.success('删除成功');
-
       let orderData = {};
       if(this.orderField) {
         orderData = {
@@ -51,10 +48,9 @@ class OperationLogStore {
         ...this.searchFormValues,
         ...orderData,
       });
-      
-      return true;
+    } else {
+      return await Promise.reject(response.Error);
     }
-    return false;
   }
 
   @action

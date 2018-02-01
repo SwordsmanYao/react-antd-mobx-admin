@@ -27,13 +27,18 @@ export default class User extends Component {
       roleModalVisible: false,
     }
 
-    this.onSelect = this.onSelect.bind(this);
+    this.setPwdModalVisible = this.setPwdModalVisible.bind(this);
+    this.setRoleModalVisible = this.setRoleModalVisible.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
+    this.onSelect = this.onSelect.bind(this);
     this.handleNew = this.handleNew.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.cleanSelectedKeys = this.cleanSelectedKeys.bind(this);
     this.handleRemoveChecked = this.handleRemoveChecked.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
+    this.handleResetPwd = this.handleResetPwd.bind(this);
+    this.handleEnableUser = this.handleEnableUser.bind(this);
+    this.handleRoleEdit = this.handleRoleEdit.bind(this);
     this.handleTableChange = this.handleTableChange.bind(this);
     this.onSelectionChange = this.onSelectionChange.bind(this);
   }
@@ -68,6 +73,14 @@ export default class User extends Component {
     });
   }
 
+  // 设置模态框显示/隐藏
+  setModalVisible = (modalVisible) => {
+    const { user } = this.props;
+    user.setData({
+      modalVisible,
+    });
+  }
+
   // 点击树节点时触发
   onSelect = (selectedKeys) => {
     console.log('selected', selectedKeys);
@@ -94,14 +107,6 @@ export default class User extends Component {
         ...orderData,
       });
     }
-  }
-
-  // 设置模态框显示/隐藏
-  setModalVisible(modalVisible) {
-    const { user } = this.props;
-    user.setData({
-      modalVisible,
-    });
   }
 
   // 新建
@@ -157,13 +162,14 @@ export default class User extends Component {
 
     user.remove({
       Params,
-    }).then(result => {
-      if(result) {
-        // 在选中条目中清除已经删除的
-        user.setData({
-          selectedRowKeys: user.selectedRowKeys.filter(item => (Params.indexOf(item) === -1)),
-        });
-      }
+    }).then(() => {
+      message.success('删除成功');
+      // 在选中条目中清除已经删除的
+      user.setData({
+        selectedRowKeys: user.selectedRowKeys.filter(item => (Params.indexOf(item) === -1)),
+      });
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
     });
   }
 
@@ -185,8 +191,8 @@ export default class User extends Component {
       Params,
      }).then(() => {
       message.success('操作成功');
-     }).catch(() => {
-      message.error('操作失败');
+     }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
      });
   }
 
@@ -195,11 +201,14 @@ export default class User extends Component {
     const { user } = this.props;
     user.getMemberRole({
       UniqueID: record.UniqueID,
+    }).then(() => {
+      user.setData({
+        currentSetRoleUser: record,
+      });
+      this.setRoleModalVisible(true);
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
     });
-    user.setData({
-      currentSetRoleUser: record,
-    });
-    this.setRoleModalVisible(true);
   }
 
   // 表格分页、排序等的回调函数

@@ -1,5 +1,4 @@
 import { observable, action } from 'mobx';
-import { message } from 'antd';
 
 import { queryTree, queryList, insert, remove, update, resetPwd, setStatus, getMemberRole, setMemberRole } from '@/services/OrgManagement/user';
 
@@ -34,8 +33,6 @@ class UserStore {
   @observable currentNode = this.defaultNode;
   // 新建按钮的是否显示加载中
   @observable newBtnLoading = false;
-  // 后端返回的错误校验信息
-  @observable error = null;
   // 新建的模态框是否显示
   @observable modalVisible = false; 
   // 组织类别下拉框数据
@@ -43,8 +40,6 @@ class UserStore {
 
   // 需要修改密码的用户信息
   @observable currentResetPwdUser = null;
-  // 修改密码后端返回的错误校验信息
-  @observable pwdError = null;
 
   // 成员角色列表数据
   @observable memberRole = null;
@@ -79,8 +74,6 @@ class UserStore {
 
     if(response.Code === 200) {
 
-      message.success('提交成功');
-
       let orderData = {};
       if(this.orderField) {
         orderData = {
@@ -97,10 +90,8 @@ class UserStore {
         ...orderData,
       });
 
-    } else if(response.Code === 101) {
-      this.setData({
-        error: response.Error,
-      });
+    } else {
+      return await Promise.reject(response.Error);
     }
   }
 
@@ -109,8 +100,6 @@ class UserStore {
     const response = await remove(data);
     if(response.Code === 200) {
 
-      message.success('删除成功');
-
       let orderData = {};
       if(this.orderField) {
         orderData = {
@@ -126,10 +115,9 @@ class UserStore {
         ...this.searchFormValues,
         ...orderData,
       });
-      
-      return true;
+    } else {
+      return await Promise.reject(response.Error);
     }
-    return false;
   }
 
 
@@ -143,8 +131,9 @@ class UserStore {
       });
 
       return response.Data;
+    } else {
+      return await Promise.reject(response.Error);
     }
-    return null;
   }
 
   @action
@@ -175,13 +164,8 @@ class UserStore {
   async resetPwd(data) {
     const response = await resetPwd(data);
 
-    if(response.Code === 200) {
-      return true;
-    } else {
-      this.setData({
-        pwdError: response.Error,
-      });
-      return false;
+    if(response.Code !== 200) {
+      return await Promise.reject(response.Error);
     }
   }
 
@@ -207,7 +191,7 @@ class UserStore {
         ...orderData,
       });
     } else {
-      return await Promise.reject();
+      return await Promise.reject(response.Error);
     }
   }
 
@@ -229,7 +213,6 @@ class UserStore {
         roleSelectedRowKeys,
       });
     } else {
-      // response.Error.Message
       return await Promise.reject(response.Error);
     }
   }

@@ -57,23 +57,19 @@ export default class MenuForm extends Component {
         }
 
         menu.commit(data).then(() => {
+          setModalVisible(false);
+        }).catch(({ ModelState }) => {
+          
           // 设置服务器返回的错误校验信息
-          if(menu.error) {
+          let fields = {};
+          Object.keys(ModelState).forEach(key => {
+            fields[key] = {
+              value: values[key],
+              errors: [new Error(ModelState[key])],
+            }
+          });
 
-            const { ModelState } = menu.error;
-
-            let fields = {};
-            Object.keys(ModelState).forEach(key => {
-              fields[key] = {
-                value: values[key],
-                errors: [new Error(ModelState[key])],
-              }
-            });
-
-            form.setFields(fields);
-          } else {
-            setModalVisible(false);
-          }
+          form.setFields(fields);
         });
               
       }

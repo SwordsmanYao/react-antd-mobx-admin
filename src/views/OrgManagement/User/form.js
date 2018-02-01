@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Form, Row, Col, Input, Modal, Radio, DatePicker } from 'antd';
+import { Form, Row, Col, Input, Modal, Radio, DatePicker, message } from 'antd';
 
 import styles from './form.less';
 
@@ -69,23 +69,20 @@ export default class UserForm extends Component {
         }
 
         user.commit(data).then(() => {
-          if(user.error) {
-            // 设置服务器返回的错误校验信息
-            const { ModelState } = user.error;
+          message.success('提交成功');
+          setModalVisible(false);
+        }).catch(({ ModelState }) => {
+          
+          // 设置服务器返回的错误校验信息
+          let fields = {};
+          Object.keys(ModelState).forEach(key => {
+            fields[key] = {
+              value: values[key],
+              errors: [new Error(ModelState[key])],
+            }
+          });
 
-            let fields = {};
-            Object.keys(ModelState).forEach(key => {
-              const key2 = key.split('.').pop();
-              fields[key2] = {
-                value: values[key2],
-                errors: [new Error(ModelState[key])],
-              }
-            });
-
-            form.setFields(fields);
-          } else {
-            setModalVisible(false);
-          }
+          form.setFields(fields);
         }); 
       }
     });

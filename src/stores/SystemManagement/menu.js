@@ -1,5 +1,4 @@
 import { observable, action } from 'mobx';
-import { message } from 'antd';
 
 import { queryTree, queryList, insert, remove, queryDetail, update } from '@/services/SystemManagement/menu';
 
@@ -31,8 +30,6 @@ class MenuStore {
   @observable currentNode = this.defaultNode;
   // 新建按钮的是否显示加载中
   @observable newBtnLoading = false;
-  // 后端返回的错误校验信息
-  @observable error = null;
   // 新建的模态框是否显示
   @observable modalVisible = false; 
 
@@ -62,16 +59,12 @@ class MenuStore {
 
     if(response.Code === 200) {
       
-      message.success('提交成功');
-
       this.fetchList({ ParentID: data.ParentID });
 
       this.fetchTree();
 
-    } else if(response.Code === 101) {
-      this.setData({
-        error: response.Error,
-      });
+    } else {
+      return await Promise.reject(response.Error);
     }
   }
 
@@ -81,11 +74,11 @@ class MenuStore {
     const response = await remove(data);
     if(response.Code === 200) {
 
-      message.success('删除成功');
-
       this.fetchList({ ParentID: data.ParentID });
 
       this.fetchTree();
+    } else {
+      return await Promise.reject(response.Error);
     }
   }
 
@@ -130,9 +123,11 @@ class MenuStore {
 
       this.setData({
         list: response.Data,
-        // current/pageSize 来自页面
         // total 来自接口返回
-        pagination: {...data,total: response.TotalCount},
+        pagination: {
+          ...this.pagination,
+          total: response.TotalCount
+        },
       });
     }
 

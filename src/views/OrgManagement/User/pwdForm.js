@@ -27,27 +27,22 @@ export default class PwdForm extends Component {
           UniqueID: user.currentResetPwdUser.UniqueID,
           LoginName: user.currentResetPwdUser.LoginName,
           NewPassword: values.NewPassword,
-        }).then((status) => {
+        }).then(() => {
+          message.success('重置成功');
+          setPwdModalVisible(false);
+        }).catch(({ ModelState }) => {
+          
+          // 设置服务器返回的错误校验信息
+          let fields = {};
+          Object.keys(ModelState).forEach(key => {
+            const key2 = key.split('.').pop();
+            fields[key2] = {
+              value: values[key2],
+              errors: [new Error(ModelState[key])],
+            }
+          });
 
-          if(status) {
-            message.success('重置成功');
-            setPwdModalVisible(false);
-          } else if(user.error) {
-
-            // 设置服务器返回的错误校验信息
-            const { ModelState } = user.error;
-
-            let fields = {};
-            Object.keys(ModelState).forEach(key => {
-              const key2 = key.split('.').pop();
-              fields[key2] = {
-                value: values[key2],
-                errors: [new Error(ModelState[key])],
-              }
-            });
-
-            form.setFields(fields);
-          }
+          form.setFields(fields);
         }); 
       }
     });

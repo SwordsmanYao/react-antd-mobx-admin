@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Button, Table, Divider, Popconfirm } from 'antd';
+import { Layout, Button, Table, Divider, Popconfirm, message } from 'antd';
 
 import DisplayTree from '@/components/DisplayTree';
 import OrgForm from './form';
@@ -70,6 +70,8 @@ export default class Org extends Component {
       UniqueID: record.UniqueID,
     }).then(() => {
       this.setModalVisible(true);
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
     });
 
     
@@ -80,6 +82,10 @@ export default class Org extends Component {
 
     org.remove({
       UniqueID: record.UniqueID,
+    }).then(() => {
+      message.success('删除成功');
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
     });
   }
 

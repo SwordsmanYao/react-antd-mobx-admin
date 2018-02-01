@@ -1,5 +1,4 @@
 import { observable, action } from 'mobx';
-import { message } from 'antd';
 
 import { queryList, remove } from '@/services/SystemManagement/exceptionLog';
 
@@ -33,8 +32,6 @@ class ExceptionLogStore {
     const response = await remove(data);
     if(response.Code === 200) {
 
-      message.success('删除成功');
-
       let orderData = {};
       if(this.orderField) {
         orderData = {
@@ -49,11 +46,9 @@ class ExceptionLogStore {
         ...this.searchFormValues,
         ...orderData,
       });
-
-      return true;
+    } else {
+      return await Promise.reject(response.Error);
     }
-
-    return false;
   }
 
   @action

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Button, Table, Divider, Popconfirm } from 'antd';
+import { Layout, Button, Table, Divider, Popconfirm, message } from 'antd';
 
 import DisplayTree from '@/components/DisplayTree';
 import MenuForm from './form';
@@ -86,6 +86,8 @@ export default class Menu extends Component {
 
     menu.remove({
       UniqueID: record.UniqueID,
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
     });
   }
 

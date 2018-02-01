@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Table, Alert, Modal, Badge } from 'antd';
+import { Table, Alert, Modal, Badge, message } from 'antd';
 import moment from 'moment';
 
 import styles from './index.less';
@@ -67,13 +67,14 @@ export default class OperationLog extends Component {
 
     operationLog.remove({
       Params,
-    }).then(result => {
-      if(result) {
-        // 在选中条目中清除已经删除的
-        operationLog.setData({
-          selectedRowKeys: operationLog.selectedRowKeys.filter(item => (Params.indexOf(item) === -1)),
-        });
-      }
+    }).then(() => {
+      message.success('删除成功');
+      // 在选中条目中清除已经删除的
+      operationLog.setData({
+        selectedRowKeys: operationLog.selectedRowKeys.filter(item => (Params.indexOf(item) === -1)),
+      });
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
     });
   }
 

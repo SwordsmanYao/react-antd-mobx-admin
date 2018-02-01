@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Form, Row, Col, Input, Modal } from 'antd';
+import { Form, Row, Col, Input, Modal, message } from 'antd';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -52,24 +52,21 @@ export default class MenuForm extends Component {
         }
 
         orgCategory.commit(data).then(() => {
+          message.success('提交成功');
+          setModalVisible(false);
+        }).catch(({ ModelState }) => {
+          
           // 设置服务器返回的错误校验信息
-          if(orgCategory.error) {
+          let fields = {};
+          Object.keys(ModelState).forEach(key => {
+            fields[key] = {
+              value: values[key],
+              errors: [new Error(ModelState[key])],
+            }
+          });
 
-            const { ModelState } = orgCategory.error;
-
-            let fields = {};
-            Object.keys(ModelState).forEach(key => {
-              fields[key] = {
-                value: values[key],
-                errors: [new Error(ModelState[key])],
-              }
-            });
-
-            form.setFields(fields);
-          } else {
-            setModalVisible(false);
-          }
-        });      
+          form.setFields(fields);
+        }); 
       }
     });
   }

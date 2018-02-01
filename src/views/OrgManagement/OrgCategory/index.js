@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Button, Table, Divider, Popconfirm } from 'antd';
+import { Layout, Button, Table, Divider, Popconfirm, message } from 'antd';
 
 import OrgCategoryForm from './form';
 import styles from './index.less';
@@ -54,9 +54,9 @@ export default class OrgCategory extends Component {
       UniqueID: record.UniqueID,
     }).then(() => {
       this.setModalVisible(true);
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
     });
-
-    
   }
   // 删除
   handleRemove = (record) => {
@@ -64,6 +64,10 @@ export default class OrgCategory extends Component {
 
     orgCategory.remove({
       UniqueID: record.UniqueID,
+    }).then(() => {
+      message.success('删除成功');
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
     });
   }
 

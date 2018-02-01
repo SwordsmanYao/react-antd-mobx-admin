@@ -9,13 +9,14 @@ export default class RoleSelect extends Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onSelectionChange = this.onSelectionChange.bind(this);
     this.afterClose = this.afterClose.bind(this);
   }
 
 
 
   // 表单提交
-  handleSubmit = (e) => {
+  handleSubmit = () => {
     const { user, setRoleModalVisible } = this.props;
 
     user.setMemberRole({
@@ -24,8 +25,8 @@ export default class RoleSelect extends Component {
     }).then(() => {
       message.success('操作成功');
       setRoleModalVisible(false);
-     }).catch(() => {
-      message.error('操作失败');
+     }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
      });
   }
 
