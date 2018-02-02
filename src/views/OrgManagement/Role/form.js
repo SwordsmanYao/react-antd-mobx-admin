@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Form, Row, Col, Input, Modal, message } from 'antd';
+import { Form, Row, Col, Input, Modal, message, Radio } from 'antd';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
+const RadioGroup = Radio.Group;
 
 @Form.create({
   onFieldsChange(props, changedFields) {
-    const { orgCategory } = props;
+    const { role } = props;
     console.log('onFieldsChange', changedFields);
 
-    orgCategory.setCurrentNodeField(changedFields);
+    role.setCurrentNodeField(changedFields);
   },
   mapPropsToFields(props) {
-    const { currentNode }  = props.orgCategory;
+    const { currentNode }  = props.role;
     console.log('mapPropsToFields', currentNode);
 
     let fields = {};
@@ -27,7 +28,7 @@ const { TextArea } = Input;
   },
 })
 @observer
-export default class OrgCategoryForm extends Component {
+export default class RoleForm extends Component {
   
   constructor(props) {
     super(props);
@@ -38,7 +39,7 @@ export default class OrgCategoryForm extends Component {
 
   // 表单提交
   handleSubmit = (e) => {
-    const { form, orgCategory, setModalVisible } = this.props;
+    const { form, role, setModalVisible } = this.props;
 
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
@@ -47,11 +48,11 @@ export default class OrgCategoryForm extends Component {
         const data = {
           ...values,
         };
-        if (orgCategory.currentNode.UniqueID && orgCategory.currentNode.UniqueID.value) {
-          data.UniqueID = orgCategory.currentNode.UniqueID.value;
+        if (role.currentNode.UniqueID && role.currentNode.UniqueID.value) {
+          data.UniqueID = role.currentNode.UniqueID.value;
         }
 
-        orgCategory.commit(data).then(() => {
+        role.commit(data).then(() => {
           message.success('提交成功');
           setModalVisible(false);
         }).catch(({ ModelState }) => {
@@ -72,8 +73,8 @@ export default class OrgCategoryForm extends Component {
   }
 
   afterClose = () => {
-    const { orgCategory } = this.props;
-    orgCategory.clearCurrentNode();
+    const { role } = this.props;
+    role.clearCurrentNode();
   }
   
 
@@ -96,7 +97,7 @@ export default class OrgCategoryForm extends Component {
 
     return (
       <Modal
-        title="机构类别"
+        title="角色管理"
         okText="确定"
         cancelText="取消"
         width="750px"
@@ -124,14 +125,17 @@ export default class OrgCategoryForm extends Component {
             <Col span={12}>
               <FormItem
                 {...formItemLayout}
-                label="排序代码"
+                label="是否可用"
               >
-                {getFieldDecorator('SortCode', {
+                {getFieldDecorator('IsAvailable', {
                   rules: [{
-                    message: '请输入数字格式排序代码', pattern: /^[0-9]*$/,
+                    required: true, message: '请选择是否可用',
                   }],
                 })(
-                  <Input />,
+                  <RadioGroup>
+                    <Radio value={1}>是</Radio>
+                    <Radio value={0}>否</Radio>
+                  </RadioGroup>,
                 )}
               </FormItem>
             </Col>

@@ -62,6 +62,12 @@ function tree(req, res) {
           },
           {
             id: 23,
+            name: '角色管理',
+            path: 'role',
+            hasChildren: false,
+          },
+          {
+            id: 24,
             name: '用户管理',
             path: 'user',
             hasChildren: false,

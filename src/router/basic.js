@@ -32,6 +32,11 @@ import asyncComponent from '../components/AsyncComponent';
     exact: true,
   },
   {
+    path: 'org-management/role',
+    component: asyncComponent(() => import(/* webpackChunkName: "role" */ '../views/OrgManagement/Role')),
+    exact: true,
+  },
+  {
     path: 'org-management/user',
     component: asyncComponent(() => import(/* webpackChunkName: "user" */ '../views/OrgManagement/User')),
     exact: true,

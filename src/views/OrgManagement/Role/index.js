@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Button, Table, Divider, Popconfirm, message } from 'antd';
+import { Layout, Button, Table, Divider, Popconfirm, message, Badge } from 'antd';
 
-import DisplayTree from '@/components/DisplayTree';
-import OrgForm from './form';
+import RoleForm from './form';
 import styles from './index.less';
 
 
-const { Sider, Content } = Layout;
+const { Content } = Layout;
 
-@inject('org')
+@inject('role')
 @observer
-export default class Org extends Component {
+export default class Role extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      // 新建的模态框是否显示
       modalVisible: false,
     }
 
-    this.onSelect = this.onSelect.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
     this.handleNew = this.handleNew.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
@@ -29,34 +26,16 @@ export default class Org extends Component {
   }
 
   componentWillMount() {
-    const { org } = this.props;
-    org.reset();
-    org.fetchTree();
-    org.refreshList();
+    const { role } = this.props;
+    role.reset();
+    role.refreshList();
   }
 
   componentWillUnmount() {
-    const { org } = this.props;
-    org.reset();
+    const { role } = this.props;
+    role.refreshList();
   }
 
-  // 点击树节点时触发
-  onSelect = (selectedKeys) => {
-    console.log('selected', selectedKeys);
-    const { org } = this.props;
-
-    if(selectedKeys.length > 0) {
-      org.setData({
-        selectedKeys: selectedKeys,
-      });
-      
-      org.fetchList({
-        ParentID: selectedKeys[0],
-        CurrentPage: org.pagination.current,
-        PageSize: org.pagination.pageSize,
-      });
-    }
-  }
 
   // 设置模态框显示/隐藏
   setModalVisible(modalVisible) {
@@ -72,24 +51,22 @@ export default class Org extends Component {
 
   // 修改
   handleEdit = (record) => {
-    const { org } = this.props;
+    const { role } = this.props;
     console.log('record' ,record);
 
-    org.fetchDetail({
+    role.fetchDetail({
       UniqueID: record.UniqueID,
     }).then(() => {
       this.setModalVisible(true);
     }).catch((e) => {
       message.error(`操作失败：${e.Message}`);
     });
-
-    
   }
   // 删除
   handleRemove = (record) => {
-    const { org } = this.props;
+    const { role } = this.props;
 
-    org.remove({
+    role.remove({
       UniqueID: record.UniqueID,
     }).then(() => {
       message.success('删除成功');
@@ -105,15 +82,27 @@ export default class Org extends Component {
   }
 
   render() {
-    const { org } = this.props;
+    const { role } = this.props;
+
     const columns = [{
       title: '名称',
-      dataIndex: 'FullName',
-      key: 'FullName',
+      dataIndex: 'Name',
+      key: 'Name',
     }, {
-      title: '排序',
-      dataIndex: 'SortCode',
-      key: 'SortCode',
+      title: '描述',
+      dataIndex: 'DescInfo',
+      key: 'DescInfo',
+    }, {
+      title: '是否可用',
+      dataIndex: 'IsAvailable',
+      key: 'IsAvailable',
+      render: (result) => {
+        if(result) {
+          return <Badge status="success" text="是" />;
+        } else {
+          return <Badge status="error" text="否" />;
+        }
+      },
     }, {
       title: '操作',
       key: 'Action',
@@ -129,9 +118,9 @@ export default class Org extends Component {
           >编辑
           </a>
           <Divider type="vertical" />
-          <Popconfirm 
+          <Popconfirm
             placement="bottom" 
-            title="如果有子节点会一同删除，确认要删除这条记录吗？" 
+            title="确认要删除这条记录吗？" 
             onConfirm={() => { this.handleRemove(record); }} 
             okText="是" 
             cancelText="否"
@@ -151,40 +140,25 @@ export default class Org extends Component {
 
     return (
       <Layout className={styles.layout}>
-        <Sider width={220} style={{ background: '#fff' }}>
-          {
-            org.treeList && org.treeList.length > 0 &&
-              <DisplayTree
-                treeList={[{
-                  id: '0',
-                  name: '组织机构',
-                  children: org.treeList.slice(),
-                }]}
-                defaultExpandedKeys={['0']}
-                onSelect={this.onSelect}
-                selectedKeys={org.selectedKeys.slice()}
-              />
-          }
-        </Sider>
-        <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
+        <Content style={{ background: '#fff', padding: 30 }}>
           <div className={styles.toolbar}>
             <Button
               icon="plus"
-              onClick={this.handleNew} 
-              loading={org.newBtnLoading}
+              onClick={this.handleNew}
+              loading={role.newBtnLoading}
             >新建</Button>
-            <OrgForm
-              org={org}
+            <RoleForm
+              role={role}
               modalVisible={this.state.modalVisible}
               setModalVisible={this.setModalVisible}
             />
           </div>
-          <Table 
+          <Table
             bordered
             size="small"
-            loading={org.loading}
-            pagination={org.pagination}
-            dataSource={org.list.slice()}
+            loading={role.loading}
+            pagination={role.pagination}
+            dataSource={role.list.slice()}
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}
