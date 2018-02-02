@@ -31,26 +31,31 @@ class ExceptionLogStore {
   async remove(data) {
     const response = await remove(data);
     if(response.Code === 200) {
-
-      let orderData = {};
-      if(this.orderField) {
-        orderData = {
-          OrderField: this.orderField,
-          IsDesc: this.isDesc,
-        }
-      }
-      
-      this.fetchList({
-        CurrentPage: this.pagination.current,
-        PageSize: this.pagination.pageSize,
-        ...this.searchFormValues,
-        ...orderData,
-      });
+      this.refreshList();
     } else {
       return await Promise.reject(response.Error);
     }
   }
 
+  // 使用当前状态刷新列表
+  @action
+  async refreshList() {
+    let orderData = {};
+    if(this.orderField) {
+      orderData = {
+        OrderField: this.orderField,
+        IsDesc: this.isDesc,
+      }
+    }
+    
+    this.fetchList({
+      CurrentPage: this.pagination.current,
+      PageSize: this.pagination.pageSize,
+      ...this.searchFormValues,
+      ...orderData,
+    });
+  }
+  
   @action
   async fetchList(data) {
     this.setData({

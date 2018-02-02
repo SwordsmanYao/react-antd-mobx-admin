@@ -49,7 +49,7 @@ class OrgCategoryStore {
     });
 
     if(response.Code === 200) {
-      this.fetchList();
+      this.refreshList();
     } else {
       return await Promise.reject(response.Error);
     }
@@ -59,7 +59,7 @@ class OrgCategoryStore {
   async remove(data) {
     const response = await remove(data);
     if(response.Code === 200) {
-      this.fetchList();
+      this.refreshList();
     } else {
       return await Promise.reject(response.Error);
     }
@@ -83,6 +83,15 @@ class OrgCategoryStore {
     } else {
       return await Promise.reject(response.Error);
     }
+  }
+
+  // 使用当前状态刷新列表
+  @action
+  async refreshList() {
+    this.fetchList({
+      CurrentPage: this.pagination.current,
+      PageSize: this.pagination.pageSize,
+    });
   }
 
   @action
@@ -114,6 +123,13 @@ class OrgCategoryStore {
    * 不含异步操作的 action
    */
   @action
+  setData(data) {
+    Object.keys(data).forEach((key) => {
+      this[key] = data[key];
+    });
+  }
+
+  @action
   clearCurrentNode() {
     this.currentNode = this.defaultNode;
     this.error = null;
@@ -124,13 +140,6 @@ class OrgCategoryStore {
       ...this.currentNode,
       ...data,
     }
-  }
-
-  @action
-  setData(data) {
-    Object.keys(data).forEach((key) => {
-      this[key] = data[key];
-    });
   }
 } 
 

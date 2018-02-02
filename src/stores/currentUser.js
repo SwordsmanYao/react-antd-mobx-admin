@@ -49,6 +49,12 @@ class CurrentUserStore {
   /**
    * 不含异步操作的 action
    */
+  @action
+  setData(data) {
+    Object.keys(data).forEach((key) => {
+      this[key] = data[key];
+    });
+  }
 
   @action
   logout() {
@@ -67,13 +73,6 @@ class CurrentUserStore {
   loadCurrentUserFromSession() {
     const user = JSON.parse(sessionStorage.getItem('currentUser'));
     this.currentUser = user;
-  }
-
-  @action
-  setData(data) {
-    Object.keys(data).forEach((key) => {
-      this[key] = data[key];
-    });
   }
 }
 

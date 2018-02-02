@@ -73,23 +73,7 @@ class UserStore {
     });
 
     if(response.Code === 200) {
-
-      let orderData = {};
-      if(this.orderField) {
-        orderData = {
-          OrderField: this.orderField,
-          IsDesc: this.isDesc,
-        }
-      }
-      
-      this.fetchList({
-        OrganizationID: this.selectedKeys[0],
-        CurrentPage: this.pagination.current,
-        PageSize: this.pagination.pageSize,
-        ...this.searchFormValues,
-        ...orderData,
-      });
-
+      this.refreshList();
     } else {
       return await Promise.reject(response.Error);
     }
@@ -99,22 +83,7 @@ class UserStore {
   async remove(data) {
     const response = await remove(data);
     if(response.Code === 200) {
-
-      let orderData = {};
-      if(this.orderField) {
-        orderData = {
-          OrderField: this.orderField,
-          IsDesc: this.isDesc,
-        }
-      }
-      
-      this.fetchList({
-        OrganizationID: this.selectedKeys[0],
-        CurrentPage: this.pagination.current,
-        PageSize: this.pagination.pageSize,
-        ...this.searchFormValues,
-        ...orderData,
-      });
+      this.refreshList();
     } else {
       return await Promise.reject(response.Error);
     }
@@ -134,6 +103,26 @@ class UserStore {
     } else {
       return await Promise.reject(response.Error);
     }
+  }
+
+  // 使用当前状态刷新列表
+  @action
+  async refreshList() {
+    let orderData = {};
+    if(this.orderField) {
+      orderData = {
+        OrderField: this.orderField,
+        IsDesc: this.isDesc,
+      }
+    }
+    
+    this.fetchList({
+      OrganizationID: this.selectedKeys[0],
+      CurrentPage: this.pagination.current,
+      PageSize: this.pagination.pageSize,
+      ...this.searchFormValues,
+      ...orderData,
+    });
   }
 
   @action
@@ -175,21 +164,7 @@ class UserStore {
     const response = await setStatus(data);
 
     if(response.Code === 200) {
-      let orderData = {};
-      if(this.orderField) {
-        orderData = {
-          OrderField: this.orderField,
-          IsDesc: this.isDesc,
-        }
-      }
-      
-      this.fetchList({
-        OrganizationID: this.selectedKeys[0],
-        CurrentPage: this.pagination.current,
-        PageSize: this.pagination.pageSize,
-        ...this.searchFormValues,
-        ...orderData,
-      });
+      this.refreshList();
     } else {
       return await Promise.reject(response.Error);
     }
@@ -232,6 +207,13 @@ class UserStore {
    * 不含异步操作的 action
    */
   @action
+  setData(data) {
+    Object.keys(data).forEach((key) => {
+      this[key] = data[key];
+    });
+  }
+
+  @action
   clearCurrentNode() {
     this.currentNode = this.defaultNode;
     this.error = null;
@@ -254,13 +236,6 @@ class UserStore {
     });
 
     this.currentNode = data;
-  }
-
-  @action
-  setData(data) {
-    Object.keys(data).forEach((key) => {
-      this[key] = data[key];
-    });
   }
 }
 

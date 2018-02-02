@@ -23,11 +23,7 @@ export default class OrgCategory extends Component {
 
   componentWillMount() {
     const { orgCategory } = this.props;
-
-    orgCategory.fetchList({
-      PageSize: orgCategory.pagination.pageSize,
-      CurrentPage: orgCategory.pagination.current,
-    });
+    orgCategory.refreshList();
   }
 
 

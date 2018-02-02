@@ -28,6 +28,13 @@ class GlobalStore {
    * 不含异步操作的 action
    */
   @action
+  setData(data) {
+    Object.keys(data).forEach((key) => {
+      this[key] = data[key];
+    });
+  }
+
+  @action
   toggleCollapsed() {
     if(!this.collapsed) {
       this.setData({
@@ -39,13 +46,6 @@ class GlobalStore {
         collapsed: !this.collapsed,
       });
     }
-  }
-
-  @action
-  setData(data) {
-    Object.keys(data).forEach((key) => {
-      this[key] = data[key];
-    });
   }
 }
 

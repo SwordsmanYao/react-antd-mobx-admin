@@ -52,11 +52,7 @@ export default class User extends Component {
           selectedKeys: [tree[0].id.toString()],
           expandedKeys: [tree[0].id.toString()],
         });
-        user.fetchList({
-          OrganizationID: user.selectedKeys[0],
-          PageSize: user.pagination.pageSize,
-          CurrentPage: user.pagination.current,
-        });
+        user.refreshList();
       }
     });
   }
@@ -364,7 +360,7 @@ export default class User extends Component {
 
     return (
       <Layout className={styles.layout}>
-        <Sider width={230} style={{ background: '#fff' }}>
+        <Sider width={210} style={{ background: '#fff' }}>
           {
             user.treeList && user.treeList.length > 0 && user.selectedKeys &&
               <DisplayTree

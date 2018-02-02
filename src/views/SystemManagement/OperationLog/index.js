@@ -25,10 +25,7 @@ export default class OperationLog extends Component {
 
   componentWillMount() {
     const { operationLog } = this.props;
-    operationLog.fetchList({
-      CurrentPage: operationLog.pagination.current,
-      PageSize: operationLog.pagination.pageSize,
-    });
+    operationLog.refreshList();
     operationLog.fetchOperateTypeTextValue();
   }
 

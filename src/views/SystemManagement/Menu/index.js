@@ -27,11 +27,7 @@ export default class Menu extends Component {
     const { menu } = this.props;
 
     menu.fetchTree();
-    menu.fetchList({
-      ParentID: menu.selectedKeys[0],
-      PageSize: menu.pagination.pageSize,
-      CurrentPage: menu.pagination.current,
-    });
+    menu.refreshList();
   }
 
   handleTableChange = (pagination, filters, sorter) => {
@@ -45,13 +41,17 @@ export default class Menu extends Component {
     console.log('selected', selectedKeys);
     const { menu } = this.props;
 
-    menu.setData({
-      selectedKeys,
-    });
-
-    menu.fetchList({
-      ParentID: selectedKeys[0],
-    });
+    if(selectedKeys.length > 0) {
+      menu.setData({
+        selectedKeys: selectedKeys,
+      });
+      
+      menu.fetchList({
+        ParentID: selectedKeys[0],
+        CurrentPage: menu.pagination.current,
+        PageSize: menu.pagination.pageSize,
+      });
+    }
   }
 
   // 设置模态框显示/隐藏
@@ -149,7 +149,7 @@ export default class Menu extends Component {
 
     return (
       <Layout className={styles.layout}>
-        <Sider width={230} style={{ background: '#fff' }}>
+        <Sider width={220} style={{ background: '#fff' }}>
           {
             menu.treeList && menu.treeList.length > 0 &&
               <DisplayTree

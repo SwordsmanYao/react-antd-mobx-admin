@@ -27,11 +27,7 @@ export default class Org extends Component {
     const { org } = this.props;
 
     org.fetchTree();
-    org.fetchList({
-      ParentID: org.selectedKeys[0],
-      PageSize: org.pagination.pageSize,
-      CurrentPage: org.pagination.current,
-    });
+    org.refreshList();
   }
 
   // 点击树节点时触发
@@ -39,13 +35,17 @@ export default class Org extends Component {
     console.log('selected', selectedKeys);
     const { org } = this.props;
 
-    org.setData({
-      selectedKeys: selectedKeys,
-    });
-
-    org.fetchList({
-      ParentID: selectedKeys[0],
-    });
+    if(selectedKeys.length > 0) {
+      org.setData({
+        selectedKeys: selectedKeys,
+      });
+      
+      org.fetchList({
+        ParentID: selectedKeys[0],
+        CurrentPage: org.pagination.current,
+        PageSize: org.pagination.pageSize,
+      });
+    }
   }
 
   // 设置模态框显示/隐藏
@@ -143,7 +143,7 @@ export default class Org extends Component {
 
     return (
       <Layout className={styles.layout}>
-        <Sider width={230} style={{ background: '#fff' }}>
+        <Sider width={220} style={{ background: '#fff' }}>
           {
             org.treeList && org.treeList.length > 0 &&
               <DisplayTree

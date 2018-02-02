@@ -25,10 +25,7 @@ export default class ExceptionLog extends Component {
 
   componentWillMount() {
     const { exceptionLog } = this.props;
-    exceptionLog.fetchList({
-      CurrentPage: exceptionLog.pagination.current,
-      PageSize: exceptionLog.pagination.pageSize,
-    });
+    exceptionLog.refreshList();
   }
 
   // 清空选中条目
