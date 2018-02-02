@@ -13,13 +13,21 @@ body {
   .alignCenter {
     text-align: center;
   }
+  // 修改分页器样式
   .ant-table-pagination.ant-pagination {
     float: left !important;
     margin: 8px 0px 0px 0px;
   }
+  //解决 small 表格边框不对齐 bug
   .ant-table-small table {
     border-collapse: collapse!important;
     overflow: visible!important;
+  }
+  // small 表格选框宽度固定
+  .ant-table-small .ant-table-thead > tr > th.ant-table-selection-column, .ant-table-tbody > tr > td.ant-table-selection-column {
+    text-align: center;
+    min-width: 32px!important;
+    width: 32px!important;
   }
   // .ant-menu.ant-menu-dark .ant-menu-item-selected,
   // .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected {
