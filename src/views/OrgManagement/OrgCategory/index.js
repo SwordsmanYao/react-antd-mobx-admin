@@ -14,6 +14,10 @@ export default class OrgCategory extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      modalVisible: false,
+    }
+
     this.setModalVisible = this.setModalVisible.bind(this);
     this.handleNew = this.handleNew.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
@@ -23,15 +27,19 @@ export default class OrgCategory extends Component {
 
   componentWillMount() {
     const { orgCategory } = this.props;
+    orgCategory.reset();
+    orgCategory.refreshList();
+  }
+
+  componentWillUnmount() {
+    const { orgCategory } = this.props;
     orgCategory.refreshList();
   }
 
 
   // 设置模态框显示/隐藏
   setModalVisible(modalVisible) {
-    const { orgCategory } = this.props;
-
-    orgCategory.setData({
+    this.setState({
       modalVisible,
     });
   }
@@ -75,7 +83,7 @@ export default class OrgCategory extends Component {
 
   render() {
     const { orgCategory } = this.props;
-    const { setModalVisible } = this;
+
     const columns = [{
       title: '名称',
       dataIndex: 'Name',
@@ -134,8 +142,8 @@ export default class OrgCategory extends Component {
             >新建</Button>
             <OrgCategoryForm
               orgCategory={orgCategory}
-              modalVisible={orgCategory.modalVisible}
-              setModalVisible={setModalVisible}
+              modalVisible={this.state.modalVisible}
+              setModalVisible={this.setModalVisible}
             />
           </div>
           <Table

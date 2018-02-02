@@ -25,8 +25,14 @@ export default class OperationLog extends Component {
 
   componentWillMount() {
     const { operationLog } = this.props;
+    operationLog.reset();
     operationLog.refreshList();
     operationLog.fetchOperateTypeTextValue();
+  }
+
+  componentWillUnmount() {
+    const { operationLog } = this.props;
+    operationLog.reset();
   }
 
   // 清空选中条目

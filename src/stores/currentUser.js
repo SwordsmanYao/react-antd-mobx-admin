@@ -32,6 +32,7 @@ class CurrentUserStore {
 
       this.setData({
         currentUser: response.Data,
+        error: null,
       })
 
       history.push('/basic');

@@ -15,6 +15,10 @@ export default class Menu extends Component {
   constructor(props) {
     super(props);
     
+    this.state = {
+      modalVisible: false,
+    }
+
     this.onSelect = this.onSelect.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
     this.handleNew = this.handleNew.bind(this);
@@ -25,9 +29,14 @@ export default class Menu extends Component {
 
   componentWillMount() {
     const { menu } = this.props;
-
+    menu.reset();
     menu.fetchTree();
     menu.refreshList();
+  }
+
+  componentWillUnmount() {
+    const { menu } = this.props;
+    menu.reset();
   }
 
   handleTableChange = (pagination, filters, sorter) => {
@@ -56,8 +65,7 @@ export default class Menu extends Component {
 
   // 设置模态框显示/隐藏
   setModalVisible(modalVisible) {
-    const { menu } = this.props;
-    menu.setData({
+    this.setState({
       modalVisible,
     });
   }
@@ -173,7 +181,7 @@ export default class Menu extends Component {
             >新建</Button>
             <MenuForm
               menu={menu}
-              modalVisible={menu.modalVisible}
+              modalVisible={this.state.modalVisible}
               setModalVisible={setModalVisible}
             />
           </div>

@@ -15,6 +15,11 @@ export default class Org extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      // 新建的模态框是否显示
+      modalVisible: false,
+    }
+
     this.onSelect = this.onSelect.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
     this.handleNew = this.handleNew.bind(this);
@@ -25,9 +30,14 @@ export default class Org extends Component {
 
   componentWillMount() {
     const { org } = this.props;
-
+    org.reset();
     org.fetchTree();
     org.refreshList();
+  }
+
+  componentWillUnmount() {
+    const { org } = this.props;
+    org.reset();
   }
 
   // 点击树节点时触发
@@ -50,8 +60,7 @@ export default class Org extends Component {
 
   // 设置模态框显示/隐藏
   setModalVisible(modalVisible) {
-    const { org } = this.props;
-    org.setData({
+    this.setState({
       modalVisible,
     });
   }
@@ -97,7 +106,6 @@ export default class Org extends Component {
 
   render() {
     const { org } = this.props;
-    const { setModalVisible } = this;
     const columns = [{
       title: '名称',
       dataIndex: 'FullName',
@@ -167,8 +175,8 @@ export default class Org extends Component {
             >新建</Button>
             <OrgForm
               org={org}
-              modalVisible={org.modalVisible}
-              setModalVisible={setModalVisible}
+              modalVisible={this.state.modalVisible}
+              setModalVisible={this.setModalVisible}
             />
           </div>
           <Table 

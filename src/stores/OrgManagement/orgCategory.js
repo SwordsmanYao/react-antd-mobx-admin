@@ -21,8 +21,7 @@ class OrgCategoryStore {
   @observable currentNode = this.defaultNode;
   // 新建按钮的是否显示加载中
   @observable newBtnLoading = false;
-  // 新建的模态框是否显示
-  @observable modalVisible = false; 
+
 
    /**
    * 含有接口请求等异步操作的 action

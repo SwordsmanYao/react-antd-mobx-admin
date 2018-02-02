@@ -5,25 +5,22 @@ import { queryList, remove, queryOperateType } from '@/services/SystemManagement
 class OperationLogStore {
 
   // 列表数据
-  @observable list = [];
+  @observable list;
   // 控制列表是否显示加载中
-  @observable loading = false; 
+  @observable loading; 
   // 列表分页数据
-  @observable pagination = {
-    current: 1,
-    pageSize: 20,
-    total: 20, // 总数,由接口提供
-  };
-  // 被选择行的行标识
-  @observable selectedRowKeys = [];
-  // 查询表单数据，在查询时赋值
-  @observable searchFormValues = {};
+  @observable pagination;
   // table 排序字段
-  @observable orderField = null;
+  @observable orderField;
   // 是否降序
-  @observable isDesc = false;
+  @observable isDesc;
+  // 被选择行的行标识
+  @observable selectedRowKeys;
+
+  // 查询表单数据，在查询时赋值
+  @observable searchFormValues;
   // 操作类型下拉框数据
-  @observable operateTypeTextValue = [];
+  @observable operateTypeTextValue;
 
 
   /**
@@ -100,6 +97,31 @@ class OperationLogStore {
     Object.keys(data).forEach((key) => {
       this[key] = data[key];
     });
+  }
+  // 用于初始化和切换页面时清空数据
+  @action
+  reset() {
+    // 列表数据
+    this.list = [];
+    // 控制列表是否显示加载中
+    this.loading = false; 
+    // 列表分页数据
+    this.pagination = {
+      current: 1,
+      pageSize: 20,
+      total: 20, // 总数,由接口提供
+    };
+    // table 排序字段
+    this.orderField = null;
+    // 是否降序
+    this.isDesc = false;
+    // 被选择行的行标识
+    this.selectedRowKeys = [];
+
+    // 查询表单数据，在查询时赋值
+    this.searchFormValues = {};
+    // 操作类型下拉框数据
+    this.operateTypeTextValue = [];
   }
 }
 

@@ -4,49 +4,43 @@ import { queryTree, queryList, insert, remove, update, resetPwd, setStatus, getM
 
 class UserStore {
   // 树结构数据
-  @observable treeList = []; 
+  @observable treeList; 
   // 当前选中的树节点id
   @observable selectedKeys;
 
   // 列表数据
-  @observable list = []; 
+  @observable list; 
   // 控制列表是否显示加载中
-  @observable loading = false; 
+  @observable loading; 
   // 列表分页数据
-  @observable pagination = {
-    current: 1,
-    pageSize: 20,
-    total: 20, // 总数,由接口提供
-  };
+  @observable pagination;
   // 被选择行的行标识
-  @observable selectedRowKeys = [];
+  @observable selectedRowKeys;
   // 查询表单数据，在查询时赋值
-  @observable searchFormValues = {};
+  @observable searchFormValues;
   // table 排序字段
-  @observable orderField = null;
+  @observable orderField;
   // 是否降序
-  @observable isDesc = false;
+  @observable isDesc;
   
   // currentNode 的默认值，用于 clear 时的数据
   defaultNode = {};
   // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
-  @observable currentNode = this.defaultNode;
+  @observable currentNode;
   // 新建按钮的是否显示加载中
-  @observable newBtnLoading = false;
-  // 新建的模态框是否显示
-  @observable modalVisible = false; 
+  @observable newBtnLoading;
   // 组织类别下拉框数据
-  @observable orgTextValue = [];
+  @observable orgTextValue;
 
   // 需要修改密码的用户信息
-  @observable currentResetPwdUser = null;
+  @observable currentResetPwdUser;
 
   // 成员角色列表数据
-  @observable memberRole = null;
+  @observable memberRole;
   // 需要设置角色的用户
-  @observable currentSetRoleUser = null;
+  @observable currentSetRoleUser;
   // 被选择角色的行标识
-  @observable roleSelectedRowKeys = [];
+  @observable roleSelectedRowKeys;
 
   /**
    * 含有接口请求等异步操作的 action
@@ -211,6 +205,50 @@ class UserStore {
     Object.keys(data).forEach((key) => {
       this[key] = data[key];
     });
+  }
+  // 用于初始化和切换页面时清空数据
+  @action
+  reset() {
+    // 树结构数据
+    this.treeList = []; 
+    // 当前选中的树节点id
+    this.selectedKeys = [];
+
+    // 列表数据
+    this.list = []; 
+    // 控制列表是否显示加载中
+    this.loading = false; 
+    // 列表分页数据
+    this.pagination = {
+      current: 1,
+      pageSize: 20,
+      total: 20, // 总数,由接口提供
+    };
+    // 被选择行的行标识
+    this.selectedRowKeys = [];
+    // 查询表单数据，在查询时赋值
+    this.searchFormValues = {};
+    // table 排序字段
+    this.orderField = null;
+    // 是否降序
+    this.isDesc = false;
+    
+    // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
+    this.currentNode = this.defaultNode;
+    // 新建按钮的是否显示加载中
+    this.newBtnLoading = false;
+    // 组织类别下拉框数据
+    this.orgTextValue = [];
+
+    // 需要修改密码的用户信息
+    this.currentResetPwdUser = null;
+
+    // 成员角色列表数据
+    this.memberRole = null;
+    // 需要设置角色的用户
+    this.currentSetRoleUser = null;
+    // 被选择角色的行标识
+    this.roleSelectedRowKeys = [];
   }
 
   @action

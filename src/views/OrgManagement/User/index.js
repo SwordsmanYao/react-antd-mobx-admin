@@ -21,15 +21,16 @@ export default class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      modalVisible: false,
       // 修改密码框是否显示
       pwdModalVisible: false,
       // 修改角色框是否显示
       roleModalVisible: false,
     }
 
+    this.setModalVisible = this.setModalVisible.bind(this);
     this.setPwdModalVisible = this.setPwdModalVisible.bind(this);
     this.setRoleModalVisible = this.setRoleModalVisible.bind(this);
-    this.setModalVisible = this.setModalVisible.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.handleNew = this.handleNew.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
@@ -46,6 +47,7 @@ export default class User extends Component {
   componentWillMount() {
     const { user } = this.props;
 
+    user.reset();
     user.fetchTree().then((tree) => {
       if(tree && tree.length > 0) {
         user.setData({
@@ -54,6 +56,18 @@ export default class User extends Component {
         });
         user.refreshList();
       }
+    });
+  }
+
+  componentWillUnmount() {
+    const { user } = this.props;
+    user.reset();
+  }
+
+  // 设置模态框显示/隐藏
+  setModalVisible = (modalVisible) => {
+    this.setState({
+      modalVisible,
     });
   }
 
@@ -66,14 +80,6 @@ export default class User extends Component {
   setRoleModalVisible = (roleModalVisible) => {
     this.setState({
       roleModalVisible,
-    });
-  }
-
-  // 设置模态框显示/隐藏
-  setModalVisible = (modalVisible) => {
-    const { user } = this.props;
-    user.setData({
-      modalVisible,
     });
   }
 
@@ -378,10 +384,10 @@ export default class User extends Component {
            />
           {
             // 需要密码字段在编辑时不显示，这里是为了让form重新挂载，否则表单域中仍然有密码字段
-            user.modalVisible &&
+            this.state.modalVisible &&
             <UserForm
               user={user}
-              modalVisible={user.modalVisible}
+              modalVisible={this.state.modalVisible}
               setModalVisible={this.setModalVisible}
             />
           }

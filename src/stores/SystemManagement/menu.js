@@ -7,7 +7,6 @@ class MenuStore {
   @observable treeList = []; 
   // 当前选中的树节点id
   @observable selectedKeys = ['0']; 
-  @observable expandedKeys = ['0'];
 
   // 列表数据
   @observable list = []; 
@@ -30,8 +29,7 @@ class MenuStore {
   @observable currentNode = this.defaultNode;
   // 新建按钮的是否显示加载中
   @observable newBtnLoading = false;
-  // 新建的模态框是否显示
-  @observable modalVisible = false; 
+
 
   /**
    * 含有接口请求等异步操作的 action

@@ -25,7 +25,13 @@ export default class ExceptionLog extends Component {
 
   componentWillMount() {
     const { exceptionLog } = this.props;
+    exceptionLog.reset();
     exceptionLog.refreshList();
+  }
+
+  componentWillUnmount() {
+    const { exceptionLog } = this.props;
+    exceptionLog.reset();
   }
 
   // 清空选中条目
