@@ -145,8 +145,8 @@ ansi-styles@^3.0.0, ansi-styles@^3.1.0:
     color-convert "^1.9.0"
 
 antd@^3.1.1:
-  version "3.1.1"
-  resolved "http://registry.npm.taobao.org/antd/download/antd-3.1.1.tgz#e20d335628ceec50c3a1fd6c73e5a246607ebb1b"
+  version "3.1.6"
+  resolved "http://registry.npm.taobao.org/antd/download/antd-3.1.6.tgz#042e9f4a13e304a25283e59d999d09cb85c0c8d4"
   dependencies:
     array-tree-filter "^2.0.0"
     babel-runtime "6.x"
@@ -1718,8 +1718,8 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     sha.js "^2.4.8"
 
 create-react-class@15.x, create-react-class@^15.5.2, create-react-class@^15.5.3, create-react-class@^15.6.0:
-  version "15.6.2"
-  resolved "http://registry.npm.taobao.org/create-react-class/download/create-react-class-15.6.2.tgz#cf1ed15f12aad7f14ef5f2dfe05e6c42f91ef02a"
+  version "15.6.3"
+  resolved "http://registry.npm.taobao.org/create-react-class/download/create-react-class-15.6.3.tgz#2d73237fb3f970ae6ebe011a9e66f46dbca80036"
   dependencies:
     fbjs "^0.8.9"
     loose-envify "^1.3.1"
@@ -2141,8 +2141,8 @@ dotenv@4.0.0:
   resolved "http://registry.npm.taobao.org/dotenv/download/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
 
 draft-js@^0.10.0, draft-js@~0.10.0:
-  version "0.10.4"
-  resolved "http://registry.npm.taobao.org/draft-js/download/draft-js-0.10.4.tgz#147741642097c8120d8edc232e9503e8b7fb8d35"
+  version "0.10.5"
+  resolved "http://registry.npm.taobao.org/draft-js/download/draft-js-0.10.5.tgz#bfa9beb018fe0533dbb08d6675c371a6b08fa742"
   dependencies:
     fbjs "^0.8.15"
     immutable "~3.7.4"
@@ -5487,8 +5487,8 @@ rc-calendar@~9.4.0:
     rc-util "^4.1.1"
 
 rc-cascader@~0.12.0:
-  version "0.12.1"
-  resolved "http://registry.npm.taobao.org/rc-cascader/download/rc-cascader-0.12.1.tgz#0148514a8dd747c2335527c172ea0cf44180f940"
+  version "0.12.2"
+  resolved "http://registry.npm.taobao.org/rc-cascader/download/rc-cascader-0.12.2.tgz#2d08fe44b504364137d3c748f51ac393483e7b3b"
   dependencies:
     array-tree-filter "^1.0.0"
     prop-types "^15.5.8"
@@ -5497,8 +5497,8 @@ rc-cascader@~0.12.0:
     shallow-equal "^1.0.0"
 
 rc-checkbox@~2.1.1:
-  version "2.1.1"
-  resolved "http://registry.npm.taobao.org/rc-checkbox/download/rc-checkbox-2.1.1.tgz#7b2d3632285eaad9cad78612a6643d7d34589e72"
+  version "2.1.4"
+  resolved "http://registry.npm.taobao.org/rc-checkbox/download/rc-checkbox-2.1.4.tgz#7f5ebabe7035ef333597d026faa0edd0f4d919b4"
   dependencies:
     babel-runtime "^6.23.0"
     classnames "2.x"
@@ -5585,8 +5585,8 @@ rc-input-number@~4.0.0:
     rmc-feedback "^1.0.0"
 
 rc-menu@^6.1.0, rc-menu@~6.2.0:
-  version "6.2.5"
-  resolved "http://registry.npm.taobao.org/rc-menu/download/rc-menu-6.2.5.tgz#cb27585cfb6a2e9c2cb09a122df1980ec807bfc8"
+  version "6.2.6"
+  resolved "http://registry.npm.taobao.org/rc-menu/download/rc-menu-6.2.6.tgz#ad95a4926792d0476b3b25f6d015a497915dbbbd"
   dependencies:
     babel-runtime "6.x"
     classnames "2.x"
@@ -5675,8 +5675,8 @@ rc-switch@~1.6.0:
     prop-types "^15.5.6"
 
 rc-table@~6.1.0:
-  version "6.1.3"
-  resolved "http://registry.npm.taobao.org/rc-table/download/rc-table-6.1.3.tgz#738de9b32afcc0a2ec3c1061576ddf437d1f7d48"
+  version "6.1.4"
+  resolved "http://registry.npm.taobao.org/rc-table/download/rc-table-6.1.4.tgz#3ab1835c9418d0aa097e36b18501ebf724b9a0cc"
   dependencies:
     babel-runtime "6.x"
     component-classes "^1.2.6"
@@ -5720,8 +5720,8 @@ rc-tooltip@^3.7.0, rc-tooltip@~3.7.0:
     rc-trigger "^2.2.2"
 
 rc-tree-select@~1.12.0:
-  version "1.12.3"
-  resolved "http://registry.npm.taobao.org/rc-tree-select/download/rc-tree-select-1.12.3.tgz#7bde797bf8b5c54657ba0e1d0831df1fdb3cf505"
+  version "1.12.9"
+  resolved "http://registry.npm.taobao.org/rc-tree-select/download/rc-tree-select-1.12.9.tgz#340ce3b1ce7afab2e717ee90febff114720e5fef"
   dependencies:
     babel-runtime "^6.23.0"
     classnames "^2.2.1"
