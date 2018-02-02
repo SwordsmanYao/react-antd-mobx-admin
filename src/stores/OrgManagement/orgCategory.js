@@ -5,22 +5,18 @@ import { insert, update, remove, queryList, queryDetail } from '@/services/OrgMa
 class OrgCategoryStore {
 
   // 列表数据
-  @observable list = [];
+  @observable list;
   // 控制列表是否显示加载中
-  @observable loading = false; 
+  @observable loading; 
   // 列表分页数据
-  @observable pagination = {
-    current: 1,
-    pageSize: 20,
-    total: 20, // 总数,由接口提供
-  };
+  @observable pagination;
 
   // currentNode 的默认值，用于 clear 时的数据
   defaultNode = {};
   // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
-  @observable currentNode = this.defaultNode;
+  @observable currentNode;
   // 新建按钮的是否显示加载中
-  @observable newBtnLoading = false;
+  @observable newBtnLoading;
 
 
    /**
@@ -126,6 +122,25 @@ class OrgCategoryStore {
     Object.keys(data).forEach((key) => {
       this[key] = data[key];
     });
+  }
+  // 用于初始化和切换页面时清空数据
+  @action
+  reset() {
+    // 列表数据
+    this.list = [];
+    // 控制列表是否显示加载中
+    this.loading = false; 
+    // 列表分页数据
+    this.pagination = {
+      current: 1,
+      pageSize: 20,
+      total: 20, // 总数,由接口提供
+    };
+
+    // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
+    this.currentNode = this.defaultNode;
+    // 新建按钮的是否显示加载中
+    this.newBtnLoading = false;
   }
 
   @action
