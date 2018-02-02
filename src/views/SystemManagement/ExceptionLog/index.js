@@ -135,6 +135,7 @@ export default class ExceptionLog extends Component {
         width: 50,
         className:'alignCenter', 
         render: (text, row, index) =>(index + 1),
+        fixed: true,
       },
       { 
         title: '操作人',

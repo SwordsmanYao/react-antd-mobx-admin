@@ -264,21 +264,26 @@ export default class User extends Component {
       title: '登录名',
       dataIndex: 'LoginName',
       key: 'LoginName',
+      width: 100,
     }, {
       title: '姓名',
       dataIndex: 'FullName',
       key: 'FullName',
+      width: 100,
     }, {
       title: '工号',
       dataIndex: 'JobNumber',
       key: 'JobNumber',
+      width: 100,
     }, {
       title: '状态',
       dataIndex: 'UserStatus',
       key: 'UserStatus',
+      width: 100,
     }, {
       title: '操作',
       key: 'Action',
+      width: 300,
       render: (text, record) => (
         <span>
           <a
@@ -426,6 +431,7 @@ export default class User extends Component {
               selectedRowKeys: user.selectedRowKeys,
               onChange: this.onSelectionChange,
             }}
+            scroll={{ y: window.innerHeight - 290 }}
             size="small"
           />
         </Content>
