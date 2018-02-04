@@ -74,13 +74,6 @@ function tree(req, res) {
           },
         ],
       },
-      {
-        id: 3,
-        name: 'demo',
-        icon: 'dashboard',
-        path: 'demo',
-        hasChildren: false,
-      },
     ],
   }));
 }

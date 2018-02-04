@@ -4,16 +4,6 @@ import { Modal, Table, message } from 'antd';
 
 @observer
 export default class RoleSelect extends Component {
-  
-  constructor(props) {
-    super(props);
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.onSelectionChange = this.onSelectionChange.bind(this);
-    this.afterClose = this.afterClose.bind(this);
-  }
-
-
 
   // 表单提交
   handleSubmit = () => {

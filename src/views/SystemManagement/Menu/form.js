@@ -32,13 +32,6 @@ const { Option } = Select;
 })
 @observer
 export default class MenuForm extends Component {
-  
-  constructor(props) {
-    super(props);
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.afterClose = this.afterClose.bind(this);
-  }
 
   // 表单提交
   handleSubmit = (e) => {

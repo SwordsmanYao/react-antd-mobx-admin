@@ -13,8 +13,7 @@ import styles from './BasicLayout.less';
 const { Content } = Layout;
 
 
-@inject('global')
-@inject('currentUser')
+@inject('global', 'currentUser')
 @observer
 class BasicLayout extends Component {
 
@@ -23,9 +22,6 @@ class BasicLayout extends Component {
     this.state = {
       firstShow: null,
     }
-
-    this.getMenuOptionsFromPath = this.getMenuOptionsFromPath.bind(this);
-    this.getFirstShow = this.getFirstShow.bind(this);
   }
   componentDidMount() {
     const { global } = this.props;
@@ -74,7 +70,7 @@ class BasicLayout extends Component {
   }
 
   // 根据当前 url 路径获取菜单的 openKeys 和 selectedKeys
-  getMenuOptionsFromPath(menusData, pathArr, openKeys = []) {
+  getMenuOptionsFromPath = (menusData, pathArr, openKeys = []) => {
     const data = menusData.filter(item => (item.path === pathArr[0]))[0];
     if(data.hasChildren && data.children && data.children.length > 0) {
       return this.getMenuOptionsFromPath(data.children, pathArr.slice(1), [...openKeys, data.id]);
@@ -88,7 +84,7 @@ class BasicLayout extends Component {
 
   // 登录后根据菜单数据 第一个要展示的路径对象
   // 此处为了性能考虑，和 Menu 的 openKeys、selectedKeys 一起计算
-  getFirstShow(menusData, parentPath = '', openKeys = []) {
+  getFirstShow = (menusData, parentPath = '', openKeys = []) => {
     if (menusData[0].hasChildren && menusData[0].children) {
       return this.getFirstShow(menusData[0].children, `${parentPath}/${menusData[0].path}` , [...openKeys, menusData[0].id.toString()]);
     } else {

@@ -19,13 +19,6 @@ export default class Org extends Component {
       // 新建的模态框是否显示
       modalVisible: false,
     }
-
-    this.onSelect = this.onSelect.bind(this);
-    this.setModalVisible = this.setModalVisible.bind(this);
-    this.handleNew = this.handleNew.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
-    this.handleRemove = this.handleRemove.bind(this);
-    this.handleTableChange = this.handleTableChange.bind(this);
   }
 
   componentWillMount() {
@@ -59,7 +52,7 @@ export default class Org extends Component {
   }
 
   // 设置模态框显示/隐藏
-  setModalVisible(modalVisible) {
+  setModalVisible = (modalVisible) => {
     this.setState({
       modalVisible,
     });

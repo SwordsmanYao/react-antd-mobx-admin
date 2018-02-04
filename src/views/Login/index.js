@@ -12,13 +12,6 @@ const FormItem = Form.Item;
 @Form.create()
 @observer
 export default class Login extends Component {
-  
-  constructor(props) {
-    super(props);
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.renderMessage = this.renderMessage.bind(this);
-  }
 
   handleSubmit = (e) => {
     const { form, currentUser } = this.props;

@@ -27,21 +27,6 @@ export default class User extends Component {
       // 修改角色框是否显示
       roleModalVisible: false,
     }
-
-    this.setModalVisible = this.setModalVisible.bind(this);
-    this.setPwdModalVisible = this.setPwdModalVisible.bind(this);
-    this.setRoleModalVisible = this.setRoleModalVisible.bind(this);
-    this.onSelect = this.onSelect.bind(this);
-    this.handleNew = this.handleNew.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
-    this.cleanSelectedKeys = this.cleanSelectedKeys.bind(this);
-    this.handleRemoveChecked = this.handleRemoveChecked.bind(this);
-    this.handleRemove = this.handleRemove.bind(this);
-    this.handleResetPwd = this.handleResetPwd.bind(this);
-    this.handleEnableUser = this.handleEnableUser.bind(this);
-    this.handleRoleEdit = this.handleRoleEdit.bind(this);
-    this.handleTableChange = this.handleTableChange.bind(this);
-    this.onSelectionChange = this.onSelectionChange.bind(this);
   }
 
   componentWillMount() {

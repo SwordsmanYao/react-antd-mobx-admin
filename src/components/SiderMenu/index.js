@@ -12,12 +12,7 @@ const { SubMenu } = Menu;
 @observer
 class SiderMenu extends Component {
 
-  constructor(props) {
-    super(props);
-    this.getMenuItems = this.getMenuItems.bind(this);
-  }
-
-  getMenuItems(menusData, parentPath = '/basic') {
+  getMenuItems = (menusData, parentPath = '/basic') => {
     return menusData.map(item => {
 
       const itemPath = `${parentPath}/${item.path || ''}`.replace(/\/+/g, '/');

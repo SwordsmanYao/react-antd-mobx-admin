@@ -12,16 +12,6 @@ const { confirm } = Modal;
 @inject('exceptionLog')
 @observer
 export default class ExceptionLog extends Component {
-  
-  constructor(props) {
-    super(props);
-
-    this.cleanSelectedKeys = this.cleanSelectedKeys.bind(this);
-    this.handleRemoveChecked = this.handleRemoveChecked.bind(this);
-    this.handleRemove = this.handleRemove.bind(this);
-    this.handleTableChange = this.handleTableChange.bind(this);
-    this.onSelectionChange = this.onSelectionChange.bind(this);
-  }
 
   componentWillMount() {
     const { exceptionLog } = this.props;

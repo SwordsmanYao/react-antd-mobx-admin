@@ -17,12 +17,7 @@ export default class OperationLogToolBar extends Component {
     this.state = {
       expandForm: false,
     }
-
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleFormReset = this.handleFormReset.bind(this);
-    this.toggleForm = this.toggleForm.bind(this);
   }
-
 
   handleSearch = (e) => {
 

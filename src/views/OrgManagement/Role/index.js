@@ -17,12 +17,6 @@ export default class Role extends Component {
     this.state = {
       modalVisible: false,
     }
-
-    this.setModalVisible = this.setModalVisible.bind(this);
-    this.handleNew = this.handleNew.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
-    this.handleRemove = this.handleRemove.bind(this);
-    this.handleTableChange = this.handleTableChange.bind(this);
   }
 
   componentWillMount() {
@@ -38,7 +32,7 @@ export default class Role extends Component {
 
 
   // 设置模态框显示/隐藏
-  setModalVisible(modalVisible) {
+  setModalVisible = (modalVisible) => {
     this.setState({
       modalVisible,
     });

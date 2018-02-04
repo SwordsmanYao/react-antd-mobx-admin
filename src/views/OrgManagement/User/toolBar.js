@@ -16,10 +16,6 @@ export default class UserToolBar extends Component {
     this.state = {
       expandForm: false,
     }
-
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleFormReset = this.handleFormReset.bind(this);
-    this.toggleForm = this.toggleForm.bind(this);
   }
 
 

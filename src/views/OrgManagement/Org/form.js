@@ -31,13 +31,6 @@ const { Option } = Select;
 })
 @observer
 export default class OrgForm extends Component {
-  
-  constructor(props) {
-    super(props);
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.afterClose = this.afterClose.bind(this);
-  }
 
   componentDidMount() {
     const { org } = this.props;

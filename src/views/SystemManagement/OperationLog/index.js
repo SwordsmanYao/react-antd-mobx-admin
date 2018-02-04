@@ -11,17 +11,6 @@ const { confirm } = Modal;
 @inject('operationLog')
 @observer
 export default class OperationLog extends Component {
-  
-  constructor(props) {
-    super(props);
-
-    this.cleanSelectedKeys = this.cleanSelectedKeys.bind(this);
-    this.handleRemoveChecked = this.handleRemoveChecked.bind(this);
-    this.handleRemove = this.handleRemove.bind(this);
-    this.handleTableChange = this.handleTableChange.bind(this);
-    this.onSelectionChange = this.onSelectionChange.bind(this);
-    this.getCheckboxProps = this.getCheckboxProps.bind(this);
-  }
 
   componentWillMount() {
     const { operationLog } = this.props;
