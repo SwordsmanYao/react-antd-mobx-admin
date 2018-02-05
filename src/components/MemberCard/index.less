@@ -1,0 +1,51 @@
+@import "~antd/lib/style/themes/default.less";
+
+.base() {
+  background-color: #fcfbfb;
+  padding: 10px 5px;
+  border-radius: 8px;
+  .avatar {
+    float: left;
+    margin-top: 3px;
+  }
+  .content {
+    margin-left: 50px;
+    .title {
+      border-bottom: 1px solid #dddddd;
+      margin: 0px 20px 5px 0px;
+      padding: 0px 0px 5px 2px;
+      height: 24px;
+      line-height: 24px;
+    }
+    .detail {
+      font-size: 12px;
+      > .name {
+        float: left;
+        margin-right: 20px;
+      }
+      > .department {
+        float: left;
+      }
+    }
+  }
+  :after{
+    content:'';
+    display:block;
+    clear:both;
+  }
+}
+.memberCard {
+  .base;
+}
+.memberCardActive {
+  .base;
+  border: 1px solid @primary-color;
+  background:linear-gradient(-135deg, @primary-color 16px, #fcfbfb 0);
+  .icon {
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    color: #fff;
+    font-size: 12px;
+  }
+}

@@ -4,6 +4,7 @@ import { Layout, Button, Table, Divider, Popconfirm, message, Badge } from 'antd
 
 import RoleForm from './form';
 import Auth from './auth';
+import Member from './member';
 import styles from './index.less';
 
 
@@ -99,13 +100,18 @@ export default class Role extends Component {
   // 角色成员
   handleMember = (record) => {
     const { role } = this.props;
-    // role.setData({
-    //   currentMemberNode: record,
-    // });
+    role.setData({
+      currentMemberNode: record,
+    });
+    role.fetchOrgTree();
     role.fetchRoleMember({
       UniqueID: record.UniqueID,
     });
-    // this.setAuthModalVisible(true);
+    role.fetchRoleMemberDetail({
+      UniqueID: record.UniqueID,
+    });
+    
+    this.setMemberModalVisible(true);
   }
 
   handleTableChange = (pagination, filters, sorter) => {
@@ -139,7 +145,7 @@ export default class Role extends Component {
     }, {
       title: '操作',
       key: 'Action',
-      width: 200,
+      width: 300,
       render: (text, record) => (
         <span>
           <a
@@ -202,10 +208,17 @@ export default class Role extends Component {
               modalVisible={this.state.modalVisible}
               setModalVisible={this.setModalVisible}
             />
+            {/* 角色授权窗口 */}
             <Auth
               role={role}
               authModalVisible={this.state.authModalVisible}
               setAuthModalVisible={this.setAuthModalVisible}
+            />
+            {/* 角色成员设置窗口 */}
+            <Member
+              role={role}
+              memberModalVisible={this.state.memberModalVisible}
+              setMemberModalVisible={this.setMemberModalVisible}
             />
           </div>
           <Table

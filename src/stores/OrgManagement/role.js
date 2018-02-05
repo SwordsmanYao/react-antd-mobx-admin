@@ -29,8 +29,12 @@ class RoleStore {
   // 角色菜单树选中 keys
   @observable roleMenuCheckedKeys;
 
+  // 当前设置成员的角色
+  @observable currentMemberNode;
   // 角色成员弹窗中的组织机构树
   @observable orgTree;
+  // 当前选中的树节点id
+  @observable selectedOrgKeys; 
   // 角色成员弹窗中角色成员列表
   @observable roleMemberList;
   // 选中的角色成员id
@@ -228,11 +232,15 @@ class RoleStore {
     // 角色菜单树选中 keys
     this.roleMenuCheckedKeys = [];
 
+    // 当前设置成员的角色
+    this.currentMemberNode = null;
     // 角色成员弹窗中的组织机构树
     this.orgTree = [];
-  // 角色成员弹窗中角色成员列表
+    // 当前选中的树节点id
+    this.selectedOrgKeys = []; 
+    // 角色成员弹窗中角色成员列表
     this.roleMemberList = [];
-  // 选中的角色成员id
+    // 选中的角色成员id
     this.selectedRoleMemberIDs = [];
   }
 

@@ -9,7 +9,7 @@ import styles from './auth.less';
 const Step = Steps.Step;
 
 @observer
-export default class RoleForm extends Component {
+export default class Auth extends Component {
 
   constructor(props) {
     super(props);
