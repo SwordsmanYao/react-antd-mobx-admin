@@ -352,15 +352,12 @@ export default class User extends Component {
     return (
       <Layout className={styles.layout}>
         <Sider width={210} style={{ background: '#fff' }}>
-          {
-            user.treeList && user.treeList.length > 0 && user.selectedKeys &&
-              <DisplayTree
-                treeList={user.treeList.slice()}
-                onSelect={this.onSelect}
-                selectedKeys={user.selectedKeys.slice()}
-                defaultExpandedKeys={user.selectedKeys.slice()}
-              />
-          }
+          <DisplayTree
+            treeList={user.treeList.slice()}
+            onSelect={this.onSelect}
+            selectedKeys={user.selectedKeys.slice()}
+            defaultExpandedKeys={user.selectedKeys.slice()}
+          />
         </Sider>
         <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
           <UserToolBar 

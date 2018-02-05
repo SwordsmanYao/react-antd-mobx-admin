@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 
-import { insert, update, remove, queryList, queryDetail } from '@/services/OrgManagement/role';
+import { insert, update, remove, queryList, queryDetail, getRoleMenu, setRoleMenu, getRoleMember, getRoleMemberDetail, setRoleMember, queryOrgTree } from '@/services/OrgManagement/role';
 
 class RoleStore {
 
@@ -21,6 +21,20 @@ class RoleStore {
   @observable currentNode;
   // 新建按钮的是否显示加载中
   @observable newBtnLoading;
+
+  // 当前授权的角色
+  @observable currentAuth;
+  // 角色菜单树
+  @observable roleMenuTree;
+  // 角色菜单树选中 keys
+  @observable roleMenuCheckedKeys;
+
+  // 角色成员弹窗中的组织机构树
+  @observable orgTree;
+  // 角色成员弹窗中角色成员列表
+  @observable roleMemberList;
+  // 选中的角色成员id
+  @observable selectedRoleMemberIDs;
 
 
    /**
@@ -118,6 +132,67 @@ class RoleStore {
     });
   }
 
+  // 获取角色授权窗口的菜单树
+  @action
+  async fetchRoleMenuTree(data) {
+    const response = await getRoleMenu(data);
+    if(response.Code === 200) {
+      this.setData({
+        roleMenuTree: response.Data,
+        roleMenuCheckedKeys: this.getSelectedIDs(response.Data),
+      });
+    }
+  }
+
+  @action
+  async commitRoleMenu(data) {
+    const response = await setRoleMenu(data);
+    if(!response.Code === 200) {
+      return await Promise.reject(response.Error);
+    }
+  }
+
+  // 获取角色成员窗口的组织机构树
+  @action
+  async fetchOrgTree(data) {
+    const response = await queryOrgTree(data);
+    if(response.Code === 200) {
+      this.setData({
+        orgTree: response.Data,
+      });
+    }
+  }
+
+  // 获取角色成员窗口选中的角色成员
+  @action
+  async fetchRoleMember(data) {
+    const response = await getRoleMember(data);
+    if(response.Code === 200) {
+      this.setData({
+        selectedRoleMemberIDs: response.Data.map(item => (item.UserID)),
+      });
+    }
+  }
+
+  // 获取角色成员窗口选中的角色成员
+  @action
+  async fetchRoleMemberDetail(data) {
+    const response = await getRoleMemberDetail(data);
+    if(response.Code === 200) {
+      this.setData({
+        roleMemberList: response.Data,
+      });
+    }
+  }
+
+  @action
+  async commitRoleMember(data) {
+    const response = await setRoleMember(data);
+    if(!response.Code === 200) {
+      return await Promise.reject(response.Error);
+    }
+  }
+
   /**
    * 不含异步操作的 action
    */
@@ -145,6 +220,20 @@ class RoleStore {
     this.currentNode = this.defaultNode;
     // 新建按钮的是否显示加载中
     this.newBtnLoading = false;
+
+    // 当前授权的角色
+    this.currentAuth = null;
+    // 角色菜单树
+    this.roleMenuTree = [];
+    // 角色菜单树选中 keys
+    this.roleMenuCheckedKeys = [];
+
+    // 角色成员弹窗中的组织机构树
+    this.orgTree = [];
+  // 角色成员弹窗中角色成员列表
+    this.roleMemberList = [];
+  // 选中的角色成员id
+    this.selectedRoleMemberIDs = [];
   }
 
   @action
@@ -158,6 +247,19 @@ class RoleStore {
       ...this.currentNode,
       ...data,
     }
+  }
+
+  getSelectedIDs(tree, ids = []) {
+     
+    tree.forEach(item => {
+      if(item.selected) {
+        ids = [...ids, item.id];
+      }
+      if(item.hasChildren && item.children && item.children.length) {
+        ids = this.getSelectedIDs(item.children, ids);
+      }
+    });
+    return ids;
   }
 } 
 

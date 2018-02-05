@@ -151,19 +151,16 @@ export default class Menu extends Component {
     return (
       <Layout className={styles.layout}>
         <Sider width={220} style={{ background: '#fff' }}>
-          {
-            menu.treeList && menu.treeList.length > 0 &&
-              <DisplayTree
-                treeList={[{
-                  id: '0',
-                  name: '菜单管理',
-                  children: menu.treeList.slice(),
-                }]}
-                defaultExpandedKeys={['0']}
-                onSelect={this.onSelect}
-                selectedKeys={menu.selectedKeys.slice()}
-              />
-          }
+          <DisplayTree
+            treeList={[{
+              id: '0',
+              name: '菜单管理',
+              children: menu.treeList.slice(),
+            }]}
+            defaultExpandedKeys={['0']}
+            onSelect={this.onSelect}
+            selectedKeys={menu.selectedKeys.slice()}
+          />
         </Sider>
         <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
           <div className={styles.toolbar}>

@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { Layout, Button, Table, Divider, Popconfirm, message, Badge } from 'antd';
 
 import RoleForm from './form';
+import Auth from './auth';
 import styles from './index.less';
 
 
@@ -16,6 +17,8 @@ export default class Role extends Component {
 
     this.state = {
       modalVisible: false,
+      authModalVisible: false,
+      memberModalVisible: false,
     }
   }
 
@@ -35,6 +38,18 @@ export default class Role extends Component {
   setModalVisible = (modalVisible) => {
     this.setState({
       modalVisible,
+    });
+  }
+
+  setAuthModalVisible = (authModalVisible) => {
+    this.setState({
+      authModalVisible,
+    });
+  }
+
+  setMemberModalVisible = (memberModalVisible) => {
+    this.setState({
+      memberModalVisible,
     });
   }
 
@@ -69,6 +84,30 @@ export default class Role extends Component {
     });
   }
 
+  // 角色授权
+  handleAuth = (record) => {
+    const { role } = this.props;
+    role.setData({
+      currentAuth: record,
+    });
+    role.fetchRoleMenuTree({
+      UniqueID: record.UniqueID,
+    });
+    this.setAuthModalVisible(true);
+  }
+
+  // 角色成员
+  handleMember = (record) => {
+    const { role } = this.props;
+    // role.setData({
+    //   currentMemberNode: record,
+    // });
+    role.fetchRoleMember({
+      UniqueID: record.UniqueID,
+    });
+    // this.setAuthModalVisible(true);
+  }
+
   handleTableChange = (pagination, filters, sorter) => {
     console.log('pagination', pagination);
     console.log('filters', filters);
@@ -87,20 +126,20 @@ export default class Role extends Component {
       dataIndex: 'DescInfo',
       key: 'DescInfo',
     }, {
-      title: '是否可用',
+      title: '状态',
       dataIndex: 'IsAvailable',
       key: 'IsAvailable',
       render: (result) => {
         if(result) {
-          return <Badge status="success" text="是" />;
+          return <Badge status="success" text="启用" />;
         } else {
-          return <Badge status="error" text="否" />;
+          return <Badge status="error" text="禁用" />;
         }
       },
     }, {
       title: '操作',
       key: 'Action',
-      width: 120,
+      width: 200,
       render: (text, record) => (
         <span>
           <a
@@ -127,7 +166,24 @@ export default class Role extends Component {
             >删除
             </a>
           </Popconfirm>
-
+          <Divider type="vertical" />
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              this.handleAuth(record);
+            }}
+          >角色授权
+          </a>
+          <Divider type="vertical" />
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              this.handleMember(record);
+            }}
+          >角色成员
+          </a>
         </span>
       ),
     }];
@@ -145,6 +201,11 @@ export default class Role extends Component {
               role={role}
               modalVisible={this.state.modalVisible}
               setModalVisible={this.setModalVisible}
+            />
+            <Auth
+              role={role}
+              authModalVisible={this.state.authModalVisible}
+              setAuthModalVisible={this.setAuthModalVisible}
             />
           </div>
           <Table

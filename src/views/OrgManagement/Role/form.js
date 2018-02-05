@@ -118,7 +118,7 @@ export default class RoleForm extends Component {
             <Col span={12}>
               <FormItem
                 {...formItemLayout}
-                label="是否可用"
+                label="状态"
               >
                 {getFieldDecorator('IsAvailable', {
                   rules: [{
@@ -126,8 +126,8 @@ export default class RoleForm extends Component {
                   }],
                 })(
                   <RadioGroup>
-                    <Radio value={1}>是</Radio>
-                    <Radio value={0}>否</Radio>
+                    <Radio value={1}>启用</Radio>
+                    <Radio value={0}>禁用</Radio>
                   </RadioGroup>,
                 )}
               </FormItem>

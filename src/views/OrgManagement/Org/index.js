@@ -145,19 +145,16 @@ export default class Org extends Component {
     return (
       <Layout className={styles.layout}>
         <Sider width={220} style={{ background: '#fff' }}>
-          {
-            org.treeList && org.treeList.length > 0 &&
-              <DisplayTree
-                treeList={[{
-                  id: '0',
-                  name: '组织机构',
-                  children: org.treeList.slice(),
-                }]}
-                defaultExpandedKeys={['0']}
-                onSelect={this.onSelect}
-                selectedKeys={org.selectedKeys.slice()}
-              />
-          }
+          <DisplayTree
+            treeList={[{
+              id: '0',
+              name: '组织机构',
+              children: org.treeList.slice(),
+            }]}
+            defaultExpandedKeys={['0']}
+            onSelect={this.onSelect}
+            selectedKeys={org.selectedKeys.slice()}
+          />
         </Sider>
         <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
           <div className={styles.toolbar}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tree } from 'antd';
+import { Tree, Spin } from 'antd';
 
 const { TreeNode } = Tree;
 
@@ -18,12 +18,14 @@ export default (props) => {
   }
 
   return (
+    treeList && treeList.length > 0 ?
     <Tree
       {...props}
     >
       {
         renderTreeNodes(treeList)
       }
-    </Tree>
+    </Tree> :
+    <Spin />
   );
 };

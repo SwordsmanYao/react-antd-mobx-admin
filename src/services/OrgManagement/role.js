@@ -2,6 +2,50 @@ import request from '@/utils/request';
 
 const api = window.PUBLIC_ENV_CONFIG.API;
 
+export function queryOrgTree() {
+  return request({
+    url: `${api}/OrgManagement/Org/tree`,
+  });
+}
+
+// 获取已选的角色成员ids
+export function getRoleMember(params) {
+  return request({
+    url: `${api}/OrgManagement/Role/RoleMember`,
+    params,
+  });
+}
+// 角色成员列表数据
+export function getRoleMemberDetail(params) {
+  return request({
+    url: `${api}/OrgManagement/Role/RoleMemberDetail`,
+    params,
+  });
+}
+
+export function setRoleMember(params) {
+  return request({
+    url: `${api}/OrgManagement/Role/SetRoleMember`,
+    method: 'post',
+    data: params,
+  });
+}
+
+// 获取角色菜单
+export function getRoleMenu(params) {
+  return request({
+    url: `${api}/OrgManagement/Role/RoleMenu`,
+    params,
+  });
+}
+
+export function setRoleMenu(params) {
+  return request({
+    url: `${api}/OrgManagement/Role/SetRoleMenu`,
+    method: 'post',
+    data: params,
+  });
+}
 
 export function insert(params) {
   return request({

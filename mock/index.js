@@ -35,6 +35,8 @@ app.get('/OrgManagement/Org/list',org.list);
 app.get('/OrgManagement/Org/detail',org.detail);
 app.get('/OrgManagement/Role/list',role.list);
 app.get('/OrgManagement/Role/detail',role.detail);
+app.get('/OrgManagement/Role/RoleMenu',role.roleMenu);
+app.get('/OrgManagement/Role/RoleMember',role.roleMember);
 app.get('/SysManagement/OperationLog/List',operationLog.list);
 app.get('/SysManagement/OperationLog/OperateType',operationLog.operateType);
 app.get('/SysManagement/ExceptionLog/List',exceptionLog.list);
