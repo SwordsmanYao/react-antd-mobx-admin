@@ -48,9 +48,15 @@ function roleMember(req, res) {
   res.send(Mock.mock({"Code":200,"Data":[{"UserID":2,"RelationType":0,"RelationID":0,"UniqueID":0,"MenuID":0},{"UserID":3,"RelationType":0,"RelationID":0,"UniqueID":0,"MenuID":0}]}));
 }
 
+function roleMemberDetail(req, res) {
+  res.send(Mock.mock({"Code":200,"Data":[{"LoginName":"admin","FullName":"超级管理员","IsRoleMember":false,"UniqueID":1,"MenuID":0},{"LoginName":"Mario","FullName":"玛丽娅","Gender":"女","IsRoleMember":true,"UniqueID":2,"MenuID":0},{"LoginName":"yaojian","FullName":"姚健2","Gender":"男","IsRoleMember":true,"UniqueID":3,"MenuID":0},{"LoginName":"test","FullName":"test","Gender":"男","IsRoleMember":false,"UniqueID":4,"MenuID":0},{"LoginName":"sadfasdfd","FullName":"asdfasdf","IsRoleMember":false,"UniqueID":5,"MenuID":0},{"LoginName":"asdfasdf","FullName":"asdfasdfas","IsRoleMember":false,"UniqueID":6,"MenuID":0},{"LoginName":"qwe","FullName":"qwe","IsRoleMember":false,"UniqueID":7,"MenuID":0},{"LoginName":"dsfads","FullName":"asdfasd","IsRoleMember":false,"UniqueID":14,"MenuID":0}]}));
+}
+
+
 module.exports = {
   list,
   detail,
   roleMenu,
   roleMember,
+  roleMemberDetail,
 }

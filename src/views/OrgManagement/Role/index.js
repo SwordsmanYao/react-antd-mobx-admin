@@ -100,14 +100,22 @@ export default class Role extends Component {
   // 角色成员
   handleMember = (record) => {
     const { role } = this.props;
+
     role.setData({
       currentMemberNode: record,
     });
-    role.fetchOrgTree();
-    role.fetchRoleMember({
-      UniqueID: record.UniqueID,
+
+    role.fetchOrgTree().then(tree => {
+      role.setData({
+        selectedOrgKeys: [tree[0].id],
+      });
+      role.fetchRoleMemberDetail({
+        UniqueID: record.UniqueID,
+        Params: [tree[0].id],
+      });
     });
-    role.fetchRoleMemberDetail({
+
+    role.fetchRoleMember({
       UniqueID: record.UniqueID,
     });
     

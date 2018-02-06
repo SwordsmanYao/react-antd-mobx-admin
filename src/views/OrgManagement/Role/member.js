@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Modal, message, Layout, Input, Button, Row, Col } from 'antd';
+import { Modal, message, Layout, Input, Row, Col } from 'antd';
 
 import DisplayTree from '@/components/DisplayTree';
 import MemberCard from '@/components/MemberCard';
@@ -14,8 +14,11 @@ export default class Member extends Component {
     super(props);
     this.state = {
       confirmLoading: false,
+      queryStr: '',
     }
   }
+
+
 
   // 表单提交
   handleSubmit = (e) => {
@@ -25,15 +28,17 @@ export default class Member extends Component {
       confirmLoading: true,
     });
     
-    // role.commitRoleMenu({
-    //   UniqueID: role.currentAuth.UniqueID,
-    //   Params: role.roleMenuCheckedKeys,
-    // }).then(() => {
-    //   message.success('操作成功');
-    //   setAuthModalVisible(false);
-    // }).catch((e) => {
-    //   message.error(`操作失败：${e.Message}`);
-    // });
+    const checkedMemberIDs =Array.from(role.selectedRoleMemberIDSet);
+
+    role.commitRoleMember({
+      UniqueID: role.currentMemberNode.UniqueID,
+      Params: checkedMemberIDs,
+    }).then(() => {
+      message.success('操作成功');
+      setMemberModalVisible(false);
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
+    });
     
     this.setState({
       confirmLoading: false,
@@ -66,8 +71,53 @@ export default class Member extends Component {
     }
   }
 
+  onClickCard = (UniqueID) => {
+    const { role } = this.props;
+    role.toggleRoleMemberChecked(UniqueID);
+  }
+
+  // 角色成员列表，每行显示三个
+  RoleMemberListShow = (roleMemberList) => {
+    console.log(roleMemberList);
+    const rowList = [];
+    let row = [];
+    roleMemberList.forEach((item, index) => {
+      row.push(item);
+      if(index % 3 === 2) {
+        rowList.push(row);
+        row = [];
+      }
+    });
+
+    if(row.length > 0) {
+      rowList.push(row);
+    }
+    
+    return rowList.map((row, index) => (
+      <Row key={index} gutter={8}>
+        {
+          row.map(item => (
+            <Col onClick={() => this.onClickCard(item.UniqueID)} key={item.UniqueID} style={{ marginBottom: 8 }} span={8}>
+              <MemberCard active={item.IsRoleMember} loginName={item.LoginName} name={item.FullName} />
+            </Col>
+          ))
+        }
+      </Row>
+    ));
+  }
+
+  handleChangeQueryStr = (e) => {
+    this.setState({
+      queryStr: e.target.value,
+    });
+  }
+
   render() {
     const { role, memberModalVisible, setMemberModalVisible } = this.props;
+
+    const showList = role.roleMemberList.filter(item => {
+      return `${item.FullName}${item.LoginName}`.indexOf(this.state.queryStr) !== -1;
+    });
 
     return (
       <Modal
@@ -88,32 +138,21 @@ export default class Member extends Component {
               defaultExpandAll
               treeList={role.orgTree.slice()}
               onSelect={this.onSelect}
-              selectedKeys={role.selectedOrgKeys.slice()}
+              selectedKeys={role.selectedOrgKeys.slice().map(item => item.toString())}
             />
           </Sider>
           <Layout>
             <Header style={{ background: '#fff' }}>
-              <Row gutter={8}>
-                <Col span={16}>
-                  <Input placeholder="请输入姓名" />
-                </Col>
-                <Col span={8}>
-                  <Button>查询</Button>
-                </Col>
-              </Row>
+              <Input
+                placeholder="请输入姓名"
+                value={this.state.queryStr}
+                onChange={this.handleChangeQueryStr}
+              />
             </Header>
             <Content style={{ background: '#fff' }}>
-              <Row gutter={8}>
-                <Col style={{ marginBottom: 8 }} span={12}>
-                  <MemberCard loginName={'10418s'} name={'都打飞'} department={'工程一部'} />
-                </Col>
-                <Col style={{ marginBottom: 8 }} span={12}>
-                  <MemberCard active loginName={'10418s'} name={'都打飞'} department={'工程一部'} />
-                </Col>
-                <Col style={{ marginBottom: 8 }} span={12}>
-                  <MemberCard active loginName={'10418s'} name={'都打飞'} department={'工程一部'} />
-                </Col>
-              </Row>
+              {
+                this.RoleMemberListShow(showList)
+              }
             </Content>
           </Layout>
         </Layout>

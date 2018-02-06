@@ -1,12 +1,20 @@
 @import "~antd/lib/style/themes/default.less";
 
 .base() {
+  cursor: pointer;
   background-color: #fcfbfb;
   padding: 10px 5px;
+  margin: 1px 8px 5px 1px;
   border-radius: 8px;
+  box-shadow: 3px 3px 10px @primary-2;
   .avatar {
     float: left;
     margin-top: 3px;
+    :global {
+      .ant-avatar-string {
+        transform: scale(1) !important;
+      }
+    }
   }
   .content {
     margin-left: 50px;
@@ -44,7 +52,7 @@
   .icon {
     position: absolute;
     top: 0px;
-    right: 5px;
+    right: 14px;
     color: #fff;
     font-size: 12px;
   }

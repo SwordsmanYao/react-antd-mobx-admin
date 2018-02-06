@@ -38,7 +38,7 @@ class RoleStore {
   // 角色成员弹窗中角色成员列表
   @observable roleMemberList;
   // 选中的角色成员id
-  @observable selectedRoleMemberIDs;
+  @observable selectedRoleMemberIDSet;
 
 
    /**
@@ -164,7 +164,11 @@ class RoleStore {
       this.setData({
         orgTree: response.Data,
       });
+      return response.Data;
+    } else {
+      return await Promise.reject(response.Error);
     }
+
   }
 
   // 获取角色成员窗口选中的角色成员
@@ -173,7 +177,7 @@ class RoleStore {
     const response = await getRoleMember(data);
     if(response.Code === 200) {
       this.setData({
-        selectedRoleMemberIDs: response.Data.map(item => (item.UserID)),
+        selectedRoleMemberIDSet: new Set(response.Data.map(item => (item.UserID))),
       });
     }
   }
@@ -241,7 +245,7 @@ class RoleStore {
     // 角色成员弹窗中角色成员列表
     this.roleMemberList = [];
     // 选中的角色成员id
-    this.selectedRoleMemberIDs = [];
+    this.selectedRoleMemberIDSet = new Set();
   }
 
   @action
@@ -255,6 +259,25 @@ class RoleStore {
       ...this.currentNode,
       ...data,
     }
+  }
+
+  // 选中或取消角色成员
+  @action
+  toggleRoleMemberChecked(UniqueID) {
+    this.roleMemberList = this.roleMemberList.map(item => {
+      if(item.UniqueID === UniqueID) {
+        if(item.IsRoleMember) {
+          this.selectedRoleMemberIDSet.delete(UniqueID);
+        } else {
+          this.selectedRoleMemberIDSet.add(UniqueID);
+        }
+        return {
+          ...item,
+          IsRoleMember: !item.IsRoleMember,
+        };
+      }
+      return item;
+    })
   }
 
   getSelectedIDs(tree, ids = []) {
