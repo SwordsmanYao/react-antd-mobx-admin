@@ -108,7 +108,7 @@ class BasicLayout extends Component {
           location.pathname !== `${match.url}` && 
           <SiderMenu global={global} />
         }
-        <Layout>
+        <Layout style={{ marginLeft: global.collapsed ? 64 : 200 }}>
           <BasicHeader global={global} currentUser={currentUser} />
           {
             // 有 MenuID 再渲染 content 部分，避免请求时没有 MenuID
