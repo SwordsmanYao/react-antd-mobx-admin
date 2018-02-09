@@ -22,6 +22,16 @@ import asyncComponent from '../components/AsyncComponent';
     exact: true,
   },
   {
+    path: 'system-management/code',
+    component: asyncComponent(() => import(/* webpackChunkName: "code" */ '../views/SystemManagement/Code')),
+    exact: true,
+  },
+  {
+    path: 'system-management/administrative-area',
+    component: asyncComponent(() => import(/* webpackChunkName: "administrativeArea" */ '../views/SystemManagement/AdministrativeArea')),
+    exact: true,
+  },
+  {
     path: 'org-management/org-category',
     component: asyncComponent(() => import(/* webpackChunkName: "orgCategory" */ '../views/OrgManagement/OrgCategory')),
     exact: true,

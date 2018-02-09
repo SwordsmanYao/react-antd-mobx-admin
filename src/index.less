@@ -23,6 +23,10 @@ body {
     border-collapse: collapse!important;
     overflow: visible!important;
   }
+  // 解决无数据时表头不显示下边框问题
+  .ant-table-small .ant-table-placeholder {
+    margin-top: 1px;
+  }
   // small 表格选框宽度固定
   .ant-table-small .ant-table-thead > tr > th.ant-table-selection-column, .ant-table-tbody > tr > td.ant-table-selection-column {
     text-align: center;

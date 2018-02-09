@@ -39,6 +39,18 @@ function tree(req, res) {
               },
             ]
           },
+          {
+            id: 13,
+            name: '代码管理',
+            path: 'code',
+            hasChildren: false,
+          },
+          {
+            id: 14,
+            name: '行政地区',
+            path: 'administrative-area',
+            hasChildren: false,
+          },
         ],
       },
       {

@@ -28,6 +28,8 @@ class RoleStore {
   @observable roleMenuTree;
   // 角色菜单树选中 keys
   @observable roleMenuCheckedKeys;
+  // 半选中状态的节点值，向后端提交时也要包涵这部分 keys
+  @observable roleMenuHalfCheckedKeys;
 
   // 当前设置成员的角色
   @observable currentMemberNode;
@@ -281,10 +283,13 @@ class RoleStore {
   }
 
   getSelectedIDs(tree, ids = []) {
-     
+    
     tree.forEach(item => {
       if(item.selected) {
-        ids = [...ids, item.id];
+        // 如果有 children 就要每一个子节点都被选中时，父节点才选中,否则父节点为半选中状态
+        if(!(item.hasChildren && item.children) || item.children.every(item => item.selected)) {
+          ids = [...ids, item.id];
+        }
       }
       if(item.hasChildren && item.children && item.children.length) {
         ids = this.getSelectedIDs(item.children, ids);

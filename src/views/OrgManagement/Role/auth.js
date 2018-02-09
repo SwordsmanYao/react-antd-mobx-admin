@@ -28,7 +28,7 @@ export default class Auth extends Component {
     
     role.commitRoleMenu({
       UniqueID: role.currentAuth.UniqueID,
-      Params: role.roleMenuCheckedKeys,
+      Params: [...role.roleMenuCheckedKeys, ...role.roleMenuHalfCheckedKeys],
     }).then(() => {
       message.success('操作成功');
       setAuthModalVisible(false);
@@ -50,12 +50,13 @@ export default class Auth extends Component {
     });
   }
 
-  onCheckRoleMenu = (checkedKeys) => {
+  onCheckRoleMenu = (checkedKeys, info) => {
     const { role } = this.props;
 
-    console.log('onCheckRoleMenu', checkedKeys);
+    console.log('onCheckRoleMenu', checkedKeys, info);
     role.setData({
       roleMenuCheckedKeys: checkedKeys,
+      roleMenuHalfCheckedKeys: info.halfCheckedKeys,
     });
   }
   
