@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Button, Table, Divider, Popconfirm, message } from 'antd';
+import { Layout, Table, Divider, Modal, message } from 'antd';
 
 import DisplayTree from '@/components/DisplayTree';
 import AdministrativeAreaForm from './form';
+import AdministrativeAreaToolBar from './toolBar';
 import styles from './index.less';
 
 
 const { Sider, Content } = Layout;
+const { confirm } = Modal;
 
 @inject('administrativeArea')
 @observer
@@ -120,26 +122,31 @@ export default class AdministrativeArea extends Component {
       title: '编号',
       dataIndex: 'PaiXuMa',
       key: 'PaiXuMa',
+      width: 80,
     }, {
       title: '名称',
       dataIndex: 'MingCheng',
       key: 'MingCheng',
+      width: 120,
     }, {
       title: '全拼',
       dataIndex: 'QuanPin',
       key: 'QuanPin',
+      width: 180,
     }, {
       title: '简拼',
       dataIndex: 'JianPin',
       key: 'JianPin',
+      width: 80,
     }, {
       title: '描述',
       dataIndex: 'MiaoShu',
       key: 'MiaoShu',
+      width: 120,
     }, {
       title: '操作',
       key: 'Action',
-      width: 120,
+      width: 100,
       render: (text, record) => (
         <span>
           <a
@@ -151,29 +158,25 @@ export default class AdministrativeArea extends Component {
           >编辑
           </a>
           <Divider type="vertical" />
-          <Popconfirm 
-            placement="bottom" 
-            title="如果有子节点会一同删除，确认要删除这条记录吗？" 
-            onConfirm={() => { this.handleRemove(record); }} 
-            okText="是" 
-            cancelText="否"
-          >
             <a
               onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
+                confirm({
+                  title: "如果有子节点会一同删除，确认要删除这条记录吗？",
+                  content: '',
+                  onOk: () => {
+                    this.handleRemove(record);
+                  },
+                });
               }}
             >删除
             </a>
-          </Popconfirm>
-
         </span>
       ),
     }];
 
     return (
       <Layout className={styles.layout}>
-        <Sider width={250} style={{ background: '#fff' }}>
+        <Sider width={250} style={{ height: window.innerHeight - 110, overflowY: 'scroll', overflowX: 'auto', background: '#fff' }}>
           <DisplayTree
             treeList={[{
               id: '0',
@@ -187,34 +190,26 @@ export default class AdministrativeArea extends Component {
             loadData={this.onLoadData}
           />
         </Sider>
-        <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
-          <div className={styles.toolbar}>
-            <Button
-              icon="plus"
-              onClick={this.handleNew}
-              loading={administrativeArea.newBtnLoading}
-            >新建</Button>
-            <AdministrativeAreaForm
-              administrativeArea={administrativeArea}
-              modalVisible={this.state.modalVisible}
-              setModalVisible={setModalVisible}
-            />
-          </div>
+        <Content style={{ paddingLeft: 30, paddingRight: 30 }}>
+          <AdministrativeAreaToolBar
+            administrativeArea={administrativeArea}
+            handleNew={this.handleNew}
+          />
+          <AdministrativeAreaForm
+            administrativeArea={administrativeArea}
+            modalVisible={this.state.modalVisible}
+            setModalVisible={setModalVisible}
+          />
           <Table
             bordered
             size="small"
             loading={administrativeArea.loading}
-            pagination={administrativeArea.pagination}
+            pagination={false}
             dataSource={administrativeArea.list.slice()}
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}
-            locale={{
-              filterTitle: '筛选',
-              filterConfirm: '确定',
-              filterReset: '重置',
-              emptyText: '暂无数据',
-            }}
+            scroll={{ y: window.innerHeight - 220 }}
           />
         </Content>
       </Layout>

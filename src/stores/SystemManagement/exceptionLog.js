@@ -98,7 +98,7 @@ class ExceptionLogStore {
     this.pagination = {
       current: 1,
       pageSize: 20,
-      total: 20, // 总数,由接口提供
+      total: 0, // 总数,由接口提供
     };
     // table 排序字段
     this.orderField = null;

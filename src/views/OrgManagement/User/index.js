@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Table, Divider, Popconfirm, Alert, Modal, message } from 'antd';
+import { Layout, Table, Divider, Alert, Modal, message, Dropdown, Icon, Menu } from 'antd';
 import moment from 'moment';
 
 import DisplayTree from '@/components/DisplayTree';
@@ -245,6 +245,7 @@ export default class User extends Component {
 
   render() {
     const { user } = this.props;
+
     const columns = [{
       title: '登录名',
       dataIndex: 'LoginName',
@@ -268,90 +269,93 @@ export default class User extends Component {
     }, {
       title: '操作',
       key: 'Action',
-      width: 300,
-      render: (text, record) => (
-        <span>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              this.handleEdit(record);
-            }}
-          >编辑
-          </a>
-          <Divider type="vertical" />
-          <Popconfirm 
-            placement="bottomLeft"
-            title="确认要删除这条记录吗？" 
-            onConfirm={() => { this.handleRemove([record.UniqueID]); }} 
-            okText="是" 
-            cancelText="否"
-          >
+      width: 150,
+      render: (text, record) => {
+
+        const menu = (
+          <Menu>
+            <Menu.Item>
+              <a
+                onClick={(e) => {
+                  this.handleResetPwd(record);
+                }}
+              >重置密码
+              </a>
+            </Menu.Item>
+            <Menu.Item>
+              <a
+                onClick={(e) => {
+                  confirm({
+                    title: "确认要启用该用户吗？",
+                    content: '',
+                    onOk: () => {
+                      this.handleEnableUser(record, [1]);
+                    },
+                  });
+                }}
+              >启用
+              </a>
+            </Menu.Item>
+            <Menu.Item>
+              <a
+                onClick={(e) => {
+                  confirm({
+                    title: "确认要禁用该用户吗？",
+                    content: '',
+                    onOk: () => {
+                      this.handleEnableUser(record, [0]);
+                    },
+                  });
+                }}
+              >禁用
+              </a>
+            </Menu.Item>
+            <Menu.Item>
+              <a
+                onClick={(e) => {
+                  this.handleRoleEdit(record);
+                }}
+              >角色
+              </a>
+            </Menu.Item>
+          </Menu>
+        );
+
+        return (
+          <span>
             <a
               onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
+                this.handleEdit(record);
               }}
-            >删除
+            >编辑
             </a>
-          </Popconfirm>
-          <Divider type="vertical" />
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              this.handleResetPwd(record);
-            }}
-          >重置密码
-          </a>
-          <Divider type="vertical" />
-          <Popconfirm 
-            placement="bottomLeft"
-            title="确认要启用该用户吗？" 
-            onConfirm={() => { this.handleEnableUser(record, [1]); }} 
-            okText="是" 
-            cancelText="否"
-          >
-            <a
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-            >启用
-            </a>
-          </Popconfirm>
-          <Divider type="vertical" />
-          <Popconfirm 
-            placement="bottomLeft"
-            title="确认要禁用该用户吗？" 
-            onConfirm={() => { this.handleEnableUser(record, [0]); }} 
-            okText="是" 
-            cancelText="否"
-          >
-            <a
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-            >禁用
-            </a>
-          </Popconfirm>
-          <Divider type="vertical" />
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              this.handleRoleEdit(record);
-            }}
-          >角色
-          </a>
-        </span>
-      ),
+            <Divider type="vertical" />
+              <a
+                onClick={(e) => {
+                  confirm({
+                    title: "确认要删除该用户吗？",
+                    content: '',
+                    onOk: () => {
+                      this.handleRemove([record.UniqueID]);
+                    },
+                  });
+                }}
+              >删除
+              </a>
+            <Divider type="vertical" />
+            <Dropdown overlay={menu}>
+              <a className="ant-dropdown-link">
+                更多<Icon type="down" />
+              </a>
+            </Dropdown>
+          </span>
+        )
+      },
     }];
 
     return (
       <Layout className={styles.layout}>
-        <Sider width={210} style={{ background: '#fff' }}>
+        <Sider width={210} style={{ height: window.innerHeight - 110, overflowY: 'scroll', overflowX: 'auto', background: '#fff' }}>
           <DisplayTree
             treeList={user.treeList.slice()}
             onSelect={this.onSelect}
@@ -359,11 +363,11 @@ export default class User extends Component {
             defaultExpandedKeys={user.selectedKeys.slice()}
           />
         </Sider>
-        <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
+        <Content style={{ paddingLeft: 30, paddingRight: 30 }}>
           <UserToolBar 
             user={user}
             handleNew={this.handleNew}
-           />
+          />
           {
             // 需要密码字段在编辑时不显示，这里是为了让form重新挂载，否则表单域中仍然有密码字段
             this.state.modalVisible &&

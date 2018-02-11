@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Button, Table, Divider, Popconfirm, message, Badge } from 'antd';
+import { Layout, Button, Table, Divider, message, Badge, Dropdown, Icon, Menu, Modal } from 'antd';
 
 import RoleForm from './form';
 import Auth from './auth';
@@ -9,6 +9,7 @@ import styles from './index.less';
 
 
 const { Content } = Layout;
+const { confirm } = Modal;
 
 @inject('role')
 @observer
@@ -135,14 +136,17 @@ export default class Role extends Component {
       title: '名称',
       dataIndex: 'Name',
       key: 'Name',
+      width: 120,
     }, {
       title: '描述',
       dataIndex: 'DescInfo',
       key: 'DescInfo',
+      width: 120,
     }, {
       title: '状态',
       dataIndex: 'IsAvailable',
       key: 'IsAvailable',
+      width: 120,      
       render: (result) => {
         if(result) {
           return <Badge status="success" text="启用" />;
@@ -153,58 +157,67 @@ export default class Role extends Component {
     }, {
       title: '操作',
       key: 'Action',
-      width: 300,
-      render: (text, record) => (
-        <span>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              this.handleEdit(record);
-            }}
-          >编辑
-          </a>
-          <Divider type="vertical" />
-          <Popconfirm
-            placement="bottom" 
-            title="确认要删除这条记录吗？" 
-            onConfirm={() => { this.handleRemove(record); }} 
-            okText="是" 
-            cancelText="否"
-          >
+      width: 150,
+      render: (text, record) => {
+
+        const menu = (
+          <Menu>
+            <Menu.Item>
+              <a
+                onClick={(e) => {
+                  this.handleAuth(record);
+                }}
+              >角色授权
+              </a>
+            </Menu.Item>
+            <Menu.Item>
+              <a
+                onClick={(e) => {
+                  this.handleMember(record);
+                }}
+              >角色成员
+              </a>
+            </Menu.Item>
+          </Menu>
+        );
+
+        return (
+          <span>
             <a
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                this.handleEdit(record);
               }}
-            >删除
+            >编辑
             </a>
-          </Popconfirm>
-          <Divider type="vertical" />
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              this.handleAuth(record);
-            }}
-          >角色授权
-          </a>
-          <Divider type="vertical" />
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              this.handleMember(record);
-            }}
-          >角色成员
-          </a>
-        </span>
-      ),
+            <Divider type="vertical" />
+              <a
+                onClick={(e) => {
+                  confirm({
+                    title: "确认要删除这条记录吗？",
+                    content: '',
+                    onOk: () => {
+                      this.handleRemove(record);
+                    },
+                  });
+                }}
+              >删除
+              </a>
+            <Divider type="vertical" />
+            <Dropdown overlay={menu}>
+              <a className="ant-dropdown-link">
+                更多<Icon type="down" />
+              </a>
+            </Dropdown>
+          </span>
+        )
+      },
     }];
 
     return (
       <Layout className={styles.layout}>
-        <Content style={{ background: '#fff', padding: 30 }}>
+        <Content style={{ paddingLeft: 30, paddingRight: 30 }}>
           <div className={styles.toolbar}>
             <Button
               icon="plus"
@@ -233,17 +246,12 @@ export default class Role extends Component {
             bordered
             size="small"
             loading={role.loading}
-            pagination={role.pagination}
+            pagination={false}
             dataSource={role.list.slice()}
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}
-            locale={{
-              filterTitle: '筛选',
-              filterConfirm: '确定',
-              filterReset: '重置',
-              emptyText: '暂无数据',
-            }}
+            scroll={{ y: window.innerHeight - 220 }}
           />
         </Content>
       </Layout>

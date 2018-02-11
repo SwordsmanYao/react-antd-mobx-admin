@@ -21,6 +21,8 @@ class GlobalStore {
       this.setData({
         menu: response.Data
       });
+    } else {
+      return await Promise.reject(response.Error);
     }
   }
 

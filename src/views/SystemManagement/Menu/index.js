@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Button, Table, Divider, Popconfirm, message } from 'antd';
+import { Layout, Button, Table, Divider, Modal, message } from 'antd';
 
 import DisplayTree from '@/components/DisplayTree';
 import MenuForm from './form';
@@ -8,6 +8,7 @@ import styles from './index.less';
 
 
 const { Sider, Content } = Layout;
+const { confirm } = Modal;
 
 @inject('menu')
 @observer
@@ -105,14 +106,17 @@ export default class Menu extends Component {
       title: '名称',
       dataIndex: 'Name',
       key: 'Name',
+      width: 120,
     }, {
       title: '路径',
       dataIndex: 'Path',
       key: 'Path',
+      width: 120,
     }, {
       title: '排序',
       dataIndex: 'SortCode',
       key: 'SortCode',
+      width: 120,
     }, {
       title: '操作',
       key: 'Action',
@@ -128,29 +132,25 @@ export default class Menu extends Component {
           >编辑
           </a>
           <Divider type="vertical" />
-          <Popconfirm 
-            placement="bottom" 
-            title="如果有子节点会一同删除，确认要删除这条记录吗？" 
-            onConfirm={() => { this.handleRemove(record); }} 
-            okText="是" 
-            cancelText="否"
-          >
             <a
               onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
+                confirm({
+                  title: "如果有子节点会一同删除，确认要删除这条记录吗？",
+                  content: '',
+                  onOk: () => {
+                    this.handleRemove(record);
+                  },
+                });
               }}
             >删除
             </a>
-          </Popconfirm>
-
         </span>
       ),
     }];
 
     return (
       <Layout className={styles.layout}>
-        <Sider width={220} style={{ background: '#fff' }}>
+        <Sider width={220}  style={{ height: window.innerHeight - 110, overflowY: 'scroll', overflowX: 'auto', background: '#fff' }}>
           <DisplayTree
             treeList={[{
               id: '0',
@@ -162,34 +162,29 @@ export default class Menu extends Component {
             selectedKeys={menu.selectedKeys.slice()}
           />
         </Sider>
-        <Content style={{ background: '#fff', marginLeft: 10, padding: 30 }}>
+        <Content style={{ paddingLeft: 30, paddingRight: 30 }}>
           <div className={styles.toolbar}>
             <Button
               icon="plus"
               onClick={this.handleNew}
               loading={menu.newBtnLoading}
             >新建</Button>
-            <MenuForm
-              menu={menu}
-              modalVisible={this.state.modalVisible}
-              setModalVisible={setModalVisible}
-            />
           </div>
+          <MenuForm
+            menu={menu}
+            modalVisible={this.state.modalVisible}
+            setModalVisible={setModalVisible}
+          />
           <Table
             bordered
             size="small"
             loading={menu.loading}
-            pagination={menu.pagination}
+            pagination={false}
             dataSource={menu.list.slice()}
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}
-            locale={{
-              filterTitle: '筛选',
-              filterConfirm: '确定',
-              filterReset: '重置',
-              emptyText: '暂无数据',
-            }}
+            scroll={{ y: window.innerHeight - 220 }}
           />
         </Content>
       </Layout>

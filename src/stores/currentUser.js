@@ -40,6 +40,7 @@ class CurrentUserStore {
       this.setData({
         error: response.Error
       });
+      return await Promise.reject(response.Error);
     }
     
     this.setData({
