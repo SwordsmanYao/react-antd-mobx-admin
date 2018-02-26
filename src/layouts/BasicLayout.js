@@ -4,6 +4,7 @@ import { Layout } from 'antd';
 import { observer, inject } from 'mobx-react';
 import enquire from 'enquire.js';
 import DevTools from 'mobx-react-devtools';
+import DocumentTitle from 'react-document-title';
 
 import { basic as basicRouter } from '../router';
 import SiderMenu from '../components/SiderMenu';
@@ -101,40 +102,42 @@ class BasicLayout extends Component {
     const { firstShow } = this.state;
 
     return (
-      <Layout className={styles.layout}>
-        <DevTools/>
-        {
-          // 在没跳转到子路由之前不渲染菜单栏，避免没有 menuID 引发错误
-          location.pathname !== `${match.url}` && 
-          <SiderMenu global={global} />
-        }
-        <Layout style={{ marginLeft: global.collapsed ? 64 : 200 }}>
+      <DocumentTitle title={global.selectedDirNameList && global.selectedDirNameList[global.selectedDirNameList.length - 1]}>
+        <Layout className={styles.layout}>
+          <DevTools/>
           {
-            currentUser.currentUser && <BasicHeader global={global} currentUser={currentUser} />
+            // 在没跳转到子路由之前不渲染菜单栏，避免没有 menuID 引发错误
+            location.pathname !== `${match.url}` && 
+            <SiderMenu global={global} />
           }
-          {
-            // 有 MenuID 再渲染 content 部分，避免请求时没有 MenuID
-            global.selectedKeys && global.selectedKeys.length > 0 &&
-            <Content className={styles.content}>
-              <Switch>
-                {
-                  basicRouter.map(item => (
-                    <Route path={`${match.url}/${item.path}`} key={item.path} exact={item.exact} component={ item.component } />
-                  ))
-                }
-                {
-                  firstShow &&
-                  <Redirect
-                    from={`${match.url}`}
-                    to={firstShow.pathname}
-                  />
-                }
-              </Switch>
-            </Content>
-          }
-          
+          <Layout style={{ marginLeft: global.collapsed ? 64 : 200 }}>
+            {
+              currentUser.currentUser && <BasicHeader global={global} currentUser={currentUser} />
+            }
+            {
+              // 有 MenuID 再渲染 content 部分，避免请求时没有 MenuID
+              global.selectedKeys && global.selectedKeys.length > 0 &&
+              <Content className={styles.content}>
+                <Switch>
+                  {
+                    basicRouter.map(item => (
+                      <Route path={`${match.url}/${item.path}`} key={item.path} exact={item.exact} component={ item.component } />
+                    ))
+                  }
+                  {
+                    firstShow &&
+                    <Redirect
+                      from={`${match.url}`}
+                      to={firstShow.pathname}
+                    />
+                  }
+                </Switch>
+              </Content>
+            }
+            
+          </Layout>
         </Layout>
-      </Layout>
+      </DocumentTitle>
     );
     
   }

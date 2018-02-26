@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { queryMenuTree } from '@/services/global';
 
 class GlobalStore {
@@ -49,6 +49,42 @@ class GlobalStore {
       });
     }
   }
+
+  // 计算当前页面的全路径名称列表，用于面包屑的数据
+  @computed get selectedDirNameList() {
+    if(this.menu && this.menu.length > 0 && this.selectedKeys && this.selectedKeys.length > 0) {
+      let nameList = [];
+      this.menu.forEach(item => {
+        const list = this.getDirNameList(item, this.selectedKeys[0]);
+        if(list && list.length > 0) {
+          nameList = list;
+        }
+      });
+      return nameList;
+    }
+    return [];
+  }
+
+  // 递归遍历，当 menuObj 的 children 中包涵选中对象或为选中对象的祖先节点时，
+  // 把当前对象的 name 拼到递归返回的 list 前作为返回值
+  getDirNameList(menuObj, selectedKey) {
+
+    if(menuObj.id === selectedKey) {
+      return [menuObj.name];
+    } else {
+      if(menuObj.hasChildren && menuObj.children) {
+        let nameList = [];
+        menuObj.children.forEach(item => {
+          const list = this.getDirNameList(item, selectedKey);
+          if(list && list.length > 0) {
+            nameList = [menuObj.name, ...list];
+          }
+        });
+        return nameList;
+      }
+    }
+  }
+
 }
 
 export default new GlobalStore();

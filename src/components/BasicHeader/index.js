@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Icon, Avatar, Dropdown, Menu } from 'antd';
+import { Layout, Icon, Avatar, Dropdown, Menu, Breadcrumb  } from 'antd';
 import { observer } from 'mobx-react';
 
 import styles from './index.less';
@@ -31,11 +31,20 @@ class BasicHeader extends Component {
 
     return (
       <Header className={styles.header}>
-        <Icon
-          className={styles.trigger}
-          type={global.collapsed ? 'menu-unfold' : 'menu-fold'}
-          onClick={() => global.toggleCollapsed()}
-        />
+        <div className={styles.left}>
+          <Icon
+            className={styles.trigger}
+            type={global.collapsed ? 'menu-unfold' : 'menu-fold'}
+            onClick={() => global.toggleCollapsed()}
+          />
+          <Breadcrumb className={styles.breadcrumb}>
+            {
+              global.selectedDirNameList && global.selectedDirNameList.map(item => (
+                <Breadcrumb.Item>{item}</Breadcrumb.Item>
+              ))
+            }
+          </Breadcrumb>
+        </div>
         <div className={styles.right}>
           <Dropdown overlay={menu} placement="bottomRight">
             <div className={`${styles.user} ${styles.action}`}>
@@ -43,7 +52,6 @@ class BasicHeader extends Component {
               <span>{currentUser.currentUser.UserName}</span>
             </div>
           </Dropdown>
-          
         </div>
       </Header>
     );
