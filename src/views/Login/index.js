@@ -20,22 +20,14 @@ export default class Login extends Component {
     const remember = localStorage.getItem('remember');
 
     if(remember) {
-      form.setFields({
-        LoginName: {
-          value: loginName
-        },
-        LoginPwd: {
-          value: loginPwd
-        },
-        remember: {
-          value: remember
-        },
+      form.setFieldsValue({
+        LoginName: loginName,
+        LoginPwd: loginPwd,
+        remember: remember,
       });
     } else {
-      form.setFields({
-        remember: {
-          value: false,
-        },
+      form.setFieldsValue({
+        remember: false,
       });
     }
   }
@@ -119,6 +111,7 @@ export default class Login extends Component {
               <FormItem className={styles.additional}>
                 {getFieldDecorator('remember', {
                   valuePropName: 'checked',
+                  initialValue: false,
                 })(
                   <Checkbox className={styles.autoLogin}>记住密码</Checkbox>
                 )}
