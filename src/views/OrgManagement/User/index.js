@@ -76,6 +76,10 @@ export default class User extends Component {
     if(selectedKeys.length > 0) {
       user.setData({
         selectedKeys: selectedKeys,
+        pagination: {
+          ...user.pagination,
+          current: 1,
+        },
       });
   
       let orderData = {};
@@ -88,7 +92,7 @@ export default class User extends Component {
       
       user.fetchList({
         OrganizationID: selectedKeys[0],
-        CurrentPage: user.pagination.current,
+        CurrentPage: 1,
         PageSize: user.pagination.pageSize,
         ...user.searchFormValues,
         ...orderData,

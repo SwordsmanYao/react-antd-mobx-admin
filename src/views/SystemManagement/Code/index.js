@@ -42,11 +42,15 @@ export default class Code extends Component {
     if(selectedKeys.length > 0) {
       code.setData({
         selectedKeys: selectedKeys,
+        pagination: {
+          ...code.pagination,
+          current: 1,
+        },
       });
       
       code.fetchList({
         ParentID: selectedKeys[0],
-        CurrentPage: code.pagination.current,
+        CurrentPage: 1,
         PageSize: code.pagination.pageSize,
       });
     }

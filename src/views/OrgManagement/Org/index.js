@@ -46,8 +46,8 @@ export default class Org extends Component {
       
       org.fetchList({
         ParentID: selectedKeys[0],
-        CurrentPage: org.pagination.current,
-        PageSize: org.pagination.pageSize,
+        // CurrentPage: org.pagination.current,
+        // PageSize: org.pagination.pageSize,
       });
     }
   }

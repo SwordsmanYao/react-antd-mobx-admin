@@ -23,6 +23,16 @@ class CurrentUserStore {
     if(response.Code === 200) {
       const user = response.Data;
 
+      // 记住密码到 localStorage
+      if(data.remember) {
+        localStorage.setItem('loginName', data.LoginName);
+        localStorage.setItem('loginPwd', data.LoginPwd);
+        localStorage.setItem('remember', data.remember);
+      } else {
+        localStorage.removeItem('loginName');
+        localStorage.removeItem('loginPwd');
+        localStorage.removeItem('remember');
+      }
       // token 单独存储，每次请求都会更新 token
       sessionStorage.setItem('token', user.Token);
       delete user.Token;
@@ -33,19 +43,17 @@ class CurrentUserStore {
       this.setData({
         currentUser: response.Data,
         error: null,
+        submitting: false,
       })
 
       history.push('/basic');
     } else {
       this.setData({
-        error: response.Error
+        error: response.Error,
+        submitting: false,
       });
       return await Promise.reject(response.Error);
     }
-    
-    this.setData({
-      submitting: false,
-    });
   }
 
   /**

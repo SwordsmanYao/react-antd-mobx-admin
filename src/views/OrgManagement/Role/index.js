@@ -123,10 +123,24 @@ export default class Role extends Component {
     this.setMemberModalVisible(true);
   }
 
+  // 表格分页、排序等的回调函数
   handleTableChange = (pagination, filters, sorter) => {
-    console.log('pagination', pagination);
-    console.log('filters', filters);
-    console.log('sorter', sorter);
+    const { role } = this.props;
+
+    // 修改 store 数据
+    role.setData({
+      pagination: {
+        ...role.pagination,
+        current: pagination.current,
+        pageSize: pagination.pageSize,
+      },
+    });
+
+    // 发起请求
+    role.fetchList({
+      CurrentPage: pagination.current,
+      PageSize: pagination.pageSize,
+    });
   }
 
   render() {
@@ -246,7 +260,7 @@ export default class Role extends Component {
             bordered
             size="small"
             loading={role.loading}
-            pagination={false}
+            pagination={role.pagination}
             dataSource={role.list.slice()}
             columns={columns}
             rowKey="UniqueID"

@@ -39,12 +39,15 @@ class AdministrativeAreaStore {
     let response = null;
 
     // 当有 id 时为编辑，否则为新建
-    if(data.UniqueID) {
-      response = await update(data);
+    if(data.OldUniqueID) {
+      response = await update({
+        ...data,
+        PaiXuMa: data.UniqueID, // 设置 PaiXuMa 和 UniqueID 字段一致
+      });
     } else {
       response = await insert({
         ...data,
-        UniqueID: data.PaiXuMa, // 设置 UniqueID 和 PaiXuMa 字段一致
+        PaiXuMa: data.UniqueID, // 设置 PaiXuMa 和 UniqueID 字段一致
       });
     }
 
@@ -174,7 +177,6 @@ class AdministrativeAreaStore {
     this.currentNode = {
       ...this.currentNode,
       ...data,
-      OldUniqueID: data.UniqueID,
     }
   }
   @action

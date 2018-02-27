@@ -45,11 +45,15 @@ export default class AdministrativeArea extends Component {
       administrativeArea.setData({
         selectedKeys: selectedKeys,
         selectedInfo: info.node.props.dataRef,
+        pagination: {
+          ...administrativeArea.pagination,
+          current: 1,
+        },
       });
       
       administrativeArea.fetchList({
         ParentID: selectedKeys[0],
-        CurrentPage: administrativeArea.pagination.current,
+        CurrentPage: 1,
         PageSize: administrativeArea.pagination.pageSize,
       });
     }
@@ -93,7 +97,10 @@ export default class AdministrativeArea extends Component {
     const { administrativeArea } = this.props;
     console.log('record' ,record);
     
-    const data = {...record};
+    const data = {
+      ...record,
+      OldUniqueID: record.UniqueID,
+    };
 
     administrativeArea.setCurrentNode(data);
     this.setModalVisible(true); 
@@ -149,8 +156,8 @@ export default class AdministrativeArea extends Component {
     const { setModalVisible } = this;
     const columns = [{
       title: '编号',
-      dataIndex: 'PaiXuMa',
-      key: 'PaiXuMa',
+      dataIndex: 'UniqueID',
+      key: 'UniqueID',
       width: 80,
     }, {
       title: '名称',

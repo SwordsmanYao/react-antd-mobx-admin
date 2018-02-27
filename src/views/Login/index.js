@@ -13,6 +13,33 @@ const FormItem = Form.Item;
 @observer
 export default class Login extends Component {
 
+  componentDidMount = () => {
+    const { form } = this.props;
+    const loginName = localStorage.getItem('loginName');
+    const loginPwd = localStorage.getItem('loginPwd');
+    const remember = localStorage.getItem('remember');
+
+    if(remember) {
+      form.setFields({
+        LoginName: {
+          value: loginName
+        },
+        LoginPwd: {
+          value: loginPwd
+        },
+        remember: {
+          value: remember
+        },
+      });
+    } else {
+      form.setFields({
+        remember: {
+          value: false,
+        },
+      });
+    }
+  }
+
   handleSubmit = (e) => {
     const { form, currentUser } = this.props;
     e.preventDefault();
@@ -92,7 +119,6 @@ export default class Login extends Component {
               <FormItem className={styles.additional}>
                 {getFieldDecorator('remember', {
                   valuePropName: 'checked',
-                  initialValue: true,
                 })(
                   <Checkbox className={styles.autoLogin}>记住密码</Checkbox>
                 )}

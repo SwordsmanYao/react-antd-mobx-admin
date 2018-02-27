@@ -43,10 +43,10 @@ export default class AdministrativeAreaForm extends Component {
           ...values,
           ParentID: administrativeArea.selectedKeys[0],
           JiBie: administrativeArea.selectedInfo.depthlevel + 1, // 深度等于父节点深度 + 1
-          OldUniqueID: administrativeArea.currentNode.OldUniqueID, // 
         };
-        if (administrativeArea.currentNode.UniqueID && administrativeArea.currentNode.UniqueID.value) {
-          data.UniqueID = administrativeArea.currentNode.UniqueID.value;
+
+        if (administrativeArea.currentNode.OldUniqueID && administrativeArea.currentNode.OldUniqueID.value) {
+          data.OldUniqueID = administrativeArea.currentNode.OldUniqueID.value;
         }
 
         administrativeArea.commit(data).then(() => {
@@ -109,7 +109,7 @@ export default class AdministrativeAreaForm extends Component {
                 {...formItemLayout}
                 label="编号"
               >
-                {getFieldDecorator('PaiXuMa', {
+                {getFieldDecorator('UniqueID', {
                   rules: [
                     {
                       required: true, message: '请输入编号',
