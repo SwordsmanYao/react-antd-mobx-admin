@@ -50,7 +50,7 @@ class GlobalStore {
     }
   }
 
-  // 计算当前页面的全路径名称列表，用于面包屑的数据
+  // 计算当前页面的全路径名称列表，用于面包屑和页面 title 的数据
   @computed get selectedDirNameList() {
     if(this.menu && this.menu.length > 0 && this.selectedKeys && this.selectedKeys.length > 0) {
       let nameList = [];
