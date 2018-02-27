@@ -154,7 +154,7 @@ class AdministrativeAreaStore {
     // 列表分页数据
     this.pagination = {
       current: 1,
-      pageSize: 200,
+      pageSize: 20,
       total: 0, // 总数,由接口提供
     };
     
@@ -174,6 +174,7 @@ class AdministrativeAreaStore {
     this.currentNode = {
       ...this.currentNode,
       ...data,
+      OldUniqueID: data.UniqueID,
     }
   }
   @action

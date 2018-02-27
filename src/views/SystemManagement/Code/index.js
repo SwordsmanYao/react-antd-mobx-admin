@@ -34,12 +34,6 @@ export default class Code extends Component {
     code.reset();
   }
 
-  handleTableChange = (pagination, filters, sorter) => {
-    console.log('pagination', pagination);
-    console.log('filters', filters);
-    console.log('sorter', sorter);
-  }
-
   // 点击树节点时触发
   onSelect = (selectedKeys) => {
     console.log('selected', selectedKeys);
@@ -91,10 +85,39 @@ export default class Code extends Component {
     });
   }
 
+  // 表格分页、排序等的回调函数
   handleTableChange = (pagination, filters, sorter) => {
-    console.log('pagination', pagination);
-    console.log('filters', filters);
-    console.log('sorter', sorter);
+    const { code } = this.props;
+
+    // 排序数据
+    // const sorterData = {};
+    // if(sorter.field) {
+    //   sorterData.OrderField = sorter.field;
+    //   if(sorter.order === 'descend') {
+    //     sorterData.IsDesc = true;
+    //   } else {
+    //     sorterData.IsDesc = false;
+    //   }
+    // }
+
+    // 修改 store 数据
+    code.setData({
+      pagination: {
+        ...code.pagination,
+        current: pagination.current,
+        pageSize: pagination.pageSize,
+      },
+      // orderField: sorterData.OrderField || null,
+      // isDesc: sorterData.IsDesc || false,
+    });
+
+    // 发起请求
+    code.fetchList({
+      CurrentPage: pagination.current,
+      PageSize: pagination.pageSize,
+      ...code.searchFormValues,
+      // ...sorterData,
+    });
   }
 
   render() {
@@ -187,7 +210,7 @@ export default class Code extends Component {
             bordered
             size="small"
             loading={code.loading}
-            pagination={false}
+            pagination={code.pagination}
             dataSource={code.list.slice()}
             columns={columns}
             rowKey="UniqueID"

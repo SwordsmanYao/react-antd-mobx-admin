@@ -50,37 +50,37 @@ class GlobalStore {
     }
   }
 
-  // 计算当前页面的全路径名称列表，用于面包屑和页面 title 的数据
-  @computed get selectedDirNameList() {
+  // 计算当前页面的全路径列表，用于面包屑和页面 title 的数据
+  @computed get selectedDirList() {
     if(this.menu && this.menu.length > 0 && this.selectedKeys && this.selectedKeys.length > 0) {
-      let nameList = [];
+      let dirList = [];
       this.menu.forEach(item => {
-        const list = this.getDirNameList(item, this.selectedKeys[0]);
+        const list = this.getDirList(item, this.selectedKeys[0]);
         if(list && list.length > 0) {
-          nameList = list;
+          dirList = list;
         }
       });
-      return nameList;
+      return dirList;
     }
     return [];
   }
 
   // 递归遍历，当 menuObj 的 children 中包涵选中对象或为选中对象的祖先节点时，
-  // 把当前对象的 name 拼到递归返回的 list 前作为返回值
-  getDirNameList(menuObj, selectedKey) {
+  // 把当前对象拼到递归返回的 list 前作为返回值
+  getDirList(menuObj, selectedKey) {
 
     if(menuObj.id === selectedKey) {
-      return [menuObj.name];
+      return [menuObj];
     } else {
       if(menuObj.hasChildren && menuObj.children) {
-        let nameList = [];
+        let dirList = [];
         menuObj.children.forEach(item => {
-          const list = this.getDirNameList(item, selectedKey);
+          const list = this.getDirList(item, selectedKey);
           if(list && list.length > 0) {
-            nameList = [menuObj.name, ...list];
+            dirList = [menuObj, ...list];
           }
         });
-        return nameList;
+        return dirList;
       }
     }
   }

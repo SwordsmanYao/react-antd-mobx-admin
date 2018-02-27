@@ -39,8 +39,8 @@ class BasicHeader extends Component {
           />
           <Breadcrumb className={styles.breadcrumb}>
             {
-              global.selectedDirNameList && global.selectedDirNameList.map(item => (
-                <Breadcrumb.Item>{item}</Breadcrumb.Item>
+              global.selectedDirList && global.selectedDirList.map(item => (
+                <Breadcrumb.Item key={item.id}>{item.name}</Breadcrumb.Item>
               ))
             }
           </Breadcrumb>

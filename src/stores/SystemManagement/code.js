@@ -136,7 +136,7 @@ class CodeStore {
     // 列表分页数据
     this.pagination = {
       current: 1,
-      pageSize: 200,
+      pageSize: 10,
       total: 0, // 总数,由接口提供
     };
     

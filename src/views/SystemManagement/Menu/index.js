@@ -33,12 +33,6 @@ export default class Menu extends Component {
     menu.reset();
   }
 
-  handleTableChange = (pagination, filters, sorter) => {
-    console.log('pagination', pagination);
-    console.log('filters', filters);
-    console.log('sorter', sorter);
-  }
-
   // 点击树节点时触发
   onSelect = (selectedKeys) => {
     console.log('selected', selectedKeys);
@@ -51,8 +45,8 @@ export default class Menu extends Component {
       
       menu.fetchList({
         ParentID: selectedKeys[0],
-        CurrentPage: menu.pagination.current,
-        PageSize: menu.pagination.pageSize,
+        // CurrentPage: menu.pagination.current,
+        // PageSize: menu.pagination.pageSize,
       });
     }
   }

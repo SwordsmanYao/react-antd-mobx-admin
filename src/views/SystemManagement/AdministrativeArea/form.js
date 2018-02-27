@@ -42,7 +42,8 @@ export default class AdministrativeAreaForm extends Component {
         const data = {
           ...values,
           ParentID: administrativeArea.selectedKeys[0],
-          depthlevel: administrativeArea.selectedInfo.depthlevel + 1, //深度等于父节点深度 + 1
+          JiBie: administrativeArea.selectedInfo.depthlevel + 1, // 深度等于父节点深度 + 1
+          OldUniqueID: administrativeArea.currentNode.OldUniqueID, // 
         };
         if (administrativeArea.currentNode.UniqueID && administrativeArea.currentNode.UniqueID.value) {
           data.UniqueID = administrativeArea.currentNode.UniqueID.value;

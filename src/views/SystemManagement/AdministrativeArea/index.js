@@ -109,10 +109,39 @@ export default class AdministrativeArea extends Component {
     });
   }
 
+  // 表格分页、排序等的回调函数
   handleTableChange = (pagination, filters, sorter) => {
-    console.log('pagination', pagination);
-    console.log('filters', filters);
-    console.log('sorter', sorter);
+    const { administrativeArea } = this.props;
+
+    // 排序数据
+    // const sorterData = {};
+    // if(sorter.field) {
+    //   sorterData.OrderField = sorter.field;
+    //   if(sorter.order === 'descend') {
+    //     sorterData.IsDesc = true;
+    //   } else {
+    //     sorterData.IsDesc = false;
+    //   }
+    // }
+
+    // 修改 store 数据
+    administrativeArea.setData({
+      pagination: {
+        ...administrativeArea.pagination,
+        current: pagination.current,
+        pageSize: pagination.pageSize,
+      },
+      // orderField: sorterData.OrderField || null,
+      // isDesc: sorterData.IsDesc || false,
+    });
+
+    // 发起请求
+    administrativeArea.fetchList({
+      CurrentPage: pagination.current,
+      PageSize: pagination.pageSize,
+      ...administrativeArea.searchFormValues,
+      // ...sorterData,
+    });
   }
 
   render() {
@@ -204,12 +233,12 @@ export default class AdministrativeArea extends Component {
             bordered
             size="small"
             loading={administrativeArea.loading}
-            pagination={false}
+            pagination={administrativeArea.pagination}
             dataSource={administrativeArea.list.slice()}
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}
-            scroll={{ y: window.innerHeight - 220 }}
+            scroll={{ y: window.innerHeight - 255 }}
           />
         </Content>
       </Layout>

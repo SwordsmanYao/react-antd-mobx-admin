@@ -13,7 +13,7 @@ class MenuStore {
   // 控制列表是否显示加载中
   @observable loading; 
   // 列表分页数据
-  @observable pagination;
+  // @observable pagination;
   
   // currentNode 的默认值，用于 clear 时的数据
   defaultNode = {
@@ -104,8 +104,8 @@ class MenuStore {
   async refreshList() {
     this.fetchList({
       ParentID: this.selectedKeys[0],
-      CurrentPage: this.pagination.current,
-      PageSize: this.pagination.pageSize,
+      // CurrentPage: this.pagination.current,
+      // PageSize: this.pagination.pageSize,
     });
   }
 
@@ -122,10 +122,10 @@ class MenuStore {
       this.setData({
         list: response.Data,
         // total 来自接口返回
-        pagination: {
-          ...this.pagination,
-          total: response.TotalCount
-        },
+        // pagination: {
+        //   ...this.pagination,
+        //   total: response.TotalCount
+        // },
       });
     }
 
@@ -156,11 +156,11 @@ class MenuStore {
     // 控制列表是否显示加载中
     this.loading = false; 
     // 列表分页数据
-    this.pagination = {
-      current: 1,
-      pageSize: 200,
-      total: 0, // 总数,由接口提供
-    };
+    // this.pagination = {
+    //   current: 1,
+    //   pageSize: 200,
+    //   total: 0, // 总数,由接口提供
+    // };
     
     // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
     this.currentNode = this.defaultNode;
