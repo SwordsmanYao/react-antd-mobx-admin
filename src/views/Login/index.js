@@ -19,11 +19,11 @@ export default class Login extends Component {
     const loginPwd = localStorage.getItem('loginPwd');
     const remember = localStorage.getItem('remember');
 
-    if(remember) {
+    if(remember===true || remember==='true') {
       form.setFieldsValue({
         LoginName: loginName,
         LoginPwd: loginPwd,
-        remember: remember,
+        remember: true,
       });
     } else {
       form.setFieldsValue({
