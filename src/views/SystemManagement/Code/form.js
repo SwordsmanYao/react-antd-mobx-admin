@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Form, Row, Col, Input, Select, Modal } from 'antd';
+import { Form, Row, Col, Input, Select, Modal, message } from 'antd';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -49,6 +49,7 @@ export default class CodeForm extends Component {
         }
 
         code.commit(data).then(() => {
+          message.success('提交成功');
           setModalVisible(false);
         }).catch(({ ModelState }) => {
           

@@ -15,6 +15,32 @@
  yarn start (or npm run start)
  ```
 
+### 项目结构
+```
+|-- build  编译构建后生成的文件，可直接放到服务器上
+|-- config  webpack相关配置文件
+|-- mock	 接口模拟
+|-- node_ modules  依赖包
+|-- public  一般不会被webpack处理的静态文件
+|-- scripts  执行命令的文件
+|--| src  源文件目录
+|--|-- assets  logo图片等资源文件
+|--|-- components  公共组件目录
+|--|-- layouts  布局页面
+|--|-- router  路由配置
+|--|-- services  接口请求
+|--|-- stores  数据存储
+|--|-- utils
+|--|-- views  页面
+|--|-- App.js  应用入口文件
+|--|-- history.js
+|--|-- index.js 整个项目的入口文件
+|-- theme   定制主题
+|-- .eslintrc  eslint配置文件
+|-- package.json  项目配置文件
+|-- yarn.lock  依赖包版本锁定文件
+```
+
 ### mobx 使用注意事项
  * 延迟对象属性地解引用
  * 不要吝啬使用 @observer，子组件只要用到 mobx 管理的数据就要加上 @observer

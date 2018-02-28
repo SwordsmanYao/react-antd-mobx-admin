@@ -1,2 +1,9 @@
 {
+  "eslint.autoFixOnSave": true,
+  "emmet.includeLanguages": {
+      "javascript": "javascriptreact"
+  },
+  "files.eol": "\n",
+  "javascript.implicitProjectConfig.experimentalDecorators": true,
+  "editor.tabSize": 2
 }

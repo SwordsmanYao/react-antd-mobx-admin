@@ -84,6 +84,8 @@ export default class Code extends Component {
 
     code.remove({
       UniqueID: record.UniqueID,
+    }).then(() => {
+      message.success('删除成功');
     }).catch((e) => {
       message.error(`操作失败：${e.Message}`);
     });
