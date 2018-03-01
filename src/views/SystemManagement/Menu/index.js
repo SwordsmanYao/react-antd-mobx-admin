@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { Layout, Button, Table, Divider, Modal, message } from 'antd';
 
 import DisplayTree from '@/components/DisplayTree';
+import StepModal from '@/components/StepModal';
 import MenuForm from './form';
 import styles from './index.less';
 
@@ -144,6 +145,39 @@ export default class Menu extends Component {
       ),
     }];
 
+    const steps = [{
+      title: '系统功能',
+      component: MenuForm,
+      // 组件被Form.create()等包裹
+      isWrappedComponent: true, 
+      props: {
+        menu,
+      },
+      // Modal 窗口关闭时触发
+      afterClose: () => {
+        const { menu } = this.props;
+        menu.clearCurrentNode();
+      },
+    }, {
+      title: '系统按钮',
+      component: MenuForm,
+      isWrappedComponent: false,
+      props: {
+        menu,
+      },
+      afterClose: () => {
+      },
+    }, {
+      title: '系统视图',
+      component: MenuForm,
+      isWrappedComponent: false,
+      props: {
+        menu,
+      },
+      afterClose: () => {
+      },
+    }];
+
     return (
       <Layout className={styles.layout}>
         <Sider width={220}  style={{ height: window.innerHeight - 110, overflowY: 'scroll', overflowX: 'auto', background: '#fff' }}>
@@ -166,10 +200,11 @@ export default class Menu extends Component {
               loading={menu.newBtnLoading}
             >新建</Button>
           </div>
-          <MenuForm
-            menu={menu}
+          <StepModal
             modalVisible={this.state.modalVisible}
             setModalVisible={setModalVisible}
+            title="菜单管理"
+            steps={steps}
           />
           <Table
             bordered
