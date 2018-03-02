@@ -71,7 +71,9 @@ class StepModal extends Component {
     steps.forEach(item => {
       item.afterClose();
     });
-
+    this.setState({
+      current: 0,
+    });
   }
 
   render() {

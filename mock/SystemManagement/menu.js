@@ -148,8 +148,15 @@ function detail(req, res) {
   }));
 }
 
+function update(req, res) {
+  res.send(Mock.mock({
+    Code: 200,
+  }));
+}
+
 module.exports = {
   tree,
   list,
   detail,
+  update,
 }

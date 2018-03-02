@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Layout, Button, Table, Divider, Modal, message } from 'antd';
 
-import OrgCategoryForm from './form';
+import MenuButtonForm from './form';
 import styles from './index.less';
 
 
 const { Content } = Layout;
 const { confirm } = Modal;
 
-@inject('orgCategory')
+@inject('menuButton', 'menu')
 @observer
-export default class OrgCategory extends Component {
+export default class MenuButton extends Component {
   constructor(props) {
     super(props);
 
@@ -21,14 +21,14 @@ export default class OrgCategory extends Component {
   }
 
   componentWillMount() {
-    const { orgCategory } = this.props;
-    orgCategory.reset();
-    orgCategory.refreshList();
+    const { menuButton } = this.props;
+    menuButton.reset();
+    menuButton.refreshList();
   }
 
   componentWillUnmount() {
-    const { orgCategory } = this.props;
-    orgCategory.reset();
+    const { menuButton } = this.props;
+    menuButton.reset();
   }
 
 
@@ -42,26 +42,36 @@ export default class OrgCategory extends Component {
   // 新建
   handleNew = () => {
     this.setModalVisible(true);
+    const { menuButton, menu } = this.props;
+    menuButton.fetchMenuButtonTree({
+      Menu_ID: menu.currentNode.UniqueID.value,
+    });
   }
 
   // 修改
   handleEdit = (record) => {
-    const { orgCategory } = this.props;
+    const { menuButton, menu } = this.props;
     console.log('record' ,record);
 
-    orgCategory.fetchDetail({
-      UniqueID: record.UniqueID,
+    menuButton.fetchMenuButtonTree({
+      Menu_ID: menu.currentNode.UniqueID.value,
     }).then(() => {
-      this.setModalVisible(true);
-    }).catch((e) => {
-      message.error(`操作失败：${e.Message}`);
+      menuButton.fetchDetail({
+        UniqueID: record.id,
+      }).then(() => {
+        this.setModalVisible(true);
+      }).catch((e) => {
+        message.error(`操作失败：${e.Message}`);
+      });
     });
+
+    
   }
   // 删除
   handleRemove = (record) => {
-    const { orgCategory } = this.props;
+    const { menuButton } = this.props;
 
-    orgCategory.remove({
+    menuButton.remove({
       UniqueID: record.UniqueID,
     }).then(() => {
       message.success('删除成功');
@@ -77,24 +87,14 @@ export default class OrgCategory extends Component {
   }
 
   render() {
-    const { orgCategory } = this.props;
+    const { menuButton, menu } = this.props;
 
     const columns = [{
       title: '名称',
-      dataIndex: 'Name',
-      key: 'Name',
+      dataIndex: 'name',
+      key: 'name',
       width: 120,
     }, {
-      title: '排序',
-      dataIndex: 'SortCode',
-      key: 'SortCode',
-      width: 120,
-    },  {
-      title: '描述',
-      dataIndex: 'DescInfo',
-      key: 'DescInfo',
-      width: 120,
-    },{
       title: '操作',
       key: 'Action',
       width: 120,
@@ -132,10 +132,11 @@ export default class OrgCategory extends Component {
             <Button
               icon="plus"
               onClick={this.handleNew}
-              loading={orgCategory.newBtnLoading}
+              loading={menuButton.newBtnLoading}
             >新建</Button>
-            <OrgCategoryForm
-              orgCategory={orgCategory}
+            <MenuButtonForm
+              menuButton={menuButton}
+              menu={menu}
               modalVisible={this.state.modalVisible}
               setModalVisible={this.setModalVisible}
             />
@@ -143,13 +144,13 @@ export default class OrgCategory extends Component {
           <Table
             bordered
             size="small"
-            loading={orgCategory.loading}
+            loading={menuButton.loading}
             pagination={false}
-            dataSource={orgCategory.list.slice()}
+            dataSource={menuButton.list.slice()}
             columns={columns}
-            rowKey="UniqueID"
+            rowKey="id"
             onChange={this.handleTableChange}
-            scroll={{ y: window.innerHeight - 220 }}
+            scroll={{ y: 220 }}
           />
         </Content>
       </Layout>

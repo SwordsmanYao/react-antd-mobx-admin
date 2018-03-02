@@ -32,7 +32,7 @@ export default class Role extends Component {
 
   componentWillUnmount() {
     const { role } = this.props;
-    role.refreshList();
+    role.reset();
   }
 
 

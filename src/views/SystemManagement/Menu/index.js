@@ -5,6 +5,7 @@ import { Layout, Button, Table, Divider, Modal, message } from 'antd';
 import DisplayTree from '@/components/DisplayTree';
 import StepModal from '@/components/StepModal';
 import MenuForm from './form';
+import MenuButton from './MenuButton';
 import styles from './index.less';
 
 
@@ -160,7 +161,7 @@ export default class Menu extends Component {
       },
     }, {
       title: '系统按钮',
-      component: MenuForm,
+      component: MenuButton,
       isWrappedComponent: false,
       props: {
         menu,

@@ -1,33 +1,28 @@
 import { observable, action } from 'mobx';
 
-import { queryTree, queryList, insert, remove, queryDetail, update } from '@/services/SystemManagement/menu';
+import { insert, update, remove, queryList, queryDetail, queryMenuButtonTree } from '@/services/SystemManagement/menuButton';
 
-class MenuStore {
-  // 树结构数据
-  @observable treeList; 
-  // 当前选中的树节点id
-  @observable selectedKeys; 
+import menu from './menu';
+
+class MenuButtonStore {
 
   // 列表数据
-  @observable list; 
+  @observable list;
   // 控制列表是否显示加载中
   @observable loading; 
   // 列表分页数据
   // @observable pagination;
-  
+
   // currentNode 的默认值，用于 clear 时的数据
-  defaultNode = {
-    IsDisplayed: {
-      value: 1,
-    },
-  };
+  defaultNode = {};
   // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
   @observable currentNode;
   // 新建按钮的是否显示加载中
   @observable newBtnLoading;
+  // 表单选择上级的下拉框数据
+  @observable menuButtonTree;
 
-
-  /**
+   /**
    * 含有接口请求等异步操作的 action
    */
   @action
@@ -45,12 +40,6 @@ class MenuStore {
       response = await update(data);
     } else {
       response = await insert(data);
-      this.setCurrentNodeField({
-        UniqueID: {
-          name: 'UniqueID', 
-          value: response.Data,
-        },
-      })
     }
 
     this.setData({
@@ -59,7 +48,6 @@ class MenuStore {
 
     if(response.Code === 200) {
       this.refreshList();
-      this.fetchTree();
     } else {
       return await Promise.reject(response.Error);
     }
@@ -70,7 +58,6 @@ class MenuStore {
     const response = await remove(data);
     if(response.Code === 200) {
       this.refreshList();
-      this.fetchTree();
     } else {
       return await Promise.reject(response.Error);
     }
@@ -85,7 +72,10 @@ class MenuStore {
       const data = {};
       // 将数据格式化，以适应组件
       Object.keys(response.Data).forEach((key) => {
-        data[key] = { value: response.Data[key] };
+        data[key] = { 
+          name: key,
+          value: response.Data[key],
+        };
       });
 
       this.setData({
@@ -96,22 +86,11 @@ class MenuStore {
     }
   }
 
-  // 查询树的数据
-  @action
-  async fetchTree() {
-    const response = await queryTree();
-    if (response.Code === 200) {
-      this.setData({
-        treeList: response.Data
-      });
-    }
-  }
-
   // 使用当前状态刷新列表
   @action
   async refreshList() {
     this.fetchList({
-      ParentID: this.selectedKeys[0],
+      Menu_ID: menu.currentNode.UniqueID.value,
       // CurrentPage: this.pagination.current,
       // PageSize: this.pagination.pageSize,
     });
@@ -142,6 +121,30 @@ class MenuStore {
     });
   }
 
+  @action
+  async fetchMenuButtonTree(data) {
+    const response = await queryMenuButtonTree(data);
+    if(response.Code === 200) {
+      this.setData({
+        menuButtonTree: this.formatTree(response.Data),
+      });
+    }
+  }
+
+  formatTree(treeList) {
+    return treeList.map(item => {
+      if(item.hasChildren && item.children) {
+        item.children = this.formatTree(item.children);
+      }
+      return {
+        ...item,
+        value: item.id,
+        key: item.id,
+        label: item.name,
+      };
+    })
+  }
+
   /**
    * 不含异步操作的 action
    */
@@ -154,13 +157,8 @@ class MenuStore {
   // 用于初始化和切换页面时清空数据
   @action
   reset() {
-    // 树结构数据
-    this.treeList = []; 
-    // 当前选中的树节点id
-    this.selectedKeys = ['0']; 
-
     // 列表数据
-    this.list = []; 
+    this.list = [];
     // 控制列表是否显示加载中
     this.loading = false; 
     // 列表分页数据
@@ -169,11 +167,13 @@ class MenuStore {
     //   pageSize: 200,
     //   total: 0, // 总数,由接口提供
     // };
-    
+
     // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
     this.currentNode = this.defaultNode;
     // 新建按钮的是否显示加载中
     this.newBtnLoading = false;
+    // 表单选择上级的下拉框数据
+    this.menuButtonTree = [];
   }
 
   @action
@@ -188,6 +188,7 @@ class MenuStore {
       ...data,
     }
   }
-}
+} 
 
-export default new MenuStore();
+export default new MenuButtonStore();
+

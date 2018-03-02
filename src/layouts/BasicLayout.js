@@ -102,7 +102,7 @@ class BasicLayout extends Component {
     const { firstShow } = this.state;
 
     return (
-      <DocumentTitle title={(global.selectedDirNameList && global.selectedDirNameList[global.selectedDirNameList.length - 1].name) || '系统'}>
+      <DocumentTitle title={(global.selectedDirList && global.selectedDirList.length > 0 && global.selectedDirList[global.selectedDirList.length - 1].name) || '系统'}>
         <Layout className={styles.layout}>
           <DevTools/>
           {
