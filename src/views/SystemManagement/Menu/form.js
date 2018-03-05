@@ -11,16 +11,16 @@ const { Option } = Select;
   onFieldsChange(props, changedFields) {
     const { menu } = props;
     console.log('onFieldsChange', changedFields);
-    menu.setCurrentNodeField(changedFields);
+    menu.setCurrentFormField(changedFields);
   },
   mapPropsToFields(props) {
-    const { currentNode }  = props.menu;
-    console.log('mapPropsToFields', currentNode);
+    const { currentForm }  = props.menu;
+    console.log('mapPropsToFields', currentForm);
 
     let fields = {};
-    Object.keys(currentNode).forEach( key => {
+    Object.keys(currentForm).forEach( key => {
       fields[key] = Form.createFormField({
-        ...currentNode[key],
+        ...currentForm[key],
       });
     });
 
@@ -45,8 +45,8 @@ export default class MenuForm extends Component {
           ...values,
           ParentID: menu.selectedKeys[0],
         };
-        if (menu.currentNode.UniqueID && menu.currentNode.UniqueID.value) {
-          data.UniqueID = menu.currentNode.UniqueID.value;
+        if (menu.currentForm.UniqueID && menu.currentForm.UniqueID.value) {
+          data.UniqueID = menu.currentForm.UniqueID.value;
         }
 
         menu.commit(data).then(() => {

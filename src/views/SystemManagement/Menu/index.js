@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Button, Table, Divider, Modal, message } from 'antd';
+import { Layout, Table, Divider, Modal, message, Alert } from 'antd';
 
 import DisplayTree from '@/components/DisplayTree';
 import StepModal from '@/components/StepModal';
 import MenuForm from './form';
 import MenuButton from './MenuButton';
+import MenuToolBar from './toolBar';
 import styles from './index.less';
 
 
@@ -66,26 +67,58 @@ export default class Menu extends Component {
   }
 
   // 修改
-  handleEdit = (record) => {
+  handleEdit = () => {
     const { menu } = this.props;
-    console.log('record' ,record);
 
-    menu.fetchDetail({
-      UniqueID: record.UniqueID,
-    }).then(() => {
+    menu.fetchDetail().then(() => {
+      menu.setCurrentForm(menu.currentDetail);
       this.setModalVisible(true);
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
     });
+  }
+
+  // 清空选中条目
+  cleanSelectedKeys = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const { menu } = this.props;
+
+    menu.setData({
+      selectedRowKeys: [],
+    });
+  }
+
+  // 批量删除选中条目
+  handleRemoveChecked = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const { menu } = this.props;
 
     
+    confirm({
+      title: `确认要删除这 ${menu.selectedRowKeys.length} 条记录吗?`,
+      content: '',
+      onOk: () => {
+        this.handleRemove(menu.selectedRowKeys);
+      },
+    });
   }
+
   // 删除
-  handleRemove = (record) => {
+  handleRemove = (Params) => {
     const { menu } = this.props;
 
     menu.remove({
-      UniqueID: record.UniqueID,
+      Params,
     }).then(() => {
       message.success('删除成功');
+      // 在选中条目中清除已经删除的
+      menu.setData({
+        selectedRowKeys: menu.selectedRowKeys.filter(item => (Params.indexOf(item) === -1)),
+      });
     }).catch((e) => {
       message.error(`操作失败：${e.Message}`);
     });
@@ -97,6 +130,15 @@ export default class Menu extends Component {
     console.log('sorter', sorter);
   }
 
+  // 勾选
+  onSelectionChange = (selectedRowKeys, selectedRows) => {
+    const { menu } = this.props;
+
+    menu.setData({
+      selectedRowKeys,
+    });
+  }
+
   render() {
     const { menu } = this.props;
     const { setModalVisible } = this;
@@ -104,46 +146,17 @@ export default class Menu extends Component {
       title: '名称',
       dataIndex: 'Name',
       key: 'Name',
-      width: 120,
+      width: 500,
     }, {
       title: '路径',
       dataIndex: 'Path',
       key: 'Path',
-      width: 120,
+      width: 500,
     }, {
       title: '排序',
       dataIndex: 'SortCode',
       key: 'SortCode',
-      width: 120,
-    }, {
-      title: '操作',
-      key: 'Action',
-      width: 120,
-      render: (text, record) => (
-        <span>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              this.handleEdit(record);
-            }}
-          >编辑
-          </a>
-          <Divider type="vertical" />
-            <a
-              onClick={(e) => {
-                confirm({
-                  title: "如果有子节点会一同删除，确认要删除这条记录吗？",
-                  content: '',
-                  onOk: () => {
-                    this.handleRemove(record);
-                  },
-                });
-              }}
-            >删除
-            </a>
-        </span>
-      ),
+      width: 500,
     }];
 
     const steps = [{
@@ -157,7 +170,7 @@ export default class Menu extends Component {
       // Modal 窗口关闭时触发
       afterClose: () => {
         const { menu } = this.props;
-        menu.clearCurrentNode();
+        menu.clearCurrentForm();
       },
     }, {
       title: '系统按钮',
@@ -194,19 +207,30 @@ export default class Menu extends Component {
           />
         </Sider>
         <Content style={{ paddingLeft: 24 }}>
-          <div className={styles.toolbar}>
-            <Button
-              icon="plus"
-              onClick={this.handleNew}
-              loading={menu.newBtnLoading}
-            >新建</Button>
-          </div>
+          <MenuToolBar 
+            menu={menu}
+            handleNew={this.handleNew}
+            handleEdit={this.handleEdit}
+            handleRemoveChecked={this.handleRemoveChecked}
+          />
           <StepModal
             modalVisible={this.state.modalVisible}
             setModalVisible={setModalVisible}
             title="菜单管理"
             steps={steps}
           />
+          <div className={styles.tableAlert}>
+            <Alert
+              message={(
+                <div>
+                  已选择 <a style={{ fontWeight: 600 }}>{menu.selectedRowKeys.length}</a> 项
+                  <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }} disabled={menu.selectedRowKeys.length <= 0}>清空</a>
+                </div>
+              )}
+              type="info"
+              showIcon
+            />
+          </div>
           <Table
             bordered
             size="small"
@@ -216,6 +240,10 @@ export default class Menu extends Component {
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}
+            rowSelection={{
+              selectedRowKeys: menu.selectedRowKeys,
+              onChange: this.onSelectionChange,
+            }}
             scroll={{ y: window.innerHeight - 220 }}
           />
         </Content>

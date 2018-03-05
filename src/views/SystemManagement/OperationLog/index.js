@@ -202,7 +202,10 @@ export default class OperationLog extends Component {
     return (
       <div className={styles.content}>
         
-        <OperationLogToolBar operationLog={operationLog} />
+        <OperationLogToolBar
+        operationLog={operationLog}
+        handleRemoveChecked={this.handleRemoveChecked}
+        />
 
         <div className={styles.toolbar}>
         </div>
@@ -211,7 +214,6 @@ export default class OperationLog extends Component {
             message={(
               <div>
                 已选择 <a style={{ fontWeight: 600 }}>{operationLog.selectedRowKeys.length}</a> 项
-                <a onClick={this.handleRemoveChecked} style={{ marginLeft: 24 }} disabled={operationLog.selectedRowKeys.length <= 0}>删除</a>
                 <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }} disabled={operationLog.selectedRowKeys.length <= 0}>清空</a>
               </div>
             )}

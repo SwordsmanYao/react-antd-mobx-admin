@@ -10,16 +10,16 @@ const { Option } = Select;
   onFieldsChange(props, changedFields) {
     const { org } = props;
     console.log('onFieldsChange', changedFields);
-    org.setCurrentNodeField(changedFields);
+    org.setCurrentFormField(changedFields);
   },
   mapPropsToFields(props) {
-    const { currentNode }  = props.org;
-    console.log('mapPropsToFields', currentNode);
+    const { currentForm }  = props.org;
+    console.log('mapPropsToFields', currentForm);
 
     let fields = {};
-    Object.keys(currentNode).forEach( key => {
+    Object.keys(currentForm).forEach( key => {
       fields[key] = Form.createFormField({
-        ...currentNode[key],
+        ...currentForm[key],
       });
     });
 
@@ -49,8 +49,8 @@ export default class OrgForm extends Component {
           ...values,
           ParentID: org.selectedKeys[0],
         };
-        if (org.currentNode.UniqueID && org.currentNode.UniqueID.value) {
-          data.UniqueID = org.currentNode.UniqueID.value;
+        if (org.currentForm.UniqueID && org.currentForm.UniqueID.value) {
+          data.UniqueID = org.currentForm.UniqueID.value;
         }
 
         org.commit(data).then(() => {
@@ -75,7 +75,7 @@ export default class OrgForm extends Component {
 
   afterClose = () => {
     const { org } = this.props;
-    org.clearCurrentNode();
+    org.clearCurrentForm();
   }
   
 

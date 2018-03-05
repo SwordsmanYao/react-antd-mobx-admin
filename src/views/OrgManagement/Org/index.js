@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Button, Table, Divider, Modal, message } from 'antd';
+import { Layout, Table, Modal, message, Alert } from 'antd';
 
 import DisplayTree from '@/components/DisplayTree';
 import OrgForm from './form';
+import OrgToolBar from './toolBar'
 import styles from './index.less';
 
 
@@ -65,26 +66,58 @@ export default class Org extends Component {
   }
 
   // 修改
-  handleEdit = (record) => {
+  handleEdit = () => {
     const { org } = this.props;
-    console.log('record' ,record);
 
-    org.fetchDetail({
-      UniqueID: record.UniqueID,
-    }).then(() => {
+    org.fetchDetail().then(() => {
+      org.setCurrentForm(org.currentDetail);
       this.setModalVisible(true);
     }).catch((e) => {
       message.error(`操作失败：${e.Message}`);
     });
   }
+  
+  // 清空选中条目
+  cleanSelectedKeys = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const { org } = this.props;
+
+    org.setData({
+      selectedRowKeys: [],
+    });
+  }
+
+  // 批量删除选中条目
+  handleRemoveChecked = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const { org } = this.props;
+
+    
+    confirm({
+      title: `确认要删除这 ${org.selectedRowKeys.length} 条记录吗?`,
+      content: '',
+      onOk: () => {
+        this.handleRemove(org.selectedRowKeys);
+      },
+    });
+  }
+
   // 删除
-  handleRemove = (record) => {
+  handleRemove = (Params) => {
     const { org } = this.props;
 
     org.remove({
-      UniqueID: record.UniqueID,
+      Params,
     }).then(() => {
       message.success('删除成功');
+      // 在选中条目中清除已经删除的
+      org.setData({
+        selectedRowKeys: org.selectedRowKeys.filter(item => (Params.indexOf(item) === -1)),
+      });
     }).catch((e) => {
       message.error(`操作失败：${e.Message}`);
     });
@@ -94,6 +127,15 @@ export default class Org extends Component {
     console.log('pagination', pagination);
     console.log('filters', filters);
     console.log('sorter', sorter);
+  }
+
+  // 勾选
+  onSelectionChange = (selectedRowKeys, selectedRows) => {
+    const { org } = this.props;
+
+    org.setData({
+      selectedRowKeys,
+    });
   }
 
   render() {
@@ -108,35 +150,6 @@ export default class Org extends Component {
       dataIndex: 'SortCode',
       key: 'SortCode',
       width: 120,
-    }, {
-      title: '操作',
-      key: 'Action',
-      width: 120,
-      render: (text, record) => (
-        <span>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              this.handleEdit(record);
-            }}
-          >编辑
-          </a>
-          <Divider type="vertical" />
-            <a
-              onClick={(e) => {
-                confirm({
-                  title: "如果有子节点会一同删除，确认要删除这条记录吗？",
-                  content: '',
-                  onOk: () => {
-                    this.handleRemove(record);
-                  },
-                });
-              }}
-            >删除
-            </a>
-        </span>
-      ),
     }];
 
     return (
@@ -154,16 +167,27 @@ export default class Org extends Component {
           />
         </Sider>
         <Content style={{ paddingLeft: 24 }}>
-          <div className={styles.toolbar}>
-            <Button
-              icon="plus"
-              onClick={this.handleNew} 
-              loading={org.newBtnLoading}
-            >新建</Button>
-            <OrgForm
-              org={org}
-              modalVisible={this.state.modalVisible}
-              setModalVisible={this.setModalVisible}
+          <OrgToolBar 
+            org={org}
+            handleNew={this.handleNew}
+            handleEdit={this.handleEdit}
+            handleRemoveChecked={this.handleRemoveChecked}
+          />
+          <OrgForm
+            org={org}
+            modalVisible={this.state.modalVisible}
+            setModalVisible={this.setModalVisible}
+          />
+          <div className={styles.tableAlert}>
+            <Alert
+              message={(
+                <div>
+                  已选择 <a style={{ fontWeight: 600 }}>{org.selectedRowKeys.length}</a> 项
+                  <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }} disabled={org.selectedRowKeys.length <= 0}>清空</a>
+                </div>
+              )}
+              type="info"
+              showIcon
             />
           </div>
           <Table 
@@ -175,6 +199,10 @@ export default class Org extends Component {
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}
+            rowSelection={{
+              selectedRowKeys: org.selectedRowKeys,
+              onChange: this.onSelectionChange,
+            }}
             scroll={{ y: window.innerHeight - 220 }}
           />
         </Content>

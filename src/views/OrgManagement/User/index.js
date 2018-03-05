@@ -117,7 +117,7 @@ export default class User extends Component {
       if(data.DateOfBirth) {
         data.DateOfBirth = moment(data.DateOfBirth);
       }
-      user.setcurrentForm(data);
+      user.setCurrentForm(data);
       this.setModalVisible(true);
     }).catch((e) => {
       message.error(`操作失败：${e.Message}`);
@@ -258,22 +258,22 @@ export default class User extends Component {
       title: '登录名',
       dataIndex: 'LoginName',
       key: 'LoginName',
-      width: 100,
+      width: 500,
     }, {
       title: '姓名',
       dataIndex: 'FullName',
       key: 'FullName',
-      width: 100,
+      width: 500,
     }, {
       title: '工号',
       dataIndex: 'JobNumber',
       key: 'JobNumber',
-      width: 100,
+      width: 500,
     }, {
       title: '状态',
       dataIndex: 'UserStatus',
       key: 'UserStatus',
-      width: 100,
+      width: 500,
     }];
 
     return (
@@ -316,7 +316,6 @@ export default class User extends Component {
               message={(
                 <div>
                   已选择 <a style={{ fontWeight: 600 }}>{user.selectedRowKeys.length}</a> 项
-                  <a onClick={this.handleRemoveChecked} style={{ marginLeft: 24 }} disabled={user.selectedRowKeys.length <= 0}>删除</a>
                   <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }} disabled={user.selectedRowKeys.length <= 0}>清空</a>
                 </div>
               )}

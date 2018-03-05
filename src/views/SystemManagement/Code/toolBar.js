@@ -89,18 +89,10 @@ export default class CodeToolBar extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { code, handleNew } = this.props;
+    const { code, handleNew, handleEdit, handleRemoveChecked } = this.props;
     return (
       <div className={styles.toolBar}>
         <Form onSubmit={this.handleSearch} layout="inline">
-          <div className={styles.buttons}>
-            <Button
-              style={{ marginRight: 20 }}
-              icon="plus"
-              onClick={handleNew} 
-              loading={code.newBtnLoading}
-            >新建</Button>
-          </div>
           <FormItem label="名称">
             {getFieldDecorator('Name')(
               <Input placeholder="请输入名称" />
@@ -123,7 +115,29 @@ export default class CodeToolBar extends Component {
               { expandForm ? <span>收起 <Icon type="up" /></span> : <span>展开 <Icon type="down" /></span> }
             </a> */}
           </div>
-          
+          <div className={styles.buttonGroups}>
+            <Button.Group>
+              <Button
+                icon="plus"
+                onClick={handleNew}
+                loading={code.newBtnLoading}
+              >
+                新建
+              </Button>
+              <Button
+                icon="edit"
+                onClick={handleEdit}
+              >
+                编辑
+              </Button>
+              <Button
+                icon="delete"
+                onClick={handleRemoveChecked}
+              >
+                删除
+              </Button>
+            </Button.Group>
+          </div>
         </Form>
       </div>
     );

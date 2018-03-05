@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Table, Divider, Modal, message } from 'antd';
+import { Layout, Table, Modal, message, Alert } from 'antd';
 
 import DisplayTree from '@/components/DisplayTree';
 import AdministrativeAreaForm from './form';
@@ -93,26 +93,61 @@ export default class AdministrativeArea extends Component {
   }
 
   // 修改
-  handleEdit = (record) => {
+  handleEdit = () => {
     const { administrativeArea } = this.props;
-    console.log('record' ,record);
-    
-    const data = {
-      ...record,
-      OldUniqueID: record.UniqueID,
-    };
 
-    administrativeArea.setCurrentNode(data);
-    this.setModalVisible(true); 
+    administrativeArea.fetchDetail().then(() => {
+      administrativeArea.setCurrentForm({
+        ...administrativeArea.currentDetail,
+        OldUniqueID: administrativeArea.currentDetail.UniqueID,
+      });
+      this.setModalVisible(true);
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
+    });
   }
+
+  // 清空选中条目
+  cleanSelectedKeys = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const { administrativeArea } = this.props;
+
+    administrativeArea.setData({
+      selectedRowKeys: [],
+    });
+  }
+
+  // 批量删除选中条目
+  handleRemoveChecked = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const { administrativeArea } = this.props;
+
+    
+    confirm({
+      title: `确认要删除这 ${administrativeArea.selectedRowKeys.length} 条记录吗?`,
+      content: '',
+      onOk: () => {
+        this.handleRemove(administrativeArea.selectedRowKeys);
+      },
+    });
+  }
+
   // 删除
-  handleRemove = (record) => {
+  handleRemove = (Params) => {
     const { administrativeArea } = this.props;
 
     administrativeArea.remove({
-      UniqueID: record.UniqueID,
+      Params,
     }).then(() => {
       message.success('删除成功');
+      // 在选中条目中清除已经删除的
+      administrativeArea.setData({
+        selectedRowKeys: administrativeArea.selectedRowKeys.filter(item => (Params.indexOf(item) === -1)),
+      });
     }).catch((e) => {
       message.error(`操作失败：${e.Message}`);
     });
@@ -153,6 +188,15 @@ export default class AdministrativeArea extends Component {
     });
   }
 
+  // 勾选
+  onSelectionChange = (selectedRowKeys, selectedRows) => {
+    const { administrativeArea } = this.props;
+
+    administrativeArea.setData({
+      selectedRowKeys,
+    });
+  }
+
   render() {
     const { administrativeArea } = this.props;
     const { setModalVisible } = this;
@@ -160,56 +204,26 @@ export default class AdministrativeArea extends Component {
       title: '编号',
       dataIndex: 'UniqueID',
       key: 'UniqueID',
-      width: 80,
+      width: '20%',
     }, {
       title: '名称',
       dataIndex: 'MingCheng',
       key: 'MingCheng',
-      width: 120,
+      width: '20%',
     }, {
       title: '全拼',
       dataIndex: 'QuanPin',
       key: 'QuanPin',
-      width: 180,
+      width: '20%',
     }, {
       title: '简拼',
       dataIndex: 'JianPin',
       key: 'JianPin',
-      width: 80,
+      width: '20%',
     }, {
       title: '描述',
       dataIndex: 'MiaoShu',
       key: 'MiaoShu',
-      width: 120,
-    }, {
-      title: '操作',
-      key: 'Action',
-      width: 100,
-      render: (text, record) => (
-        <span>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              this.handleEdit(record);
-            }}
-          >编辑
-          </a>
-          <Divider type="vertical" />
-            <a
-              onClick={(e) => {
-                confirm({
-                  title: "如果有子节点会一同删除，确认要删除这条记录吗？",
-                  content: '',
-                  onOk: () => {
-                    this.handleRemove(record);
-                  },
-                });
-              }}
-            >删除
-            </a>
-        </span>
-      ),
     }];
 
     return (
@@ -232,12 +246,26 @@ export default class AdministrativeArea extends Component {
           <AdministrativeAreaToolBar
             administrativeArea={administrativeArea}
             handleNew={this.handleNew}
+            handleEdit={this.handleEdit}
+            handleRemoveChecked={this.handleRemoveChecked}
           />
           <AdministrativeAreaForm
             administrativeArea={administrativeArea}
             modalVisible={this.state.modalVisible}
             setModalVisible={setModalVisible}
           />
+           <div className={styles.tableAlert}>
+            <Alert
+              message={(
+                <div>
+                  已选择 <a style={{ fontWeight: 600 }}>{administrativeArea.selectedRowKeys.length}</a> 项
+                  <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }} disabled={administrativeArea.selectedRowKeys.length <= 0}>清空</a>
+                </div>
+              )}
+              type="info"
+              showIcon
+            />
+          </div>
           <Table
             bordered
             size="small"
@@ -247,6 +275,10 @@ export default class AdministrativeArea extends Component {
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}
+            rowSelection={{
+              selectedRowKeys: administrativeArea.selectedRowKeys,
+              onChange: this.onSelectionChange,
+            }}
             scroll={{ y: window.innerHeight - 255 }}
           />
         </Content>

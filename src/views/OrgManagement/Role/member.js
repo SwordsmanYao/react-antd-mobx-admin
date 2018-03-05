@@ -31,7 +31,7 @@ export default class Member extends Component {
     const checkedMemberIDs =Array.from(role.selectedRoleMemberIDSet);
 
     role.commitRoleMember({
-      UniqueID: role.currentMemberNode.UniqueID,
+      UniqueID: role.selectedRowKeys[0],
       Params: checkedMemberIDs,
     }).then(() => {
       message.success('操作成功');

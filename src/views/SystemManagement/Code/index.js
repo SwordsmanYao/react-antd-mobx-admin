@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Table, Divider, Modal, message } from 'antd';
+import { Layout, Table, Modal, message, Alert } from 'antd';
 
 import DisplayTree from '@/components/DisplayTree';
 import CodeForm from './form';
@@ -69,23 +69,58 @@ export default class Code extends Component {
   }
 
   // 修改
-  handleEdit = (record) => {
+  handleEdit = () => {
     const { code } = this.props;
-    console.log('record' ,record);
-    
-    const data = {...record};
 
-    code.setCurrentNode(data);
-    this.setModalVisible(true); 
+    code.fetchDetail().then(() => {
+      code.setCurrentForm(code.currentDetail);
+      this.setModalVisible(true);
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
+    });
   }
+  
+  // 清空选中条目
+  cleanSelectedKeys = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const { code } = this.props;
+
+    code.setData({
+      selectedRowKeys: [],
+    });
+  }
+
+  // 批量删除选中条目
+  handleRemoveChecked = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const { code } = this.props;
+
+    
+    confirm({
+      title: `确认要删除这 ${code.selectedRowKeys.length} 条记录吗?`,
+      content: '',
+      onOk: () => {
+        this.handleRemove(code.selectedRowKeys);
+      },
+    });
+  }
+
   // 删除
-  handleRemove = (record) => {
+  handleRemove = (Params) => {
     const { code } = this.props;
 
     code.remove({
-      UniqueID: record.UniqueID,
+      Params,
     }).then(() => {
       message.success('删除成功');
+      // 在选中条目中清除已经删除的
+      code.setData({
+        selectedRowKeys: code.selectedRowKeys.filter(item => (Params.indexOf(item) === -1)),
+      });
     }).catch((e) => {
       message.error(`操作失败：${e.Message}`);
     });
@@ -126,6 +161,15 @@ export default class Code extends Component {
     });
   }
 
+  // 勾选
+  onSelectionChange = (selectedRowKeys, selectedRows) => {
+    const { code } = this.props;
+
+    code.setData({
+      selectedRowKeys,
+    });
+  }
+
   render() {
     const { code } = this.props;
     const { setModalVisible } = this;
@@ -133,22 +177,22 @@ export default class Code extends Component {
       title: '名称',
       dataIndex: 'Name',
       key: 'Name',
-      width: 120,
+      width: 500,
     }, {
       title: '代码值',
       dataIndex: 'CodeValue',
       key: 'CodeValue',
-      width: 80,
+      width: 500,
     }, {
       title: '排序',
       dataIndex: 'SortCode',
       key: 'SortCode',
-      width: 80,
+      width: 500,
     }, {
       title: '类型',
       dataIndex: 'Category',
       key: 'Category',
-      width: 80,
+      width: 500,
       render: (text, record) => (
         text === 1 ? '分类' : '代码'
       ),
@@ -156,36 +200,7 @@ export default class Code extends Component {
       title: '描述',
       dataIndex: 'Remark',
       key: 'Remark',
-      width: 160,
-    }, {
-      title: '操作',
-      key: 'Action',
-      width: 100,
-      render: (text, record) => (
-        <span>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              this.handleEdit(record);
-            }}
-          >编辑
-          </a>
-          <Divider type="vertical" />
-            <a
-              onClick={(e) => {
-                confirm({
-                  title: "如果有子节点会一同删除，确认要删除这条记录吗？",
-                  content: '',
-                  onOk: () => {
-                    this.handleRemove(record);
-                  },
-                });
-              }}
-            >删除
-            </a>
-        </span>
-      ),
+      width: 500,
     }];
 
     return (
@@ -206,12 +221,26 @@ export default class Code extends Component {
           <CodeToolBar
             code={code}
             handleNew={this.handleNew}
+            handleEdit={this.handleEdit}
+            handleRemoveChecked={this.handleRemoveChecked}
           />
           <CodeForm
             code={code}
             modalVisible={this.state.modalVisible}
             setModalVisible={setModalVisible}
           />
+          <div className={styles.tableAlert}>
+            <Alert
+              message={(
+                <div>
+                  已选择 <a style={{ fontWeight: 600 }}>{code.selectedRowKeys.length}</a> 项
+                  <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }} disabled={code.selectedRowKeys.length <= 0}>清空</a>
+                </div>
+              )}
+              type="info"
+              showIcon
+            />
+          </div>
           <Table
             bordered
             size="small"
@@ -221,6 +250,10 @@ export default class Code extends Component {
             columns={columns}
             rowKey="UniqueID"
             onChange={this.handleTableChange}
+            rowSelection={{
+              selectedRowKeys: code.selectedRowKeys,
+              onChange: this.onSelectionChange,
+            }}
             scroll={{ y: window.innerHeight - 220 }}
           />
         </Content>

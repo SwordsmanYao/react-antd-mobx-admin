@@ -10,16 +10,16 @@ const { Option } = Select;
   onFieldsChange(props, changedFields) {
     const { code } = props;
     console.log('onFieldsChange', changedFields);
-    code.setCurrentNodeField(changedFields);
+    code.setCurrentFormField(changedFields);
   },
   mapPropsToFields(props) {
-    const { currentNode }  = props.code;
-    console.log('mapPropsToFields', currentNode);
+    const { currentForm }  = props.code;
+    console.log('mapPropsToFields', currentForm);
 
     let fields = {};
-    Object.keys(currentNode).forEach( key => {
+    Object.keys(currentForm).forEach( key => {
       fields[key] = Form.createFormField({
-        ...currentNode[key],
+        ...currentForm[key],
       });
     });
 
@@ -44,8 +44,8 @@ export default class CodeForm extends Component {
           ...values,
           ParentID: code.selectedKeys[0],
         };
-        if (code.currentNode.UniqueID && code.currentNode.UniqueID.value) {
-          data.UniqueID = code.currentNode.UniqueID.value;
+        if (code.currentForm.UniqueID && code.currentForm.UniqueID.value) {
+          data.UniqueID = code.currentForm.UniqueID.value;
         }
 
         code.commit(data).then(() => {
@@ -71,7 +71,7 @@ export default class CodeForm extends Component {
 
   afterClose = () => {
     const { code } = this.props;
-    code.clearCurrentNode();
+    code.clearCurrentForm();
   }
 
   render() {

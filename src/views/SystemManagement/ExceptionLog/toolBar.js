@@ -90,26 +90,27 @@ export default class ExceptionLogToolBar extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { expandForm } = this.state;
+    const { handleRemoveChecked } = this.props;
 
     return (
       <div className={styles.toolBar}>
         <Form onSubmit={this.handleSearch} layout="inline">
-          <FormItem label="操作时间">
-            {getFieldDecorator('LM_OperateStartTime')(
-              <DatePicker placeholder="操作起始时间" />
-            )}
-          </FormItem>
-          <FormItem colon={false}>
-            {getFieldDecorator('LM_OperateEndTime')(
-              <DatePicker placeholder="操作结束时间" />
+          <FormItem label="操作者">
+            {getFieldDecorator('LM_OperateUser')(
+              <Input placeholder="请输入操作者" />
             )}
           </FormItem>
           {
             expandForm && 
             <span>
-              <FormItem label="操作者">
-                {getFieldDecorator('LM_OperateUser')(
-                  <Input placeholder="请输入操作者" />
+              <FormItem label="操作时间">
+                {getFieldDecorator('LM_OperateStartTime')(
+                  <DatePicker placeholder="操作起始时间" />
+                )}
+              </FormItem>
+              <FormItem colon={false}>
+                {getFieldDecorator('LM_OperateEndTime')(
+                  <DatePicker placeholder="操作结束时间" />
                 )}
               </FormItem>
             </span>
@@ -121,7 +122,16 @@ export default class ExceptionLogToolBar extends Component {
               { expandForm ? <span>收起 <Icon type="up" /></span> : <span>展开 <Icon type="down" /></span> }
             </a>
           </div>
-          
+          <div className={styles.buttonGroups}>
+            <Button.Group>
+              <Button
+                icon="delete"
+                onClick={handleRemoveChecked}
+              >
+                删除
+              </Button>
+            </Button.Group>
+          </div>
         </Form>
       </div>
     );

@@ -11,16 +11,16 @@ const RadioGroup = Radio.Group;
     const { role } = props;
     console.log('onFieldsChange', changedFields);
 
-    role.setCurrentNodeField(changedFields);
+    role.setCurrentFormField(changedFields);
   },
   mapPropsToFields(props) {
-    const { currentNode }  = props.role;
-    console.log('mapPropsToFields', currentNode);
+    const { currentForm }  = props.role;
+    console.log('mapPropsToFields', currentForm);
 
     let fields = {};
-    Object.keys(currentNode).forEach( key => {
+    Object.keys(currentForm).forEach( key => {
       fields[key] = Form.createFormField({
-        ...currentNode[key],
+        ...currentForm[key],
       });
     });
 
@@ -41,8 +41,8 @@ export default class RoleForm extends Component {
         const data = {
           ...values,
         };
-        if (role.currentNode.UniqueID && role.currentNode.UniqueID.value) {
-          data.UniqueID = role.currentNode.UniqueID.value;
+        if (role.currentForm.UniqueID && role.currentForm.UniqueID.value) {
+          data.UniqueID = role.currentForm.UniqueID.value;
         }
 
         role.commit(data).then(() => {
@@ -67,7 +67,7 @@ export default class RoleForm extends Component {
 
   afterClose = () => {
     const { role } = this.props;
-    role.clearCurrentNode();
+    role.clearCurrentForm();
   }
   
 

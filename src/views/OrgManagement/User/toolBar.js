@@ -88,10 +88,6 @@ export default class UserToolBar extends Component {
     });
   }
   
-  handleMenuClick = (e) => {
-    console.log('click', e);
-  }
-
   render() {
     const { getFieldDecorator } = this.props.form;
     const { expandForm } = this.state;
@@ -177,12 +173,6 @@ export default class UserToolBar extends Component {
             </a>
           </div>
           <div className={styles.buttonGroups}>
-            {/* <Button
-              style={{ marginRight: 20 }}
-              icon="plus"
-              onClick={handleNew} 
-              loading={user.newBtnLoading}
-            >新建</Button> */}
             <Button.Group>
               <Button
                 icon="plus"

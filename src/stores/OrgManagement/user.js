@@ -273,7 +273,7 @@ class UserStore {
     }
   }
   @action
-  setcurrentForm(data) {
+  setCurrentForm(data) {
     // 将数据格式化，以适应组件
     Object.keys(data).forEach((key) => {
       data[key] = {

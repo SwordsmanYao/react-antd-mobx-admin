@@ -27,7 +27,7 @@ export default class Auth extends Component {
     });
     
     role.commitRoleMenu({
-      UniqueID: role.currentAuth.UniqueID,
+      UniqueID: role.selectedRowKeys[0],
       Params: [...role.roleMenuCheckedKeys, ...role.roleMenuHalfCheckedKeys],
     }).then(() => {
       message.success('操作成功');

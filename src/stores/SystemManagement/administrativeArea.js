@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 
-import { queryTree, queryList, insert, remove, update } from '@/services/SystemManagement/administrativeArea';
+import { queryTree, queryList, insert, queryDetail, remove, update } from '@/services/SystemManagement/administrativeArea';
 
 class AdministrativeAreaStore {
   // 树结构数据
@@ -16,11 +16,15 @@ class AdministrativeAreaStore {
   @observable loading; 
   // 列表分页数据
   @observable pagination;
+  // 被选择行的行标识
+  @observable selectedRowKeys;
+  // 当前要操作的数据详情
+  @observable currentDetail;
   
-  // currentNode 的默认值，用于 clear 时的数据
-  defaultNode = {};
+  // currentForm 的默认值，用于 clear 时的数据
+  defaultCurrentForm = {};
   // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
-  @observable currentNode;
+  @observable currentForm;
   // 新建按钮的是否显示加载中
   @observable newBtnLoading;
 
@@ -69,6 +73,22 @@ class AdministrativeAreaStore {
     if(response.Code === 200) {
       this.refreshList();
       this.fetchTree();
+    } else {
+      return await Promise.reject(response.Error);
+    }
+  }
+
+  @action
+  async fetchDetail() {
+
+    const response = await queryDetail({
+      UniqueID: this.selectedRowKeys[0],
+    });
+
+    if (response.Code === 200) {
+      this.setData({
+        currentDetail: response.Data,
+      });
     } else {
       return await Promise.reject(response.Error);
     }
@@ -160,27 +180,31 @@ class AdministrativeAreaStore {
       pageSize: 20,
       total: 0, // 总数,由接口提供
     };
+    // 被选择行的行标识
+    this.selectedRowKeys = [];
+    // 当前要操作的数据详情
+    this.currentDetail = null;
     
     // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
-    this.currentNode = this.defaultNode;
+    this.currentForm = this.defaultCurrentForm;
     // 新建按钮的是否显示加载中
     this.newBtnLoading = false;
   }
 
   @action
-  clearCurrentNode() {
-    this.currentNode = this.defaultNode;
+  clearCurrentForm() {
+    this.currentForm = this.defaultCurrentForm;
     this.error = null;
   }
   @action
-  setCurrentNodeField(data) {
-    this.currentNode = {
-      ...this.currentNode,
+  setCurrentFormField(data) {
+    this.currentForm = {
+      ...this.currentForm,
       ...data,
     }
   }
   @action
-  setCurrentNode(data) {
+  setCurrentForm(data) {
     // 将数据格式化，以适应组件
     Object.keys(data).forEach((key) => {
       data[key] = {
@@ -189,7 +213,7 @@ class AdministrativeAreaStore {
       };
     });
 
-    this.currentNode = data;
+    this.currentForm = data;
   }
 }
 

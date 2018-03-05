@@ -10,16 +10,16 @@ const { TextArea } = Input;
     const { orgCategory } = props;
     console.log('onFieldsChange', changedFields);
 
-    orgCategory.setCurrentNodeField(changedFields);
+    orgCategory.setCurrentFormField(changedFields);
   },
   mapPropsToFields(props) {
-    const { currentNode }  = props.orgCategory;
-    console.log('mapPropsToFields', currentNode);
+    const { currentForm }  = props.orgCategory;
+    console.log('mapPropsToFields', currentForm);
 
     let fields = {};
-    Object.keys(currentNode).forEach( key => {
+    Object.keys(currentForm).forEach( key => {
       fields[key] = Form.createFormField({
-        ...currentNode[key],
+        ...currentForm[key],
       });
     });
 
@@ -40,8 +40,8 @@ export default class OrgCategoryForm extends Component {
         const data = {
           ...values,
         };
-        if (orgCategory.currentNode.UniqueID && orgCategory.currentNode.UniqueID.value) {
-          data.UniqueID = orgCategory.currentNode.UniqueID.value;
+        if (orgCategory.currentForm.UniqueID && orgCategory.currentForm.UniqueID.value) {
+          data.UniqueID = orgCategory.currentForm.UniqueID.value;
         }
 
         orgCategory.commit(data).then(() => {
@@ -66,7 +66,7 @@ export default class OrgCategoryForm extends Component {
 
   afterClose = () => {
     const { orgCategory } = this.props;
-    orgCategory.clearCurrentNode();
+    orgCategory.clearCurrentForm();
   }
   
 

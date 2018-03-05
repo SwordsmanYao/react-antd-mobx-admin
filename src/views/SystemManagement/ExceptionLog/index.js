@@ -226,7 +226,10 @@ export default class ExceptionLog extends Component {
     return (
       <div className={styles.content}>
         
-        <ExceptionLogToolBar exceptionLog={exceptionLog} />
+        <ExceptionLogToolBar
+          exceptionLog={exceptionLog}
+          handleRemoveChecked={this.handleRemoveChecked}
+        />
 
         <div className={styles.toolbar}>
         </div>
@@ -235,7 +238,6 @@ export default class ExceptionLog extends Component {
             message={(
               <div>
                 已选择 <a style={{ fontWeight: 600 }}>{exceptionLog.selectedRowKeys.length}</a> 项
-                <a onClick={this.handleRemoveChecked} style={{ marginLeft: 24 }} disabled={exceptionLog.selectedRowKeys.length <= 0}>删除</a>
                 <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }} disabled={exceptionLog.selectedRowKeys.length <= 0}>清空</a>
               </div>
             )}

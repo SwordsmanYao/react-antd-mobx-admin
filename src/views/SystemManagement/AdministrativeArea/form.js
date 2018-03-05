@@ -9,16 +9,16 @@ const { TextArea } = Input;
   onFieldsChange(props, changedFields) {
     const { administrativeArea } = props;
     console.log('onFieldsChange', changedFields);
-    administrativeArea.setCurrentNodeField(changedFields);
+    administrativeArea.setCurrentFormField(changedFields);
   },
   mapPropsToFields(props) {
-    const { currentNode }  = props.administrativeArea;
-    console.log('mapPropsToFields', currentNode);
+    const { currentForm }  = props.administrativeArea;
+    console.log('mapPropsToFields', currentForm);
 
     let fields = {};
-    Object.keys(currentNode).forEach( key => {
+    Object.keys(currentForm).forEach( key => {
       fields[key] = Form.createFormField({
-        ...currentNode[key],
+        ...currentForm[key],
       });
     });
 
@@ -45,8 +45,8 @@ export default class AdministrativeAreaForm extends Component {
           JiBie: administrativeArea.selectedInfo.depthlevel + 1, // 深度等于父节点深度 + 1
         };
 
-        if (administrativeArea.currentNode.OldUniqueID && administrativeArea.currentNode.OldUniqueID.value) {
-          data.OldUniqueID = administrativeArea.currentNode.OldUniqueID.value;
+        if (administrativeArea.currentForm.OldUniqueID && administrativeArea.currentForm.OldUniqueID.value) {
+          data.OldUniqueID = administrativeArea.currentForm.OldUniqueID.value;
         }
 
         administrativeArea.commit(data).then(() => {
