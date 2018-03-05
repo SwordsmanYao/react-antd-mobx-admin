@@ -41,3 +41,10 @@ export function queryList(params) {
   });
 }
 
+export function queryDetail(params) {
+  return request({
+    url: `${api}/SysManagement/AdministrativeArea/Detail`,
+    params,
+  });
+}
+

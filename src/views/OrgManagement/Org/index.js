@@ -76,8 +76,6 @@ export default class Org extends Component {
     }).catch((e) => {
       message.error(`操作失败：${e.Message}`);
     });
-
-    
   }
   // 删除
   handleRemove = (record) => {
@@ -155,7 +153,7 @@ export default class Org extends Component {
             selectedKeys={org.selectedKeys.slice()}
           />
         </Sider>
-        <Content style={{ paddingLeft: 30, paddingRight: 30 }}>
+        <Content style={{ paddingLeft: 24 }}>
           <div className={styles.toolbar}>
             <Button
               icon="plus"

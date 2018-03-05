@@ -193,7 +193,7 @@ export default class Menu extends Component {
             selectedKeys={menu.selectedKeys.slice()}
           />
         </Sider>
-        <Content style={{ paddingLeft: 30, paddingRight: 30 }}>
+        <Content style={{ paddingLeft: 24 }}>
           <div className={styles.toolbar}>
             <Button
               icon="plus"

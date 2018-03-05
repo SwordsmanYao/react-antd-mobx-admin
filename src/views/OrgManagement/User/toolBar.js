@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Form, Button, Icon, Input } from 'antd';
+import { Form, Button, Icon, Input, Menu, Dropdown, Modal } from 'antd';
 
 import styles from './toolBar.less';
 
 const FormItem = Form.Item;
+const { confirm } = Modal;
 
 @Form.create()
 @observer
@@ -87,30 +88,70 @@ export default class UserToolBar extends Component {
     });
   }
   
+  handleMenuClick = (e) => {
+    console.log('click', e);
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
     const { expandForm } = this.state;
-    const { user, handleNew } = this.props;
+    const { user, handleNew, handleEdit, handleRemoveChecked, handleResetPwd, handleEnableUser, handleRoleEdit } = this.props;
+
+    const menu = (
+      <Menu>
+        <Menu.Item>
+          <a
+            onClick={(e) => {
+              handleResetPwd();
+            }}
+          >重置密码
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a
+            onClick={(e) => {
+              confirm({
+                title: "确认要启用该用户吗？",
+                content: '',
+                onOk: () => {
+                  handleEnableUser([1]);
+                },
+              });
+            }}
+          >启用
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a
+            onClick={(e) => {
+              confirm({
+                title: "确认要禁用该用户吗？",
+                content: '',
+                onOk: () => {
+                  handleEnableUser([0]);
+                },
+              });
+            }}
+          >禁用
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a
+            onClick={(e) => {
+              handleRoleEdit();
+            }}
+          >角色
+          </a>
+        </Menu.Item>
+      </Menu>
+    );
+
     return (
       <div className={styles.toolBar}>
         <Form onSubmit={this.handleSearch} layout="inline">
-          <div className={styles.buttons}>
-            <Button
-              style={{ marginRight: 20 }}
-              icon="plus"
-              onClick={handleNew} 
-              loading={user.newBtnLoading}
-            >新建</Button>
-          </div>
           <FormItem label="登录名">
             {getFieldDecorator('LoginName')(
               <Input placeholder="请输入登录名" />
-            )}
-          </FormItem>
-          <FormItem label="姓名">
-            {getFieldDecorator('FullName')(
-              <Input placeholder="请输入姓名" />
             )}
           </FormItem>
           {
@@ -119,6 +160,11 @@ export default class UserToolBar extends Component {
               <FormItem label="手机">
                 {getFieldDecorator('MobilePhone')(
                   <Input placeholder="请输入手机号码" />
+                )}
+              </FormItem>
+              <FormItem label="姓名">
+                {getFieldDecorator('FullName')(
+                  <Input placeholder="请输入姓名" />
                 )}
               </FormItem>
             </span>
@@ -130,7 +176,40 @@ export default class UserToolBar extends Component {
               { expandForm ? <span>收起 <Icon type="up" /></span> : <span>展开 <Icon type="down" /></span> }
             </a>
           </div>
-          
+          <div className={styles.buttonGroups}>
+            {/* <Button
+              style={{ marginRight: 20 }}
+              icon="plus"
+              onClick={handleNew} 
+              loading={user.newBtnLoading}
+            >新建</Button> */}
+            <Button.Group>
+              <Button
+                icon="plus"
+                onClick={handleNew}
+                loading={user.newBtnLoading}
+              >
+                新建
+              </Button>
+              <Button
+                icon="edit"
+                onClick={handleEdit}
+              >
+                编辑
+              </Button>
+              <Button
+                icon="delete"
+                onClick={handleRemoveChecked}
+              >
+                删除
+              </Button>
+              <Dropdown overlay={menu}>
+                <Button>
+                  更多<Icon type="down" />
+                </Button>
+              </Dropdown>
+            </Button.Group>
+          </div>
         </Form>
       </div>
     );

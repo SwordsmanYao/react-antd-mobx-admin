@@ -231,7 +231,7 @@ export default class Role extends Component {
 
     return (
       <Layout className={styles.layout}>
-        <Content style={{ paddingLeft: 30, paddingRight: 30 }}>
+        <Content>
           <div className={styles.toolbar}>
             <Button
               icon="plus"

@@ -7,6 +7,12 @@ function list(req, res) {
   ));
 }
 
+function detail(req, res) {
+  res.send(Mock.mock(
+    {"Code":200,"Data":{"EmployeeID":7,"LoginName":"yaojian","Employee":{"FullName":"姚健2","JobNumber":"2131231112222","MobilePhone":"13371755552","Gender":"男","DateOfBirth":"2018-03-22T00:00:00","OrganizationID":1,"Remarks":"2233311222","UniqueID":7,"MenuID":0},"UniqueID":3,"MenuID":0}}
+  ))
+}
+
 function role(req, res) {
   res.send(Mock.mock(
     {"Code":200,"Data":[{"Name":"超级管理员","IsMemberRole":true,"UniqueID":1,"MenuID":0},{"Name":"aa","DescInfo":"aa","IsMemberRole":false,"UniqueID":2,"MenuID":0}]}
@@ -15,5 +21,6 @@ function role(req, res) {
 
 module.exports = {
   list,
+  detail,
   role,
 }

@@ -11,15 +11,15 @@ const RadioGroup = Radio.Group;
 @Form.create({
   onFieldsChange(props, changedFields) {
     const { user } = props;
-    user.setCurrentNodeField(changedFields);
+    user.setCurrentFormField(changedFields);
   },
   mapPropsToFields(props) {
-    const { currentNode }  = props.user;
+    const { currentForm }  = props.user;
 
     let fields = {};
-    Object.keys(currentNode).forEach( key => {
+    Object.keys(currentForm).forEach( key => {
       fields[key] = Form.createFormField({
-        ...currentNode[key],
+        ...currentForm[key],
       });
     });
 
@@ -53,9 +53,9 @@ export default class UserForm extends Component {
             ...values,
           },
         };
-        if (user.currentNode.UniqueID && user.currentNode.UniqueID.value) {
-          data.UniqueID = user.currentNode.UniqueID.value;
-          data.Employee.UniqueID = user.currentNode.EmployeeID.value;
+        if (user.currentForm.UniqueID && user.currentForm.UniqueID.value) {
+          data.UniqueID = user.currentForm.UniqueID.value;
+          data.Employee.UniqueID = user.currentForm.EmployeeID.value;
         }
         if (values.LoginPwd) {
           data.LoginPwd = values.LoginPwd;
@@ -82,8 +82,12 @@ export default class UserForm extends Component {
   }
 
   afterClose = () => {
+    console.log('afterClose');
     const { user } = this.props;
-    user.clearCurrentNode();
+    user.clearCurrentForm();
+    user.setData({
+      currentDetail: null,
+    });
   }
   
 
@@ -115,124 +119,128 @@ export default class UserForm extends Component {
         onCancel={() => setModalVisible(false)}
         afterClose={this.afterClose}
       >
-        <Form className={styles.form}>
-          <Row gutter={24} >
-            <Col span={12}>
-              <FormItem
-                {...formItemLayout}
-                label="登录名"
-              >
-                {getFieldDecorator('LoginName', {
-                  rules: [{
-                    required: true, message: '请输入登录名',
-                  }],
-                })(
-                  <Input />,
-                )}
-              </FormItem>
-            </Col>
-           {
-              !user.currentNode.UniqueID && 
+        {
+          // 需要密码字段在编辑时不显示，这里是为了让form重新挂载，否则表单域中仍然有密码字段
+          modalVisible &&
+          <Form className={styles.form}>
+            <Row gutter={24} >
               <Col span={12}>
                 <FormItem
                   {...formItemLayout}
-                  label="密码"
+                  label="登录名"
                 >
-                  {getFieldDecorator('LoginPwd', {
+                  {getFieldDecorator('LoginName', {
                     rules: [{
-                      required: true, message: '请输入密码', max: 48,
+                      required: true, message: '请输入登录名',
                     }],
                   })(
-                    <Input type="password" />,
+                    <Input />,
                   )}
                 </FormItem>
               </Col>
-            }
-            <Col span={12}>
-              <FormItem
-                {...formItemLayout}
-                label="姓名"
-              >
-                {getFieldDecorator('FullName', {
-                  rules: [{
-                    required: true, message: '请输入姓名',
-                  }],
-                })(
-                  <Input />,
-                )}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem
-                {...formItemLayout}
-                label="手机"
-              >
-                {getFieldDecorator('MobilePhone', {
-                  rules: [{
-                    required: true, message: '请输入手机号码',
-                  }, {
-                    pattern: /^[0-9]*$/, message: '请输入正确格式的手机号码',
-                  }],
-                })(
-                  <Input />,
-                )}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem
-                {...formItemLayout}
-                label="工号"
-              >
-                {getFieldDecorator('JobNumber')(
-                  <Input />,
-                )}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem
-                {...formItemLayout}
-                label="邮箱"
-              >
-                {getFieldDecorator('Email')(
-                  <Input />,
-                )}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem
-                {...formItemLayout}
-                label="性别"
-              >
-                {getFieldDecorator('Gender')(
-                  <RadioGroup>
-                    <Radio value={'男'}>男</Radio>
-                    <Radio value={'女'}>女</Radio>
-                  </RadioGroup>,
-                )}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem 
-                {...formItemLayout}
-                label="生日"
-              >
-                {getFieldDecorator('DateOfBirth')(
-                  <DatePicker />
-                )}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem
-                {...formItemLayout}
-                label="备注"
-              >
-                {getFieldDecorator('Remarks')(
-                  <TextArea autosize />,
-                )}
-              </FormItem>
-            </Col>
-          </Row>
-        </Form>
+            {
+                !user.currentForm.UniqueID && 
+                <Col span={12}>
+                  <FormItem
+                    {...formItemLayout}
+                    label="密码"
+                  >
+                    {getFieldDecorator('LoginPwd', {
+                      rules: [{
+                        required: true, message: '请输入密码', max: 48,
+                      }],
+                    })(
+                      <Input type="password" />,
+                    )}
+                  </FormItem>
+                </Col>
+              }
+              <Col span={12}>
+                <FormItem
+                  {...formItemLayout}
+                  label="姓名"
+                >
+                  {getFieldDecorator('FullName', {
+                    rules: [{
+                      required: true, message: '请输入姓名',
+                    }],
+                  })(
+                    <Input />,
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={12}>
+                <FormItem
+                  {...formItemLayout}
+                  label="手机"
+                >
+                  {getFieldDecorator('MobilePhone', {
+                    rules: [{
+                      required: true, message: '请输入手机号码',
+                    }, {
+                      pattern: /^[0-9]*$/, message: '请输入正确格式的手机号码',
+                    }],
+                  })(
+                    <Input />,
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={12}>
+                <FormItem
+                  {...formItemLayout}
+                  label="工号"
+                >
+                  {getFieldDecorator('JobNumber')(
+                    <Input />,
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={12}>
+                <FormItem
+                  {...formItemLayout}
+                  label="邮箱"
+                >
+                  {getFieldDecorator('Email')(
+                    <Input />,
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={12}>
+                <FormItem
+                  {...formItemLayout}
+                  label="性别"
+                >
+                  {getFieldDecorator('Gender')(
+                    <RadioGroup>
+                      <Radio value={'男'}>男</Radio>
+                      <Radio value={'女'}>女</Radio>
+                    </RadioGroup>,
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={12}>
+                <FormItem 
+                  {...formItemLayout}
+                  label="生日"
+                >
+                  {getFieldDecorator('DateOfBirth')(
+                    <DatePicker />
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={12}>
+                <FormItem
+                  {...formItemLayout}
+                  label="备注"
+                >
+                  {getFieldDecorator('Remarks')(
+                    <TextArea autosize />,
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>
+        }
       </Modal>
     );
   }

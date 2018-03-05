@@ -17,8 +17,8 @@ export default class PwdForm extends Component {
       if (!err) {
         console.log('values', values);
         user.resetPwd({
-          UniqueID: user.currentResetPwdUser.UniqueID,
-          LoginName: user.currentResetPwdUser.LoginName,
+          UniqueID: user.currentDetail.UniqueID,
+          LoginName: user.currentDetail.LoginName,
           NewPassword: values.NewPassword,
         }).then(() => {
           message.success('重置成功');
@@ -49,7 +49,7 @@ export default class PwdForm extends Component {
     resetFields();
 
     user.setData({
-      currentResetPwdUser: null,
+      currentDetail: null,
     });
   }
   

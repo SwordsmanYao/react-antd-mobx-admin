@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 
-import { queryTree, queryList, insert, remove, update, resetPwd, setStatus, getMemberRole, setMemberRole } from '@/services/OrgManagement/user';
+import { queryTree, queryList, insert, remove, queryDetail, update, resetPwd, setStatus, getMemberRole, setMemberRole } from '@/services/OrgManagement/user';
 
 class UserStore {
   // 树结构数据
@@ -22,23 +22,20 @@ class UserStore {
   @observable orderField;
   // 是否降序
   @observable isDesc;
+  // 当前要操作的数据详情
+  @observable currentDetail;
   
-  // currentNode 的默认值，用于 clear 时的数据
-  defaultNode = {};
+  // currentForm 的默认值，用于 clear 时的数据
+  defaultCurrentForm = {};
   // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
-  @observable currentNode;
+  @observable currentForm;
   // 新建按钮的是否显示加载中
   @observable newBtnLoading;
   // 组织类别下拉框数据
   @observable orgTextValue;
 
-  // 需要修改密码的用户信息
-  @observable currentResetPwdUser;
-
   // 成员角色列表数据
   @observable memberRole;
-  // 需要设置角色的用户
-  @observable currentSetRoleUser;
   // 被选择角色的行标识
   @observable roleSelectedRowKeys;
 
@@ -83,6 +80,21 @@ class UserStore {
     }
   }
 
+  @action
+  async fetchDetail() {
+
+    const response = await queryDetail({
+      UniqueID: this.selectedRowKeys[0],
+    });
+
+    if (response.Code === 200) {
+      this.setData({
+        currentDetail: response.Data,
+      });
+    } else {
+      return await Promise.reject(response.Error);
+    }
+  }
 
   // 查询树的数据
   @action
@@ -232,39 +244,36 @@ class UserStore {
     this.orderField = null;
     // 是否降序
     this.isDesc = false;
+    // 当前要操作的数据详情
+    this.currentDetail = null;
     
     // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
-    this.currentNode = this.defaultNode;
+    this.currentForm = this.defaultCurrentForm;
     // 新建按钮的是否显示加载中
     this.newBtnLoading = false;
     // 组织类别下拉框数据
     this.orgTextValue = [];
 
-    // 需要修改密码的用户信息
-    this.currentResetPwdUser = null;
-
     // 成员角色列表数据
     this.memberRole = null;
-    // 需要设置角色的用户
-    this.currentSetRoleUser = null;
     // 被选择角色的行标识
     this.roleSelectedRowKeys = [];
   }
 
   @action
-  clearCurrentNode() {
-    this.currentNode = this.defaultNode;
+  clearCurrentForm() {
+    this.currentForm = this.defaultCurrentForm;
     this.error = null;
   }
   @action
-  setCurrentNodeField(data) {
-    this.currentNode = {
-      ...this.currentNode,
+  setCurrentFormField(data) {
+    this.currentForm = {
+      ...this.currentForm,
       ...data,
     }
   }
   @action
-  setCurrentNode(data) {
+  setcurrentForm(data) {
     // 将数据格式化，以适应组件
     Object.keys(data).forEach((key) => {
       data[key] = {
@@ -273,7 +282,7 @@ class UserStore {
       };
     });
 
-    this.currentNode = data;
+    this.currentForm = data;
   }
 }
 

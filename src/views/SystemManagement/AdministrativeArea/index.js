@@ -228,7 +228,7 @@ export default class AdministrativeArea extends Component {
             loadData={this.onLoadData}
           />
         </Sider>
-        <Content style={{ paddingLeft: 30, paddingRight: 30 }}>
+        <Content style={{ paddingLeft: 24 }}>
           <AdministrativeAreaToolBar
             administrativeArea={administrativeArea}
             handleNew={this.handleNew}

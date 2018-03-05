@@ -10,7 +10,7 @@ export default class RoleSelect extends Component {
     const { user, setRoleModalVisible } = this.props;
 
     user.setMemberRole({
-      UniqueID: user.currentSetRoleUser.UniqueID,
+      UniqueID: user.selectedRowKeys[0],
       Params: user.roleSelectedRowKeys,
     }).then(() => {
       message.success('操作成功');
@@ -34,7 +34,6 @@ export default class RoleSelect extends Component {
     const { user } = this.props;
 
     user.setData({
-      currentSetRoleUser: null,
       roleSelectedRowKeys: [],
     });
   }

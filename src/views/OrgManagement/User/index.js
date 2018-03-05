@@ -106,16 +106,22 @@ export default class User extends Component {
   }
 
   // 修改
-  handleEdit = (record) => {
+  handleEdit = () => {
     const { user } = this.props;
-    console.log('record' ,record);
 
-    const data = {...record};
-    if(data.DateOfBirth) {
-      data.DateOfBirth = moment(data.DateOfBirth);
-    }
-    user.setCurrentNode(data);
-    this.setModalVisible(true);    
+    user.fetchDetail().then(() => {
+      const data = {
+        ...user.currentDetail.Employee,
+        ...user.currentDetail,
+      };
+      if(data.DateOfBirth) {
+        data.DateOfBirth = moment(data.DateOfBirth);
+      }
+      user.setcurrentForm(data);
+      this.setModalVisible(true);
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
+    });
   }
 
   // 清空选中条目
@@ -165,20 +171,21 @@ export default class User extends Component {
   }
 
   // 重置密码
-  handleResetPwd = (record) => {
+  handleResetPwd = () => {
     const { user } = this.props;
 
-    this.setPwdModalVisible(true);
-    user.setData({
-      currentResetPwdUser: record,
+    user.fetchDetail().then(() => {
+      this.setPwdModalVisible(true);
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
     });
   }
 
-  // 启用/禁用用户
-  handleEnableUser = (record, Params) => {
+  // 启用/禁用用户 [1] 启用  [0] 禁用
+  handleEnableUser = (Params) => {
     const { user } = this.props;
      user.setStatus({
-      UniqueID: record.UniqueID,
+      UniqueID: user.selectedRowKeys[0],
       Params,
      }).then(() => {
       message.success('操作成功');
@@ -188,14 +195,11 @@ export default class User extends Component {
   }
 
   // 设置成员角色
-  handleRoleEdit = (record) => {
+  handleRoleEdit = () => {
     const { user } = this.props;
     user.getMemberRole({
-      UniqueID: record.UniqueID,
+      UniqueID: user.selectedRowKeys[0],
     }).then(() => {
-      user.setData({
-        currentSetRoleUser: record,
-      });
       this.setRoleModalVisible(true);
     }).catch((e) => {
       message.error(`操作失败：${e.Message}`);
@@ -270,91 +274,6 @@ export default class User extends Component {
       dataIndex: 'UserStatus',
       key: 'UserStatus',
       width: 100,
-    }, {
-      title: '操作',
-      key: 'Action',
-      width: 150,
-      render: (text, record) => {
-
-        const menu = (
-          <Menu>
-            <Menu.Item>
-              <a
-                onClick={(e) => {
-                  this.handleResetPwd(record);
-                }}
-              >重置密码
-              </a>
-            </Menu.Item>
-            <Menu.Item>
-              <a
-                onClick={(e) => {
-                  confirm({
-                    title: "确认要启用该用户吗？",
-                    content: '',
-                    onOk: () => {
-                      this.handleEnableUser(record, [1]);
-                    },
-                  });
-                }}
-              >启用
-              </a>
-            </Menu.Item>
-            <Menu.Item>
-              <a
-                onClick={(e) => {
-                  confirm({
-                    title: "确认要禁用该用户吗？",
-                    content: '',
-                    onOk: () => {
-                      this.handleEnableUser(record, [0]);
-                    },
-                  });
-                }}
-              >禁用
-              </a>
-            </Menu.Item>
-            <Menu.Item>
-              <a
-                onClick={(e) => {
-                  this.handleRoleEdit(record);
-                }}
-              >角色
-              </a>
-            </Menu.Item>
-          </Menu>
-        );
-
-        return (
-          <span>
-            <a
-              onClick={(e) => {
-                this.handleEdit(record);
-              }}
-            >编辑
-            </a>
-            <Divider type="vertical" />
-              <a
-                onClick={(e) => {
-                  confirm({
-                    title: "确认要删除该用户吗？",
-                    content: '',
-                    onOk: () => {
-                      this.handleRemove([record.UniqueID]);
-                    },
-                  });
-                }}
-              >删除
-              </a>
-            <Divider type="vertical" />
-            <Dropdown overlay={menu}>
-              <a className="ant-dropdown-link">
-                更多<Icon type="down" />
-              </a>
-            </Dropdown>
-          </span>
-        )
-      },
     }];
 
     return (
@@ -367,20 +286,21 @@ export default class User extends Component {
             defaultExpandedKeys={user.selectedKeys.slice()}
           />
         </Sider>
-        <Content style={{ paddingLeft: 30, paddingRight: 30 }}>
+        <Content style={{ paddingLeft: 24 }}>
           <UserToolBar 
             user={user}
             handleNew={this.handleNew}
+            handleEdit={this.handleEdit}
+            handleRemoveChecked={this.handleRemoveChecked}
+            handleResetPwd={this.handleResetPwd}
+            handleEnableUser={this.handleEnableUser}
+            handleRoleEdit={this.handleRoleEdit}
           />
-          {
-            // 需要密码字段在编辑时不显示，这里是为了让form重新挂载，否则表单域中仍然有密码字段
-            this.state.modalVisible &&
-            <UserForm
-              user={user}
-              modalVisible={this.state.modalVisible}
-              setModalVisible={this.setModalVisible}
-            />
-          }
+          <UserForm
+            user={user}
+            modalVisible={this.state.modalVisible}
+            setModalVisible={this.setModalVisible}
+          />
           <PwdForm
             user={user}
             pwdModalVisible={this.state.pwdModalVisible}

@@ -72,3 +72,10 @@ export function queryList(params) {
     params,
   });
 }
+
+export function queryDetail(params) {
+  return request({
+    url: `${api}/OrgManagement/User/Detail`,
+    params,
+  });
+}

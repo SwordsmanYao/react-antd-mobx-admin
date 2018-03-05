@@ -50,6 +50,7 @@ app.get('/SysManagement/OperationLog/List', operationLog.list);
 app.get('/SysManagement/OperationLog/OperateType', operationLog.operateType);
 app.get('/SysManagement/ExceptionLog/List', exceptionLog.list);
 app.get('/OrgManagement/User/List', user.list);
+app.get('/OrgManagement/User/Detail', user.detail);
 app.get('/OrgManagement/User/MemberRole', user.role);
 app.get('/SysManagement/Code/ClassificationTree', code.tree);
 app.get('/SysManagement/Code/List', code.list);
