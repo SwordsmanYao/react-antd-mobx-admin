@@ -121,7 +121,9 @@ export default class MenuButtonForm extends Component {
                 {...formItemLayout}
                 label="上级"
               >
-                {getFieldDecorator('ParentID')(
+                {getFieldDecorator('ParentID', {
+                  initialValue: '0'
+                })(
                   <TreeSelect
                     dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                     treeData={[ 
@@ -132,7 +134,6 @@ export default class MenuButtonForm extends Component {
                       },
                       ...menuButton.menuButtonTree,
                     ]}
-                    defaultValue={'0'}
                     placeholder="请选择"
                     treeDefaultExpandAll
                   />,

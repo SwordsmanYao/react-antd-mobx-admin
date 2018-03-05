@@ -72,9 +72,14 @@ class MenuButtonStore {
       const data = {};
       // 将数据格式化，以适应组件
       Object.keys(response.Data).forEach((key) => {
-        data[key] = { 
+        let value = response.Data[key];
+        if(key==='ParentID') {
+          value = value.toString();
+        }
+
+        data[key] = {
           name: key,
-          value: response.Data[key],
+          value,
         };
       });
 
