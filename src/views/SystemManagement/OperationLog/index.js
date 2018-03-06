@@ -125,10 +125,12 @@ export default class OperationLog extends Component {
     const columns = [
       { 
         title: '序号',
-        dataIndex: 'UniqueID',
-        width: 50,
+        dataIndex: 'NO',
+        width: 60,
         className:'alignCenter', 
-        render: (text, row, index) =>(index + 1),
+        render: (text, row, index) =>(
+          index + 1 + (operationLog.pagination.current - 1) * operationLog.pagination.pageSize
+        ),
         fixed: true,
       },
       { 
@@ -239,7 +241,7 @@ export default class OperationLog extends Component {
             onChange: this.onSelectionChange,
             getCheckboxProps: this.getCheckboxProps,
           }}
-          scroll={{ x: 1550, y: window.innerHeight - 305 }}
+          scroll={{ x: 1700, y: window.innerHeight - 280 }}
           size="small"
         />
       </div>

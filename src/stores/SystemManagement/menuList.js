@@ -1,10 +1,10 @@
 import { observable, action } from 'mobx';
 
-import { insert, update, remove, queryList, queryDetail, queryMenuButtonTree } from '@/services/SystemManagement/menuButton';
+import { insert, update, remove, queryList, queryDetail } from '@/services/SystemManagement/menuList';
 
 import menu from './menu';
 
-class MenuButtonStore {
+class MenuListStore {
 
   // 列表数据
   @observable list;
@@ -19,8 +19,7 @@ class MenuButtonStore {
   @observable currentForm;
   // 新建按钮的是否显示加载中
   @observable newBtnLoading;
-  // 表单选择上级的下拉框数据
-  @observable menuButtonTree;
+
 
    /**
    * 含有接口请求等异步操作的 action
@@ -119,30 +118,6 @@ class MenuButtonStore {
     });
   }
 
-  @action
-  async fetchMenuButtonTree(data) {
-    const response = await queryMenuButtonTree(data);
-    if(response.Code === 200) {
-      this.setData({
-        menuButtonTree: this.formatTree(response.Data),
-      });
-    }
-  }
-
-  formatTree(treeList) {
-    return treeList.map(item => {
-      if(item.hasChildren && item.children) {
-        item.children = this.formatTree(item.children);
-      }
-      return {
-        ...item,
-        value: item.id,
-        key: item.id,
-        label: item.name,
-      };
-    })
-  }
-
   /**
    * 不含异步操作的 action
    */
@@ -164,8 +139,6 @@ class MenuButtonStore {
     this.currentForm = this.defaultCurrentForm;
     // 新建按钮的是否显示加载中
     this.newBtnLoading = false;
-    // 表单选择上级的下拉框数据
-    this.menuButtonTree = [];
   }
 
   @action
@@ -182,5 +155,5 @@ class MenuButtonStore {
   }
 } 
 
-export default new MenuButtonStore();
+export default new MenuListStore();
 

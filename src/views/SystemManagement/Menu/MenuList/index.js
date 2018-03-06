@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Layout, Button, Table, Divider, Modal, message } from 'antd';
 
-import MenuButtonForm from './form';
+import MenuListForm from './form';
 import styles from './index.less';
 
 
 const { Content } = Layout;
 const { confirm } = Modal;
 
-@inject('menuButton', 'menu')
+@inject('menuList', 'menu')
 @observer
-export default class MenuButton extends Component {
+export default class MenuList extends Component {
   constructor(props) {
     super(props);
 
@@ -27,14 +27,14 @@ export default class MenuButton extends Component {
   }
 
   componentWillMount() {
-    const { menuButton } = this.props;
-    menuButton.reset();
-    menuButton.refreshList();
+    const { menuList } = this.props;
+    menuList.reset();
+    menuList.refreshList();
   }
 
   componentWillUnmount() {
-    const { menuButton } = this.props;
-    menuButton.reset();
+    const { menuList } = this.props;
+    menuList.reset();
   }
 
 
@@ -48,34 +48,27 @@ export default class MenuButton extends Component {
   // 新建
   handleNew = () => {
     this.setModalVisible(true);
-    const { menuButton, menu } = this.props;
-    menuButton.fetchMenuButtonTree({
-      Menu_ID: menu.currentForm.UniqueID.value,
-    });
   }
 
   // 修改
   handleEdit = (record) => {
-    const { menuButton, menu } = this.props;
+    const { menuList } = this.props;
 
-    menuButton.fetchMenuButtonTree({
-      Menu_ID: menu.currentForm.UniqueID.value,
+    menuList.fetchDetail({
+      UniqueID: record.UniqueID,
     }).then(() => {
-      menuButton.fetchDetail({
-        UniqueID: record.id,
-      }).then(() => {
-        this.setModalVisible(true);
-      }).catch((e) => {
-        message.error(`操作失败：${e.Message}`);
-      });
+      this.setModalVisible(true);
+    }).catch((e) => {
+      message.error(`操作失败：${e.Message}`);
     });
+
   }
 
   // 删除
   handleRemove = (Params) => {
-    const { menuButton } = this.props;
+    const { menuList } = this.props;
 
-    menuButton.remove({
+    menuList.remove({
       Params,
     }).then(() => {
       message.success('删除成功');
@@ -85,17 +78,22 @@ export default class MenuButton extends Component {
   }
 
   render() {
-    const { menuButton, menu } = this.props;
+    const { menuList, menu } = this.props;
 
     const columns = [{
       title: '名称',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'Name',
+      key: 'Name',
       width: 120,
     }, {
       title: '编号',
-      dataIndex: 'path',
-      key: 'path',
+      dataIndex: 'Number',
+      key: 'Number',
+      width: 120,
+    }, {
+      title: '排序代码',
+      dataIndex: 'SortCode',
+      key: 'SortCode',
       width: 120,
     }, {
       title: '操作',
@@ -121,7 +119,7 @@ export default class MenuButton extends Component {
                     title: "确认要删除这条记录吗？",
                     content: '',
                     onOk: () => {
-                      this.handleRemove([record.id]);
+                      this.handleRemove([record.UniqueID]);
                     },
                   });
                 }}
@@ -141,10 +139,10 @@ export default class MenuButton extends Component {
             <Button
               icon="plus"
               onClick={this.handleNew}
-              loading={menuButton.newBtnLoading}
+              loading={menuList.newBtnLoading}
             >新建</Button>
-            <MenuButtonForm
-              menuButton={menuButton}
+            <MenuListForm
+              menuButton={menuList}
               menu={menu}
               modalVisible={this.state.modalVisible}
               setModalVisible={this.setModalVisible}
@@ -153,11 +151,11 @@ export default class MenuButton extends Component {
           <Table
             bordered
             size="small"
-            loading={menuButton.loading}
+            loading={menuList.loading}
             pagination={false}
-            dataSource={menuButton.list.slice()}
+            dataSource={menuList.list.slice()}
             columns={columns}
-            rowKey="id"
+            rowKey="UniqueID"
             onChange={this.handleTableChange}
             scroll={{ y: 206 }}
           />

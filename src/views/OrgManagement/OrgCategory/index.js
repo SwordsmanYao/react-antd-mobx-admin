@@ -121,21 +121,26 @@ export default class OrgCategory extends Component {
   render() {
     const { orgCategory } = this.props;
 
-    const columns = [{
+    const columns = [{ 
+      title: '序号',
+      dataIndex: 'NO',
+      width: '6%',
+      className:'alignCenter', 
+      render: (text, row, index) =>(index + 1),
+    }, {
       title: '名称',
       dataIndex: 'Name',
       key: 'Name',
-      width: 120,
+      width: '30%',
     }, {
       title: '排序',
       dataIndex: 'SortCode',
       key: 'SortCode',
-      width: 120,
+      width: '30%',
     },  {
       title: '描述',
       dataIndex: 'DescInfo',
       key: 'DescInfo',
-      width: 120,
     }];
 
     return (

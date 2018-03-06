@@ -173,26 +173,34 @@ export default class Code extends Component {
   render() {
     const { code } = this.props;
     const { setModalVisible } = this;
-    const columns = [{
+    const columns = [{ 
+      title: '序号',
+      dataIndex: 'NO',
+      width: '7%',
+      className:'alignCenter', 
+      render: (text, row, index) =>(
+        index + 1 + (code.pagination.current - 1) * code.pagination.pageSize
+      ),
+    }, {
       title: '名称',
       dataIndex: 'Name',
       key: 'Name',
-      width: 500,
+      width: '20%',
     }, {
       title: '代码值',
       dataIndex: 'CodeValue',
       key: 'CodeValue',
-      width: 500,
+      width: '20%',
     }, {
       title: '排序',
       dataIndex: 'SortCode',
       key: 'SortCode',
-      width: 500,
+      width: '15%',
     }, {
       title: '类型',
       dataIndex: 'Category',
       key: 'Category',
-      width: 500,
+      width: '15%',
       render: (text, record) => (
         text === 1 ? '分类' : '代码'
       ),
@@ -200,7 +208,6 @@ export default class Code extends Component {
       title: '描述',
       dataIndex: 'Remark',
       key: 'Remark',
-      width: 500,
     }];
 
     return (
@@ -254,7 +261,7 @@ export default class Code extends Component {
               selectedRowKeys: code.selectedRowKeys,
               onChange: this.onSelectionChange,
             }}
-            scroll={{ y: window.innerHeight - 220 }}
+            scroll={{ y: window.innerHeight - 293 }}
           />
         </Content>
       </Layout>

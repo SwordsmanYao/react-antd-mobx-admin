@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, Steps } from 'antd';
+import { Modal, Button, Steps, message } from 'antd';
 import { observer } from 'mobx-react';
 
 import styles from './index.less';
@@ -51,9 +51,19 @@ class StepModal extends Component {
     }
   }
 
+  handleComplete = () => {
+    const { setModalVisible } = this.props;
+    setModalVisible(false);
+    message.success('操作完成');
+  }
+
   handleNext = () => {
     // 通过 ref 调用子组件的方法
-    this.childNode.handleNextStep();
+    if(this.childNode.handleNextStep) {
+      this.childNode.handleNextStep();
+    } else {
+      this.goNext();
+    }
   }
   handleBack = () => {
     const current = this.state.current - 1;
@@ -62,6 +72,7 @@ class StepModal extends Component {
   goNext = () => {
     const current = this.state.current + 1;
     this.setState({ current });
+    console.log('goNext');
   }
   setChildRef = (node) => {
     this.childNode = node;
@@ -96,15 +107,25 @@ class StepModal extends Component {
           <Button key="back" onClick={this.handleBack}>
             上一步
           </Button>,
-          <Button key="submit" type="primary" loading={btnLoading} onClick={this.handleNext}>
-            {
-              current < steps.length - 1 ? '下一步' : '完成'
-            }
-          </Button>,
+          current < steps.length - 1 ?
+          <Button key="next" type="primary" loading={btnLoading} onClick={this.handleNext}>下一步</Button>:
+          <Button key="submit" type="primary" loading={btnLoading} onClick={this.handleComplete}>完成</Button>
         ]}
       >
         <Steps current={current}>
-          {steps.map(item => <Step key={item.title} title={item.title} />)}
+          {
+            steps.map((item, index) => (
+              <Step
+                key={item.title}
+                title={item.title}
+                onClick={() => {
+                  if(current > index) {
+                    this.setState({current: index});
+                  }
+                }}
+              />
+            ))
+          }
         </Steps>
         <div className={styles.stepContent}>
           <ChildComponent

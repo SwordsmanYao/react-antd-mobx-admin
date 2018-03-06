@@ -1,6 +1,10 @@
 import { observable, action } from 'mobx';
 
-import { insert, update, remove, queryList, queryDetail, getRoleMenu, setRoleMenu, getRoleMember, getRoleMemberDetail, setRoleMember, queryOrgTree } from '@/services/OrgManagement/role';
+import { 
+  insert, update, remove, queryList, queryDetail, getRoleMenu, setRoleMenu, getRoleMenuButton,
+  setRoleMenuButton, getRoleMenuField, setRoleMenuField, getRoleMember, getRoleMemberDetail,
+  setRoleMember, queryOrgTree
+} from '@/services/OrgManagement/role';
 
 class RoleStore {
 
@@ -25,8 +29,6 @@ class RoleStore {
   // 新建按钮的是否显示加载中
   @observable newBtnLoading;
 
-  // 当前授权的角色
-  @observable currentAuth;
   // 角色菜单树
   @observable roleMenuTree;
   // 角色菜单树选中 keys
@@ -34,8 +36,20 @@ class RoleStore {
   // 半选中状态的节点值，向后端提交时也要包涵这部分 keys
   @observable roleMenuHalfCheckedKeys;
 
-  // 当前设置成员的角色
-  @observable currentMemberNode;
+  // 角色菜单按钮树
+  @observable roleMenuButtonTree;
+  // 角色菜单按钮树选中 keys
+  @observable roleMenuButtonCheckedKeys;
+  // 半选中状态的节点值，向后端提交时也要包涵这部分 keys
+  @observable roleMenuButtonHalfCheckedKeys;
+
+  // 角色菜单按钮树
+  @observable roleMenuFieldTree;
+  // 角色菜单按钮树选中 keys
+  @observable roleMenuFieldCheckedKeys;
+  // 半选中状态的节点值，向后端提交时也要包涵这部分 keys
+  @observable roleMenuFieldHalfCheckedKeys;
+
   // 角色成员弹窗中的组织机构树
   @observable orgTree;
   // 当前选中的树节点id
@@ -157,6 +171,46 @@ class RoleStore {
     }
   }
 
+  // 获取角色授权窗口的菜单按钮树
+  @action
+  async fetchRoleMenuButtonTree(data) {
+    const response = await getRoleMenuButton(data);
+    if(response.Code === 200) {
+      this.setData({
+        roleMenuButtonTree: response.Data,
+        roleMenuButtonCheckedKeys: this.getSelectedIDs(response.Data),
+      });
+    }
+  }
+
+  @action
+  async commitRoleMenuButton(data) {
+    const response = await setRoleMenuButton(data);
+    if(!response.Code === 200) {
+      return await Promise.reject(response.Error);
+    }
+  }
+
+  // 获取角色授权窗口的菜单树
+  @action
+  async fetchRoleMenuFieldTree(data) {
+    const response = await getRoleMenuField(data);
+    if(response.Code === 200) {
+      this.setData({
+        roleMenuFieldTree: response.Data,
+        roleMenuFieldCheckedKeys: this.getSelectedIDs(response.Data),
+      });
+    }
+  }
+
+  @action
+  async commitRoleMenuField(data) {
+    const response = await setRoleMenuField(data);
+    if(!response.Code === 200) {
+      return await Promise.reject(response.Error);
+    }
+  }
+
   // 获取角色成员窗口的组织机构树
   @action
   async fetchOrgTree(data) {
@@ -234,15 +288,27 @@ class RoleStore {
     // 新建按钮的是否显示加载中
     this.newBtnLoading = false;
 
-    // 当前授权的角色
-    this.currentAuth = null;
     // 角色菜单树
     this.roleMenuTree = [];
     // 角色菜单树选中 keys
     this.roleMenuCheckedKeys = [];
+    // 半选中状态的节点值，向后端提交时也要包涵这部分 keys
+    this.roleMenuHalfCheckedKeys = [];
 
-    // 当前设置成员的角色
-    this.currentMemberNode = null;
+    // 角色菜单按钮树
+    this.roleMenuButtonTree = [];
+    // 角色菜单按钮树选中 keys
+    this.roleMenuButtonCheckedKeys = [];
+    // 半选中状态的节点值，向后端提交时也要包涵这部分 keys
+    this.roleMenuButtonHalfCheckedKeys = [];
+
+    // 角色菜单按钮树
+    this.roleMenuFieldTree = [];
+    // 角色菜单按钮树选中 keys
+    this.roleMenuFieldCheckedKeys = [];
+    // 半选中状态的节点值，向后端提交时也要包涵这部分 keys
+    this.roleMenuFieldHalfCheckedKeys = [];
+
     // 角色成员弹窗中的组织机构树
     this.orgTree = [];
     // 当前选中的树节点id

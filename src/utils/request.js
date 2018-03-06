@@ -5,7 +5,7 @@ import history from '../history';
 import globalStore from '../stores/global';
 
 const service = axios.create({
-  timeout: 15000,
+  timeout: 30000,
   cache: false,
 });
 

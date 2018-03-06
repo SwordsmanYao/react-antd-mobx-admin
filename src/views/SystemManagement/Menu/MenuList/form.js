@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Form, Row, Col, Input, Modal, message, Select, TreeSelect } from 'antd';
+import { Form, Row, Col, Input, Modal, message, Radio, Select } from 'antd';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
+const RadioGroup = Radio.Group;
 const { Option } = Select;
 
 @Form.create({
@@ -74,9 +75,9 @@ export default class MenuButtonForm extends Component {
 
   render() {
 
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
 
-    const { modalVisible, setModalVisible, menuButton } = this.props;
+    const { modalVisible, setModalVisible } = this.props;
 
     const formItemLayout = {
       labelCol: {
@@ -91,7 +92,7 @@ export default class MenuButtonForm extends Component {
 
     return (
       <Modal
-        title="系统按钮"
+        title="系统视图"
         okText="确定"
         cancelText="取消"
         width="600px"
@@ -119,30 +120,6 @@ export default class MenuButtonForm extends Component {
             <Col span={12}>
               <FormItem
                 {...formItemLayout}
-                label="上级"
-              >
-                {getFieldDecorator('ParentID', {
-                  initialValue: '0'
-                })(
-                  <TreeSelect
-                    dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                    treeData={[ 
-                      {
-                        value: '0',
-                        key: '0',
-                        label: '请选择'
-                      },
-                      ...menuButton.menuButtonTree,
-                    ]}
-                    placeholder="请选择"
-                    treeDefaultExpandAll
-                  />,
-                )}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem
-                {...formItemLayout}
                 label="编号"
               >
                 {getFieldDecorator('Number', {
@@ -157,27 +134,26 @@ export default class MenuButtonForm extends Component {
             <Col span={12}>
               <FormItem
                 {...formItemLayout}
-                label="类型"
+                label="是否排序"
               >
-                {getFieldDecorator('Category', {
-                  rules: [{
-                    required: true, message: '请选择类型',
-                  }],
-                })(
-                  <Select>
-                    <Option value={1}>列表按钮</Option>
-                    <Option value={2}>表单按钮</Option>
-                  </Select>,
+                {getFieldDecorator('IsSortFields')(
+                  <RadioGroup>
+                    <Radio value={true}>是</Radio>
+                    <Radio value={false}>否</Radio>
+                  </RadioGroup>,
                 )}
               </FormItem>
             </Col>
             <Col span={12}>
               <FormItem
                 {...formItemLayout}
-                label="图标"
+                label="默认排序"
               >
-                {getFieldDecorator('IconName')(
-                  <Input />,
+                {getFieldDecorator('DefaultSortingMethod')(
+                  <Select disabled={!getFieldValue('IsSortFields')}>
+                    <Option value={1}>升序</Option>
+                    <Option value={2}>降序</Option>
+                  </Select>,
                 )}
               </FormItem>
             </Col>

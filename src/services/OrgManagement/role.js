@@ -47,6 +47,38 @@ export function setRoleMenu(params) {
   });
 }
 
+// 获取角色按钮
+export function getRoleMenuButton(params) {
+  return request({
+    url: `${api}/OrgManagement/Role/RoleMenuButton`,
+    params,
+  });
+}
+
+export function setRoleMenuButton(params) {
+  return request({
+    url: `${api}/OrgManagement/Role/SetRoleMenuButton`,
+    method: 'post',
+    data: params,
+  });
+}
+
+// 获取角色列表字段
+export function getRoleMenuField(params) {
+  return request({
+    url: `${api}/OrgManagement/Role/RoleMenuField`,
+    params,
+  });
+}
+
+export function setRoleMenuField(params) {
+  return request({
+    url: `${api}/OrgManagement/Role/SetRoleMenuField`,
+    method: 'post',
+    data: params,
+  });
+}
+
 export function insert(params) {
   return request({
     url: `${api}/OrgManagement/Role/Insert`,

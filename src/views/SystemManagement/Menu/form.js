@@ -33,7 +33,7 @@ const { Option } = Select;
 @observer
 export default class MenuForm extends Component {
 
-  // 表单提交
+  // StepModal 组件调用方法
   handleNextStep = () => {
     console.log('handleSubmit');
     const { form, menu, goNext } = this.props;

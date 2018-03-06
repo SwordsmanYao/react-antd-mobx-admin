@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Table, Divider, Alert, Modal, message, Dropdown, Icon, Menu } from 'antd';
+import { Layout, Table, Alert, Modal, message } from 'antd';
 import moment from 'moment';
 
 import DisplayTree from '@/components/DisplayTree';
@@ -254,26 +254,33 @@ export default class User extends Component {
   render() {
     const { user } = this.props;
 
-    const columns = [{
+    const columns = [{ 
+      title: '序号',
+      dataIndex: 'NO',
+      width: '7%',
+      className:'alignCenter', 
+      render: (text, row, index) =>(
+        index + 1 + (user.pagination.current - 1) * user.pagination.pageSize
+      ),
+    }, {
       title: '登录名',
       dataIndex: 'LoginName',
       key: 'LoginName',
-      width: 500,
+      width: '20%',
     }, {
       title: '姓名',
       dataIndex: 'FullName',
       key: 'FullName',
-      width: 500,
+      width: '20%',
     }, {
       title: '工号',
       dataIndex: 'JobNumber',
       key: 'JobNumber',
-      width: 500,
+      width: '20%',
     }, {
       title: '状态',
       dataIndex: 'UserStatus',
       key: 'UserStatus',
-      width: 500,
     }];
 
     return (
@@ -340,7 +347,7 @@ export default class User extends Component {
               selectedRowKeys: user.selectedRowKeys,
               onChange: this.onSelectionChange,
             }}
-            scroll={{ y: window.innerHeight - 290 }}
+            scroll={{ y: window.innerHeight - 293 }}
             size="small"
           />
         </Content>

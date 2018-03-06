@@ -121,10 +121,12 @@ export default class ExceptionLog extends Component {
     const columns = [
       { 
         title: '序号',
-        dataIndex: 'UniqueID',
-        width: 50,
+        dataIndex: 'NO',
+        width: 60,
         className:'alignCenter', 
-        render: (text, row, index) =>(index + 1),
+        render: (text, row, index) =>(
+          index + 1 + (exceptionLog.pagination.current - 1) * exceptionLog.pagination.pageSize
+        ),
         fixed: true,
       },
       { 
@@ -262,7 +264,7 @@ export default class ExceptionLog extends Component {
             selectedRowKeys: exceptionLog.selectedRowKeys,
             onChange: this.onSelectionChange,
           }}
-          scroll={{ x: 2690, y: window.innerHeight - 305 }}
+          scroll={{ x: 2800, y: window.innerHeight - 280 }}
           size="small"
         />
       </div>

@@ -200,7 +200,15 @@ export default class AdministrativeArea extends Component {
   render() {
     const { administrativeArea } = this.props;
     const { setModalVisible } = this;
-    const columns = [{
+    const columns = [{ 
+      title: '序号',
+      dataIndex: 'NO',
+      width: '7%',
+      className:'alignCenter', 
+      render: (text, row, index) =>(
+        index + 1 + (administrativeArea.pagination.current - 1) * administrativeArea.pagination.pageSize
+      ),
+    }, {
       title: '编号',
       dataIndex: 'UniqueID',
       key: 'UniqueID',
@@ -279,7 +287,7 @@ export default class AdministrativeArea extends Component {
               selectedRowKeys: administrativeArea.selectedRowKeys,
               onChange: this.onSelectionChange,
             }}
-            scroll={{ y: window.innerHeight - 255 }}
+            scroll={{ y: window.innerHeight - 293 }}
           />
         </Content>
       </Layout>

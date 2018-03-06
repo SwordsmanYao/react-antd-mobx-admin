@@ -140,16 +140,21 @@ export default class Org extends Component {
 
   render() {
     const { org } = this.props;
-    const columns = [{
+    const columns = [{ 
+      title: '序号',
+      dataIndex: 'NO',
+      width: '7%',
+      className:'alignCenter', 
+      render: (text, row, index) =>(index + 1),
+    }, {
       title: '名称',
       dataIndex: 'FullName',
       key: 'FullName',
-      width: 120,
+      width: '40%',
     }, {
       title: '排序',
       dataIndex: 'SortCode',
       key: 'SortCode',
-      width: 120,
     }];
 
     return (
@@ -203,7 +208,7 @@ export default class Org extends Component {
               selectedRowKeys: org.selectedRowKeys,
               onChange: this.onSelectionChange,
             }}
-            scroll={{ y: window.innerHeight - 220 }}
+            scroll={{ y: window.innerHeight - 293 }}
           />
         </Content>
       </Layout>

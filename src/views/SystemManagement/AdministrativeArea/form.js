@@ -72,7 +72,7 @@ export default class AdministrativeAreaForm extends Component {
 
   afterClose = () => {
     const { administrativeArea } = this.props;
-    administrativeArea.clearCurrentNode();
+    administrativeArea.clearCurrentForm();
   }
 
   render() {

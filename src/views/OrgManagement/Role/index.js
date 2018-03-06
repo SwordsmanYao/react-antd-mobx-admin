@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Table, Divider, message, Badge, Dropdown, Icon, Menu, Modal, Alert } from 'antd';
+import { Layout, Table, message, Badge, Modal, Alert } from 'antd';
 
 import RoleToolBar from './toolBar';
 import RoleForm from './form';
@@ -121,10 +121,6 @@ export default class Role extends Component {
 
   // 角色授权
   handleAuth = () => {
-    const { role } = this.props;
-    role.fetchRoleMenuTree({
-      UniqueID: role.selectedRowKeys[0],
-    });
     this.setAuthModalVisible(true);
   }
 
@@ -181,21 +177,28 @@ export default class Role extends Component {
   render() {
     const { role } = this.props;
 
-    const columns = [{
+    const columns = [{ 
+      title: '序号',
+      dataIndex: 'NO',
+      width: '6%',
+      className:'alignCenter', 
+      render: (text, row, index) =>(
+        index + 1 + (role.pagination.current - 1) * role.pagination.pageSize
+      ),
+    }, {
       title: '名称',
       dataIndex: 'Name',
       key: 'Name',
-      width: 120,
+      width: '30%',
     }, {
       title: '描述',
       dataIndex: 'DescInfo',
       key: 'DescInfo',
-      width: 120,
+      width: '30%',
     }, {
       title: '状态',
       dataIndex: 'IsAvailable',
-      key: 'IsAvailable',
-      width: 120,      
+      key: 'IsAvailable',   
       render: (result) => {
         if(result) {
           return <Badge status="success" text="启用" />;

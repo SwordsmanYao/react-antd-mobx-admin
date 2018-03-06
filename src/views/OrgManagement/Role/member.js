@@ -48,7 +48,6 @@ export default class Member extends Component {
   afterClose = () => {
     const { role } = this.props;
     role.setData({
-      currentMemberNode: null,
       orgTree: [],
       roleMemberList: [],
       selectedRoleMemberIDs: [],
@@ -65,7 +64,7 @@ export default class Member extends Component {
         selectedOrgKeys: selectedKeys,
       });
       role.fetchRoleMemberDetail({
-        UniqueID: role.currentMemberNode.UniqueID,
+        UniqueID: role.selectedRowKeys[0],
         Params: selectedKeys,
       });
     }

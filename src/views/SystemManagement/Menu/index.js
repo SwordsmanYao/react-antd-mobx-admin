@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Layout, Table, Divider, Modal, message, Alert } from 'antd';
+import { Layout, Table, Modal, message, Alert } from 'antd';
 
 import DisplayTree from '@/components/DisplayTree';
 import StepModal from '@/components/StepModal';
 import MenuForm from './form';
 import MenuButton from './MenuButton';
+import MenuList from './MenuList';
 import MenuToolBar from './toolBar';
 import styles from './index.less';
 
@@ -13,7 +14,7 @@ import styles from './index.less';
 const { Sider, Content } = Layout;
 const { confirm } = Modal;
 
-@inject('menu')
+@inject('menu', 'menuButton', 'menuList')
 @observer
 export default class Menu extends Component {
   constructor(props) {
@@ -112,7 +113,7 @@ export default class Menu extends Component {
     const { menu } = this.props;
 
     menu.remove({
-      Params,
+      UniqueID: Params[0],
     }).then(() => {
       message.success('删除成功');
       // 在选中条目中清除已经删除的
@@ -142,21 +143,26 @@ export default class Menu extends Component {
   render() {
     const { menu } = this.props;
     const { setModalVisible } = this;
-    const columns = [{
+    const columns = [{ 
+      title: '序号',
+      dataIndex: 'NO',
+      width: '7%',
+      className:'alignCenter', 
+      render: (text, row, index) =>(index + 1),
+    }, {
       title: '名称',
       dataIndex: 'Name',
       key: 'Name',
-      width: 500,
+      width: '30%',
     }, {
       title: '路径',
       dataIndex: 'Path',
       key: 'Path',
-      width: 500,
+      width: '40%',
     }, {
       title: '排序',
       dataIndex: 'SortCode',
       key: 'SortCode',
-      width: 500,
     }];
 
     const steps = [{
@@ -176,19 +182,17 @@ export default class Menu extends Component {
       title: '系统按钮',
       component: MenuButton,
       isWrappedComponent: false,
-      props: {
-        menu,
-      },
       afterClose: () => {
+        const { menuButton } = this.props;
+        menuButton.reset();
       },
     }, {
       title: '系统视图',
-      component: MenuForm,
+      component: MenuList,
       isWrappedComponent: false,
-      props: {
-        menu,
-      },
       afterClose: () => {
+        const { menuList } = this.props;
+        menuList.reset();
       },
     }];
 
@@ -244,7 +248,7 @@ export default class Menu extends Component {
               selectedRowKeys: menu.selectedRowKeys,
               onChange: this.onSelectionChange,
             }}
-            scroll={{ y: window.innerHeight - 220 }}
+            scroll={{ y: window.innerHeight - 293 }}
           />
         </Content>
       </Layout>

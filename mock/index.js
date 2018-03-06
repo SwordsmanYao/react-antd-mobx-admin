@@ -2,6 +2,7 @@ var express = require('express');
 var currentUser = require('./currentUser');
 var menu = require('./SystemManagement/menu');
 var menuButton = require('./SystemManagement/menuButton');
+var menuList = require('./SystemManagement/menuList');
 var orgCategory = require('./OrgManagement/orgCategory');
 var org = require('./OrgManagement/org');
 var role = require('./OrgManagement/role');
@@ -35,6 +36,8 @@ app.post('/SysManagement/Menu/update', menu.update);
 app.get('/SysManagement/MenuButton/tree', menuButton.tree);
 app.get('/SysManagement/MenuButton/list',  menuButton.list);
 app.get('/SysManagement/MenuButton/detail', menuButton.detail);
+app.get('/SysManagement/MenuList/list',  menuList.list);
+app.get('/SysManagement/MenuList/detail', menuList.detail);
 app.get('/OrgManagement/OrgCategory/list', orgCategory.list);
 app.get('/OrgManagement/OrgCategory/detail', orgCategory.detail);
 app.get('/OrgManagement/OrgCategory/TextValue', orgCategory.textValue);
@@ -54,8 +57,10 @@ app.get('/OrgManagement/User/Detail', user.detail);
 app.get('/OrgManagement/User/MemberRole', user.role);
 app.get('/SysManagement/Code/ClassificationTree', code.tree);
 app.get('/SysManagement/Code/List', code.list);
+app.get('/SysManagement/Code/Detail', code.detail);
 app.get('/SysManagement/AdministrativeArea/Tree', administrativeArea.tree);
 app.get('/SysManagement/AdministrativeArea/List', administrativeArea.list);
+app.get('/SysManagement/AdministrativeArea/Detail', administrativeArea.detail);
 
 
 
