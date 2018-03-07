@@ -14,7 +14,11 @@ class MenuListStore {
   // @observable pagination;
 
   // currentForm 的默认值，用于 clear 时的数据
-  defaultCurrentForm = {};
+  defaultCurrentForm = {
+    IsSortFields: {
+      value: false,
+    },
+  };
   // 当前正在编辑的节点，属性为对象，包涵错误信息等，eg: {Name: {value: 'test'}},
   @observable currentForm;
   // 新建按钮的是否显示加载中

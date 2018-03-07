@@ -43,6 +43,7 @@ export default class Org extends Component {
     if(selectedKeys.length > 0) {
       org.setData({
         selectedKeys: selectedKeys,
+        selectedRowKeys: [],
       });
       
       org.fetchList({

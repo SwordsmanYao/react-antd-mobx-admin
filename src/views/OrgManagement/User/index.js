@@ -76,6 +76,7 @@ export default class User extends Component {
     if(selectedKeys.length > 0) {
       user.setData({
         selectedKeys: selectedKeys,
+        selectedRowKeys: [],
         pagination: {
           ...user.pagination,
           current: 1,
@@ -257,7 +258,7 @@ export default class User extends Component {
     const columns = [{ 
       title: '序号',
       dataIndex: 'NO',
-      width: '7%',
+      width: '6%',
       className:'alignCenter', 
       render: (text, row, index) =>(
         index + 1 + (user.pagination.current - 1) * user.pagination.pageSize
@@ -266,21 +267,39 @@ export default class User extends Component {
       title: '登录名',
       dataIndex: 'LoginName',
       key: 'LoginName',
-      width: '20%',
+      width: '10%',
     }, {
       title: '姓名',
       dataIndex: 'FullName',
       key: 'FullName',
-      width: '20%',
+      width: '12%',
     }, {
       title: '工号',
       dataIndex: 'JobNumber',
       key: 'JobNumber',
-      width: '20%',
+      width: '12%',
     }, {
       title: '状态',
       dataIndex: 'UserStatus',
       key: 'UserStatus',
+      width: '10%',
+    }, {
+      title: '手机',
+      dataIndex: 'MobilePhone',
+      key: 'MobilePhone',
+      width: '15%',
+    }, {
+      title: '角色',
+      dataIndex: 'RoleName',
+      key: 'RoleName',
+      width: '12%',
+    }, {
+      title: '注册日期',
+      dataIndex: 'CreatedTime',
+      key: 'CreatedTime',
+      render: (text, row, index) => { 
+        return new moment(text).format('YYYY-MM-DD HH:mm:ss');
+      },
     }];
 
     return (

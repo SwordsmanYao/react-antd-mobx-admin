@@ -45,6 +45,7 @@ export default class Menu extends Component {
     if(selectedKeys.length > 0) {
       menu.setData({
         selectedKeys: selectedKeys,
+        selectedRowKeys: [],
       });
       
       menu.fetchList({
@@ -153,19 +154,43 @@ export default class Menu extends Component {
       title: '名称',
       dataIndex: 'Name',
       key: 'Name',
-      width: '30%',
+      width: '20%',
     }, {
       title: '路径',
       dataIndex: 'Path',
       key: 'Path',
-      width: '40%',
+      width: '30%',
     }, {
       title: '排序',
       dataIndex: 'SortCode',
       key: 'SortCode',
-    }];
+      width: '10%',
+    }, {
+      title: '类型',
+      dataIndex: 'Category',
+      key: 'Category',
+      width: '15%',
+      render: (text, row, index) => {
+        switch(text)
+        {
+          case 1:
+            return '目录';
+          case 2:
+            return '栏目';
+          case 3:
+            return '代码';
+          default:
+            return '-';
+        }
+      }
+    }, {
+      title: '显示',
+      dataIndex: 'IsDisplayed',
+      key: 'IsDisplayed',
+      render: (text, row, index) => (text===1 ? '是' : '否')
+    },];
 
-    const steps = [{
+    let steps = [{
       title: '系统功能',
       component: MenuForm,
       // 组件被Form.create()等包裹
@@ -178,23 +203,31 @@ export default class Menu extends Component {
         const { menu } = this.props;
         menu.clearCurrentForm();
       },
-    }, {
-      title: '系统按钮',
-      component: MenuButton,
-      isWrappedComponent: false,
-      afterClose: () => {
-        const { menuButton } = this.props;
-        menuButton.reset();
-      },
-    }, {
-      title: '系统视图',
-      component: MenuList,
-      isWrappedComponent: false,
-      afterClose: () => {
-        const { menuList } = this.props;
-        menuList.reset();
-      },
     }];
+
+    // 类型为栏目的可以设置 系统按钮 和 系统视图
+    if(menu.currentForm && menu.currentForm.Category && menu.currentForm.Category.value === 2) {
+      steps = [
+        ...steps,
+        {
+          title: '系统按钮',
+          component: MenuButton,
+          isWrappedComponent: false,
+          afterClose: () => {
+            const { menuButton } = this.props;
+            menuButton.reset();
+          },
+        }, {
+          title: '系统视图',
+          component: MenuList,
+          isWrappedComponent: false,
+          afterClose: () => {
+            const { menuList } = this.props;
+            menuList.reset();
+          },
+        },
+      ];
+    }
 
     return (
       <Layout className={styles.layout}>

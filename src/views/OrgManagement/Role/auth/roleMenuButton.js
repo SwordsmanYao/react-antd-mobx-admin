@@ -39,7 +39,9 @@ export default class RoleMenuButton extends Component {
 
   componentDidMount = () => {
     const { role } = this.props;
-    role.fetchRoleMenuButtonTree();
+    if(!(role.roleMenuButtonList && role.roleMenuButtonList.length > 0)) {
+      role.fetchRoleMenuButtonList();
+    }
   }
 
   onCheck = (checkedKeys, info) => {

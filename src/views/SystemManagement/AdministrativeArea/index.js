@@ -44,6 +44,7 @@ export default class AdministrativeArea extends Component {
     if(selectedKeys.length > 0) {
       administrativeArea.setData({
         selectedKeys: selectedKeys,
+        selectedRowKeys: [],
         selectedInfo: info.node.props.dataRef,
         pagination: {
           ...administrativeArea.pagination,

@@ -42,6 +42,7 @@ export default class Code extends Component {
     if(selectedKeys.length > 0) {
       code.setData({
         selectedKeys: selectedKeys,
+        selectedRowKeys: [],
         pagination: {
           ...code.pagination,
           current: 1,

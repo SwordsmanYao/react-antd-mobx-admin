@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 
 import { 
   insert, update, remove, queryList, queryDetail, getRoleMenu, setRoleMenu, getRoleMenuButton,
@@ -37,7 +37,7 @@ class RoleStore {
   @observable roleMenuHalfCheckedKeys;
 
   // 角色菜单按钮树
-  @observable roleMenuButtonTree;
+  @observable roleMenuButtonList;
   // 角色菜单按钮树选中 keys
   @observable roleMenuButtonCheckedKeys;
   // 半选中状态的节点值，向后端提交时也要包涵这部分 keys
@@ -158,7 +158,8 @@ class RoleStore {
     if(response.Code === 200) {
       this.setData({
         roleMenuTree: response.Data,
-        roleMenuCheckedKeys: this.getSelectedIDs(response.Data),
+        roleMenuCheckedKeys: this.getTreeChecked(response.Data).checkedKeys,
+        roleMenuHalfCheckedKeys: this.getTreeChecked(response.Data).halfCheckedKeys,
       });
     }
   }
@@ -173,12 +174,12 @@ class RoleStore {
 
   // 获取角色授权窗口的菜单按钮树
   @action
-  async fetchRoleMenuButtonTree(data) {
+  async fetchRoleMenuButtonList(data) {
     const response = await getRoleMenuButton(data);
     if(response.Code === 200) {
       this.setData({
-        roleMenuButtonTree: response.Data,
-        roleMenuButtonCheckedKeys: this.getSelectedIDs(response.Data),
+        roleMenuButtonList: response.Data,
+        // roleMenuButtonCheckedKeys: this.getSelectedIDs(response.Data),
       });
     }
   }
@@ -198,7 +199,7 @@ class RoleStore {
     if(response.Code === 200) {
       this.setData({
         roleMenuFieldTree: response.Data,
-        roleMenuFieldCheckedKeys: this.getSelectedIDs(response.Data),
+        // roleMenuFieldCheckedKeys: this.getSelectedIDs(response.Data),
       });
     }
   }
@@ -296,7 +297,7 @@ class RoleStore {
     this.roleMenuHalfCheckedKeys = [];
 
     // 角色菜单按钮树
-    this.roleMenuButtonTree = [];
+    this.roleMenuButtonList = [];
     // 角色菜单按钮树选中 keys
     this.roleMenuButtonCheckedKeys = [];
     // 半选中状态的节点值，向后端提交时也要包涵这部分 keys
@@ -363,21 +364,68 @@ class RoleStore {
     })
   }
 
-  getSelectedIDs(tree, ids = []) {
+  // 
+  @computed
+  get roleMenuButtonTree() {
+    return this.mergeMenuTreeWithButtonList(this.roleMenuTree, this.roleMenuButtonList, this.roleMenuCheckedKeys, this.roleMenuHalfCheckedKeys);
+  }
+  mergeMenuTreeWithButtonList(roleMenuTree, roleMenuButtonList, roleMenuCheckedKeys, roleMenuHalfCheckedKeys) {
+    return roleMenuTree
+    .filter(item => ([...roleMenuCheckedKeys, ...roleMenuHalfCheckedKeys].includes(item.id)))
+    .map(item => {
+      let children = [];
+      let selected = false;
+      if(item.hasChildren && item.children && item.children.length > 0) {
+        children = this.mergeMenuTreeWithButtonList(item.children, roleMenuButtonList, roleMenuCheckedKeys, roleMenuHalfCheckedKeys);
+      } else {
+        roleMenuButtonList.forEach(btns => {
+          if(item.id === btns.MenuID) {
+            children = btns.Buttons;
+            selected = btns.Buttons.some(btn => btn.selected);
+          }
+        })
+      }
+      return {
+        id: item.id,
+        name: item.name,
+        hasChildren: children.length > 0,
+        selected,
+        children,
+      }
+    });
+  }
+
+  // 从树数组中获取 全选中的id （checkedKeys）和半选中的id （halfCheckedKeys）
+  getTreeChecked(tree, { checkedKeys = [], halfCheckedKeys = [], isCheckedAll = true } = {}) {
     
     tree.forEach(item => {
       if(item.selected) {
-        // 如果有 children 就要每一个子节点都被选中时，父节点才选中,否则父节点为半选中状态
-        if(!(item.hasChildren && item.children) || item.children.every(item => item.selected)) {
-          ids = [...ids, item.id];
+        if(item.hasChildren && item.children && item.children.length > 0) {
+          const result = this.getTreeChecked(item.children);
+          // 只有 children 中节点都被选中 item 才为全选中状态否则为半选中状态
+          if(!result.isCheckedAll) {
+            isCheckedAll = false;
+            checkedKeys = [...checkedKeys, ...result.checkedKeys];
+            halfCheckedKeys = [...halfCheckedKeys, ...result.halfCheckedKeys, item.id];
+          } else {
+            checkedKeys = [...checkedKeys, ...result.checkedKeys, item.id];
+            halfCheckedKeys = [...halfCheckedKeys, ...result.halfCheckedKeys];
+          }
+        } else {
+          checkedKeys = [...checkedKeys, item.id];
         }
-      }
-      if(item.hasChildren && item.children && item.children.length) {
-        ids = this.getSelectedIDs(item.children, ids);
+      } else {
+        isCheckedAll = false;
       }
     });
-    return ids;
+    return {
+      checkedKeys,
+      halfCheckedKeys,
+      isCheckedAll,
+    }
   }
+
+
 } 
 
 export default new RoleStore();
