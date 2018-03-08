@@ -35,6 +35,7 @@ class BasicLayout extends Component {
         isPad = true;
         global.setData({
           collapsed: true,
+          tmpOpenKeys: global.openKeys.length > 0 ? global.openKeys : global.tmpOpenKeys,
           openKeys: [],
         });
       },
@@ -42,6 +43,8 @@ class BasicLayout extends Component {
         isPad = false;
         global.setData({
           collapsed: false,
+          openKeys: global.tmpOpenKeys.length > 0 ? global.tmpOpenKeys : global.openKeys,
+          tmpOpenKeys: [],
         });
       },
     });

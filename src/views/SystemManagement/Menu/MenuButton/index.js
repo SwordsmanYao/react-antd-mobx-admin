@@ -21,9 +21,8 @@ export default class MenuButton extends Component {
   }
 
   // StepModal 组件调用方法
-  handleNextStep = () => {
-    const { goNext } = this.props;
-    goNext();
+  handleNextStep = (callback) => {
+    callback();
   }
 
   componentWillMount() {

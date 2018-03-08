@@ -125,7 +125,7 @@ function list(req, res) {
         ParentID: 0,
         MenuID: 0,
         IsDisplayed: 1,
-        Category: 1,
+        Category: 2,
       },
     ],
   }));
@@ -143,7 +143,7 @@ function detail(req, res) {
       ParentID: 0,
       MenuID: 0,
       IsDisplayed: 1,
-      Category: 1,
+      Category: 2,
     },  
   }));
 }

@@ -87,57 +87,59 @@ export default class UserToolBar extends Component {
       expandForm: !this.state.expandForm,
     });
   }
+
+  onMenuClick = ({ key }) => {
+    const { handleResetPwd, handleEnableUser, handleRoleEdit } = this.props;
+
+    switch(key)
+    {
+      case 'resetPwd':
+        handleResetPwd();
+        break;
+      case 'enableUser':
+        confirm({
+          title: "确认要启用该用户吗？",
+          content: '',
+          onOk: () => {
+            handleEnableUser([1]);
+          },
+        });
+        break;
+      case 'disableUser':
+        confirm({
+          title: "确认要禁用该用户吗？",
+          content: '',
+          onOk: () => {
+            handleEnableUser([0]);
+          },
+        });
+        break;
+      case 'role':
+        handleRoleEdit();
+        break;
+      default:
+        return;
+    }
+  }
   
   render() {
     const { getFieldDecorator } = this.props.form;
     const { expandForm } = this.state;
-    const { user, handleNew, handleEdit, handleRemoveChecked, handleResetPwd, handleEnableUser, handleRoleEdit } = this.props;
+    const { user, handleNew, handleEdit, handleRemoveChecked } = this.props;
 
     const menu = (
-      <Menu>
-        <Menu.Item>
-          <a
-            onClick={(e) => {
-              handleResetPwd();
-            }}
-          >重置密码
-          </a>
+      <Menu onClick={this.onMenuClick}>
+        <Menu.Item key="resetPwd" disabled={user.selectedRowKeys.length !== 1}>
+          <Icon type="lock" />重置密码
         </Menu.Item>
-        <Menu.Item>
-          <a
-            onClick={(e) => {
-              confirm({
-                title: "确认要启用该用户吗？",
-                content: '',
-                onOk: () => {
-                  handleEnableUser([1]);
-                },
-              });
-            }}
-          >启用
-          </a>
+        <Menu.Item key="enableUser" disabled={user.selectedRowKeys.length !== 1}>
+          启用
         </Menu.Item>
-        <Menu.Item>
-          <a
-            onClick={(e) => {
-              confirm({
-                title: "确认要禁用该用户吗？",
-                content: '',
-                onOk: () => {
-                  handleEnableUser([0]);
-                },
-              });
-            }}
-          >禁用
-          </a>
+        <Menu.Item key="disableUser" disabled={user.selectedRowKeys.length !== 1}>
+          禁用
         </Menu.Item>
-        <Menu.Item>
-          <a
-            onClick={(e) => {
-              handleRoleEdit();
-            }}
-          >角色
-          </a>
+        <Menu.Item key="role" disabled={user.selectedRowKeys.length !== 1}>
+          角色
         </Menu.Item>
       </Menu>
     );
@@ -184,12 +186,14 @@ export default class UserToolBar extends Component {
               <Button
                 icon="edit"
                 onClick={handleEdit}
+                disabled={user.selectedRowKeys.length !== 1}
               >
                 编辑
               </Button>
               <Button
                 icon="delete"
                 onClick={handleRemoveChecked}
+                disabled={user.selectedRowKeys.length < 1}
               >
                 删除
               </Button>

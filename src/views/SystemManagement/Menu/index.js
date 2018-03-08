@@ -114,7 +114,7 @@ export default class Menu extends Component {
     const { menu } = this.props;
 
     menu.remove({
-      UniqueID: Params[0],
+      Params,
     }).then(() => {
       message.success('删除成功');
       // 在选中条目中清除已经删除的

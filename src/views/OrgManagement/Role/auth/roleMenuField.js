@@ -15,8 +15,8 @@ export default class RoleMenuField extends Component {
   }
 
   // StepModal 组件调用方法
-  handleNextStep = (e) => {
-    const { role, goNext } = this.props;
+  handleNextStep = (callback) => {
+    const { role } = this.props;
 
     this.setState({
       confirmLoading: true,
@@ -24,10 +24,16 @@ export default class RoleMenuField extends Component {
     
     role.commitRoleMenuField({
       UniqueID: role.selectedRowKeys[0],
-      Params: [...role.roleMenuFieldCheckedKeys, ...role.roleMenuFieldHalfCheckedKeys],
+      Params: [...role.roleMenuFieldCheckedKeys, ...role.roleMenuFieldHalfCheckedKeys]
+      .filter(item => /^[0-9]+-[0-9]+$/.test(item))
+      .map(item => (
+        {
+          text: item.split('-')[0],
+          value: item.split('-')[1],
+        }
+      )),
     }).then(() => {
-      message.success('操作成功');
-      goNext();
+      callback();
     }).catch((e) => {
       message.error(`操作失败：${e.Message}`);
     });
@@ -39,7 +45,9 @@ export default class RoleMenuField extends Component {
 
   componentDidMount = () => {
     const { role } = this.props;
-    role.fetchRoleMenuFieldTree();
+    role.fetchRoleMenuFieldTree({
+      UniqueID: role.selectedRowKeys[0],
+    });
   }
 
   onCheck = (checkedKeys, info) => {
@@ -60,6 +68,8 @@ export default class RoleMenuField extends Component {
       <DisplayTree
         checkable
         defaultExpandAll
+        showIcons
+        selectable={false}
         treeList={role.roleMenuFieldTree.slice()}
         onCheck={this.onCheck}
         checkedKeys={role.roleMenuFieldCheckedKeys.slice()}

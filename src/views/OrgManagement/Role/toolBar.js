@@ -7,27 +7,33 @@ import styles from './toolBar.less';
 @observer
 export default class OrgToolBar extends Component {
 
+  onMenuClick = ({ key }) => {
+    const { handleAuth, handleMember } = this.props;
+
+    switch(key)
+    {
+      case 'auth':
+        handleAuth();
+        break;
+      case 'member':
+        handleMember();
+        break;
+      default:
+        return;
+    }
+  }
+
   render() {
 
-    const { role, handleNew, handleEdit, handleRemoveChecked, handleAuth, handleMember } = this.props;
+    const { role, handleNew, handleEdit, handleRemoveChecked } = this.props;
 
     const menu = (
-      <Menu>
-        <Menu.Item>
-          <a
-            onClick={(e) => {
-              handleAuth();
-            }}
-          >角色授权
-          </a>
+      <Menu onClick={this.onMenuClick}>
+        <Menu.Item key="auth" disabled={role.selectedRowKeys.length !== 1}>
+          <Icon type="setting" />角色授权
         </Menu.Item>
-        <Menu.Item>
-          <a
-            onClick={(e) => {
-              handleMember();
-            }}
-          >角色成员
-          </a>
+        <Menu.Item key="member" disabled={role.selectedRowKeys.length !== 1}>
+          <Icon type="user" />角色成员
         </Menu.Item>
       </Menu>
     );
@@ -46,12 +52,14 @@ export default class OrgToolBar extends Component {
             <Button
               icon="edit"
               onClick={handleEdit}
+              disabled={role.selectedRowKeys.length !== 1}
             >
               编辑
             </Button>
             <Button
               icon="delete"
               onClick={handleRemoveChecked}
+              disabled={role.selectedRowKeys.length < 1}
             >
               删除
             </Button>

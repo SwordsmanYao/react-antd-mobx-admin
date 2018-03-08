@@ -8,6 +8,8 @@ class GlobalStore {
   @observable menu = [];
   // 展开的 submenu key 数组
   @observable openKeys = [];
+  // openKeys 的临时保存副本，在折叠菜单时赋值
+  tmpOpenKeys = [];
   // 菜单选中的叶节点 key
   @observable selectedKeys = [];
 
@@ -41,11 +43,14 @@ class GlobalStore {
     if(!this.collapsed) {
       this.setData({
         collapsed: !this.collapsed,
-        openKeys: [], // 折叠动作时把打开的菜单关上
+        tmpOpenKeys: this.openKeys.length > 0 ? this.openKeys : this.tmpOpenKeys,
+        openKeys: [],
       });
     } else {
       this.setData({
         collapsed: !this.collapsed,
+        openKeys: this.tmpOpenKeys.length > 0 ? this.tmpOpenKeys : this.openKeys,
+        tmpOpenKeys: [],
       });
     }
   }

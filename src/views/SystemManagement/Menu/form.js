@@ -34,9 +34,9 @@ const { Option } = Select;
 export default class MenuForm extends Component {
 
   // StepModal 组件调用方法
-  handleNextStep = () => {
+  handleNextStep = (callback) => {
     console.log('handleSubmit');
-    const { form, menu, goNext } = this.props;
+    const { form, menu } = this.props;
 
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
@@ -50,7 +50,7 @@ export default class MenuForm extends Component {
         }
 
         menu.commit(data).then(() => {
-          goNext();
+          callback();
         }).catch(({ ModelState }) => {
           
           // 设置服务器返回的错误校验信息

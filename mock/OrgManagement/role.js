@@ -53,6 +53,23 @@ function roleMemberDetail(req, res) {
   res.send(Mock.mock({"Code":200,"Data":[{"LoginName":"admin","FullName":"超级管理员","IsRoleMember":false,"UniqueID":1,"MenuID":0},{"LoginName":"Mario","FullName":"玛丽娅","Gender":"女","IsRoleMember":true,"UniqueID":2,"MenuID":0},{"LoginName":"yaojian","FullName":"姚健2","Gender":"男","IsRoleMember":true,"UniqueID":3,"MenuID":0},{"LoginName":"test","FullName":"test","Gender":"男","IsRoleMember":false,"UniqueID":4,"MenuID":0},{"LoginName":"sadfasdfd","FullName":"asdfasdf","IsRoleMember":false,"UniqueID":5,"MenuID":0},{"LoginName":"asdfasdf","FullName":"asdfasdfas","IsRoleMember":false,"UniqueID":6,"MenuID":0},{"LoginName":"qwe","FullName":"qwe","IsRoleMember":false,"UniqueID":7,"MenuID":0},{"LoginName":"dsfads","FullName":"asdfasd","IsRoleMember":false,"UniqueID":14,"MenuID":0}]}));
 }
 
+function roleMenuButton(req, res) {
+  res.send(Mock.mock({"Code":200,"Data":[{"MenuID":33,"Buttons":[{"id":"22","name":"新建","hasChildren":false,"selected":false},{"id":"23","name":"编辑","hasChildren":false,"selected":false},{"id":"24","name":"删除","hasChildren":false,"selected":false},{"id":"25","name":"更多","hasChildren":true,"selected":true,"children":[{"id":"29","name":"角色","hasChildren":false,"selected":true},{"id":"28","name":"禁用","hasChildren":false,"selected":true},{"id":"27","name":"启用","hasChildren":false,"selected":false},{"id":"26","name":"重置密码","hasChildren":false,"selected":false}]}]},{"MenuID":21,"Buttons":[{"id":"19","name":"新建","hasChildren":false,"selected":false},{"id":"20","name":"编辑","hasChildren":false,"selected":false},{"id":"21","name":"删除","hasChildren":false,"selected":true}]},{"MenuID":41,"Buttons":[{"id":"18","name":"aasf","hasChildren":false,"selected":false},{"id":"17","name":"sadf","hasChildren":false,"selected":false},{"id":"14","name":"daafdsaf","hasChildren":false,"selected":false}]},{"MenuID":40,"Buttons":[{"id":"12","name":"dsfadfd","hasChildren":true,"selected":false,"children":[{"id":"9","name":"dsfads","hasChildren":false,"selected":false}]},{"id":"11","name":"sdfasdfasd","hasChildren":false,"selected":false}]}]}));
+}
+
+function roleMenuField(req, res) {
+  res.send(Mock.mock({"Code":200,"Data":[{"MenuID":33,"Fields":[{"id":"8","name":"登录名","hasChildren":false,"selected":true},{"id":"9","name":"姓名","hasChildren":false,"selected":true},{"id":"10","name":"工号","hasChildren":false,"selected":true},{"id":"11","name":"状态","hasChildren":false,"selected":true},{"id":"12","name":"手机","hasChildren":false,"selected":true},{"id":"13","name":"角色","hasChildren":false,"selected":true},{"id":"14","name":"注册日期","hasChildren":false,"selected":false}]},{"MenuID":21,"Fields":[{"id":"3","name":"名称","hasChildren":false,"selected":true},{"id":"4","name":"路径","hasChildren":false,"selected":true},{"id":"5","name":"排序","hasChildren":false,"selected":true},{"id":"6","name":"类型","hasChildren":false,"selected":true},{"id":"7","name":"显示","hasChildren":false,"selected":true}]}]}));
+}
+
+function setRoleMenu(req, res) {
+  res.send(Mock.mock({"Code":200}));
+}
+function setRoleMenuButton(req, res) {
+  res.send(Mock.mock({"Code":200}));
+}
+function setRoleMenuField(req, res) {
+  res.send(Mock.mock({"Code":200}));
+}
 
 module.exports = {
   list,
@@ -60,4 +77,9 @@ module.exports = {
   roleMenu,
   roleMember,
   roleMemberDetail,
+  setRoleMenu,
+  setRoleMenuButton,
+  setRoleMenuField,
+  roleMenuButton,
+  roleMenuField,
 }

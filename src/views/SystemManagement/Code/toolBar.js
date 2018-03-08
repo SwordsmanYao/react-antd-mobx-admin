@@ -127,12 +127,14 @@ export default class CodeToolBar extends Component {
               <Button
                 icon="edit"
                 onClick={handleEdit}
+                disabled={code.selectedRowKeys.length !== 1}
               >
                 编辑
               </Button>
               <Button
                 icon="delete"
                 onClick={handleRemoveChecked}
+                disabled={code.selectedRowKeys.length < 1}
               >
                 删除
               </Button>

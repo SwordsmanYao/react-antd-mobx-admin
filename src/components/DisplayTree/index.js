@@ -1,14 +1,14 @@
 import React from 'react';
-import { Tree, Spin } from 'antd';
+import { Tree, Spin, Icon } from 'antd';
 
 const { TreeNode } = Tree;
 
 export default (props) => {
-  const { treeList } = props;
+  const { treeList, selectable = true, showIcons = false } = props;
 
   function renderTreeNodes(data) {
     return data.map(item => (
-      <TreeNode title={item.name} key={item.id} dataRef={item}>
+      <TreeNode title={<span>{showIcons && <span><Icon type={item.icon} />&nbsp;&nbsp;</span>}{item.name}</span>} key={item.id} dataRef={item} selectable={item.selectable || selectable}>
         {
           item.children && item.children.length &&
             renderTreeNodes(item.children)

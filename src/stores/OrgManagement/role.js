@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action } from 'mobx';
 
 import { 
   insert, update, remove, queryList, queryDetail, getRoleMenu, setRoleMenu, getRoleMenuButton,
@@ -37,7 +37,7 @@ class RoleStore {
   @observable roleMenuHalfCheckedKeys;
 
   // 角色菜单按钮树
-  @observable roleMenuButtonList;
+  @observable roleMenuButtonTree;
   // 角色菜单按钮树选中 keys
   @observable roleMenuButtonCheckedKeys;
   // 半选中状态的节点值，向后端提交时也要包涵这部分 keys
@@ -174,12 +174,19 @@ class RoleStore {
 
   // 获取角色授权窗口的菜单按钮树
   @action
-  async fetchRoleMenuButtonList(data) {
+  async fetchRoleMenuButtonTree(data) {
     const response = await getRoleMenuButton(data);
     if(response.Code === 200) {
+      const roleMenuButtonTree = this.getRoleMenuTreeWithDetail(
+        this.roleMenuTree,
+        response.Data,
+        this.roleMenuCheckedKeys,
+        this.roleMenuHalfCheckedKeys,
+      );
       this.setData({
-        roleMenuButtonList: response.Data,
-        // roleMenuButtonCheckedKeys: this.getSelectedIDs(response.Data),
+        roleMenuButtonTree,
+        roleMenuButtonCheckedKeys: this.getTreeChecked(roleMenuButtonTree).checkedKeys,
+        roleMenuButtonHalfCheckedKeys: this.getTreeChecked(roleMenuButtonTree).halfCheckedKeys,
       });
     }
   }
@@ -197,9 +204,16 @@ class RoleStore {
   async fetchRoleMenuFieldTree(data) {
     const response = await getRoleMenuField(data);
     if(response.Code === 200) {
+      const roleMenuFieldTree = this.getRoleMenuTreeWithDetail(
+        this.roleMenuTree,
+        response.Data,
+        this.roleMenuCheckedKeys,
+        this.roleMenuHalfCheckedKeys,
+      );
       this.setData({
-        roleMenuFieldTree: response.Data,
-        // roleMenuFieldCheckedKeys: this.getSelectedIDs(response.Data),
+        roleMenuFieldTree,
+        roleMenuFieldCheckedKeys: this.getTreeChecked(roleMenuFieldTree).checkedKeys,
+        roleMenuFieldHalfCheckedKeys: this.getTreeChecked(roleMenuFieldTree).halfCheckedKeys,
       });
     }
   }
@@ -297,7 +311,7 @@ class RoleStore {
     this.roleMenuHalfCheckedKeys = [];
 
     // 角色菜单按钮树
-    this.roleMenuButtonList = [];
+    this.roleMenuButtonTree = [];
     // 角色菜单按钮树选中 keys
     this.roleMenuButtonCheckedKeys = [];
     // 半选中状态的节点值，向后端提交时也要包涵这部分 keys
@@ -364,24 +378,24 @@ class RoleStore {
     })
   }
 
-  // 
-  @computed
-  get roleMenuButtonTree() {
-    return this.mergeMenuTreeWithButtonList(this.roleMenuTree, this.roleMenuButtonList, this.roleMenuCheckedKeys, this.roleMenuHalfCheckedKeys);
-  }
-  mergeMenuTreeWithButtonList(roleMenuTree, roleMenuButtonList, roleMenuCheckedKeys, roleMenuHalfCheckedKeys) {
+  // 合并菜单树和按钮列表/字段列表，把按钮/字段树加到菜单叶节点上
+  getRoleMenuTreeWithDetail(roleMenuTree, roleMenuDetailList, roleMenuCheckedKeys, roleMenuHalfCheckedKeys) {
     return roleMenuTree
     .filter(item => ([...roleMenuCheckedKeys, ...roleMenuHalfCheckedKeys].includes(item.id)))
     .map(item => {
       let children = [];
       let selected = false;
+
       if(item.hasChildren && item.children && item.children.length > 0) {
-        children = this.mergeMenuTreeWithButtonList(item.children, roleMenuButtonList, roleMenuCheckedKeys, roleMenuHalfCheckedKeys);
+        children = this.getRoleMenuTreeWithDetail(item.children, roleMenuDetailList, roleMenuCheckedKeys, roleMenuHalfCheckedKeys);
+        selected = children.some(item => item.selected);
       } else {
-        roleMenuButtonList.forEach(btns => {
-          if(item.id === btns.MenuID) {
-            children = btns.Buttons;
-            selected = btns.Buttons.some(btn => btn.selected);
+        roleMenuDetailList.forEach(details => {
+          if(item.id === details.MenuID.toString()) {
+            const itemList = details.Buttons || details.Fields;
+            children = this.formatDetails(itemList, details.MenuID);
+
+            selected = itemList.some(detail => detail.selected);
           }
         })
       }
@@ -392,6 +406,21 @@ class RoleStore {
         selected,
         children,
       }
+    });
+  }
+
+  // 格式化按钮/字段数据的 id，把 menuid 加到 id 中，添加 icon
+  formatDetails(itemList,  menuID) {
+    return itemList.map(item => {
+      const data = {
+        ...item,
+        id: `${menuID}-${item.id}`,
+        icon: 'tag',
+      };
+      if(item.hasChildren && item.children && item.children.length >0) {
+        data.children = this.formatDetails(item.children, menuID);
+      }
+      return data;
     });
   }
 

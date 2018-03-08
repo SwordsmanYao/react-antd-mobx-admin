@@ -127,12 +127,14 @@ export default class AdministrativeAreaToolBar extends Component {
               <Button
                 icon="edit"
                 onClick={handleEdit}
+                disabled={administrativeArea.selectedRowKeys.length !== 1}
               >
                 编辑
               </Button>
               <Button
                 icon="delete"
                 onClick={handleRemoveChecked}
+                disabled={administrativeArea.selectedRowKeys.length < 1}
               >
                 删除
               </Button>

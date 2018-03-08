@@ -15,8 +15,8 @@ export default class RoleMenu extends Component {
   }
 
   // StepModal 组件调用方法
-  handleNextStep = (e) => {
-    const { role, goNext } = this.props;
+  handleNextStep = (callback) => {
+    const { role } = this.props;
 
     this.setState({
       confirmLoading: true,
@@ -26,8 +26,7 @@ export default class RoleMenu extends Component {
       UniqueID: role.selectedRowKeys[0],
       Params: [...role.roleMenuCheckedKeys, ...role.roleMenuHalfCheckedKeys],
     }).then(() => {
-      message.success('操作成功');
-      goNext();
+      callback();
     }).catch((e) => {
       message.error(`操作失败：${e.Message}`);
     });
@@ -62,7 +61,10 @@ export default class RoleMenu extends Component {
       <DisplayTree
         checkable
         defaultExpandAll
-        treeList={role.roleMenuTree.slice()}
+        selectable={false}
+        treeList={role.roleMenuTree.map(item => ({
+          ...item,
+        })).slice()}
         onCheck={this.onCheck}
         checkedKeys={role.roleMenuCheckedKeys.slice()}
       />

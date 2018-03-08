@@ -51,16 +51,10 @@ class StepModal extends Component {
     }
   }
 
-  handleComplete = () => {
-    const { setModalVisible } = this.props;
-    setModalVisible(false);
-    message.success('操作完成');
-  }
-
   handleNext = () => {
     // 通过 ref 调用子组件的方法
     if(this.childNode.handleNextStep) {
-      this.childNode.handleNextStep();
+      this.childNode.handleNextStep(this.goNext);
     } else {
       this.goNext();
     }
@@ -70,9 +64,15 @@ class StepModal extends Component {
     this.setState({ current });
   }
   goNext = () => {
-    const current = this.state.current + 1;
-    this.setState({ current });
-    console.log('goNext');
+    const { steps, setModalVisible } = this.props;
+    if(this.state.current < steps.length - 1) {
+      this.setState({
+        current: this.state.current + 1,
+      });
+    } else {
+      setModalVisible(false);
+      message.success('操作完成');
+    }
   }
   setChildRef = (node) => {
     this.childNode = node;
@@ -107,9 +107,12 @@ class StepModal extends Component {
           <Button key="back" onClick={this.handleBack}>
             上一步
           </Button>,
-          current < steps.length - 1 ?
-          <Button key="next" type="primary" loading={btnLoading} onClick={this.handleNext}>下一步</Button>:
-          <Button key="submit" type="primary" loading={btnLoading} onClick={this.handleComplete}>完成</Button>
+          
+          <Button key="next" type="primary" loading={btnLoading} onClick={this.handleNext}>
+          {
+            current < steps.length - 1 ? '下一步' : '完成'
+          }
+          </Button>
         ]}
       >
         <Steps current={current}>
@@ -128,18 +131,18 @@ class StepModal extends Component {
           }
         </Steps>
         <div className={styles.stepContent}>
-          <ChildComponent
-            {
-              ...ref
-            } 
-            {
-              ...steps[current].props
-            }
-            goNext={this.goNext}
-          />
+          {
+            modalVisible &&
+            <ChildComponent
+              {
+                ...ref
+              } 
+              {
+                ...steps[current].props
+              }
+            />
+          }
         </div>
-        
-
       </Modal>
     );
   }

@@ -25,12 +25,14 @@ export default class OrgCategoryToolBar extends Component {
             <Button
               icon="edit"
               onClick={handleEdit}
+              disabled={orgCategory.selectedRowKeys.length !== 1}
             >
               编辑
             </Button>
             <Button
               icon="delete"
               onClick={handleRemoveChecked}
+              disabled={orgCategory.selectedRowKeys.length < 1}
             >
               删除
             </Button>

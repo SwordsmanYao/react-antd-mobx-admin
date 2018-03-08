@@ -25,12 +25,14 @@ export default class MenuToolBar extends Component {
             <Button
               icon="edit"
               onClick={handleEdit}
+              disabled={menu.selectedRowKeys.length !== 1}
             >
               编辑
             </Button>
             <Button
               icon="delete"
               onClick={handleRemoveChecked}
+              disabled={menu.selectedRowKeys.length < 1}
             >
               删除
             </Button>
