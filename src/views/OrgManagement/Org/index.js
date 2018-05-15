@@ -20,6 +20,7 @@ export default class Org extends Component {
     this.state = {
       // 新建的模态框是否显示
       modalVisible: false,
+      expandedKeys: ['0'],
     }
   }
 
@@ -44,6 +45,10 @@ export default class Org extends Component {
       org.setData({
         selectedKeys: selectedKeys,
         selectedRowKeys: [],
+      });
+      
+      this.setState({
+        expandedKeys: Array.from(new Set(this.state.expandedKeys).add(selectedKeys[0])),
       });
       
       org.fetchList({
@@ -139,6 +144,13 @@ export default class Org extends Component {
     });
   }
 
+  onExpand = (expandedKeys) => {
+    console.log(expandedKeys);
+    this.setState({
+      expandedKeys,
+    });
+  }
+
   render() {
     const { org } = this.props;
     const columns = [{ 
@@ -167,9 +179,11 @@ export default class Org extends Component {
               name: '组织机构',
               children: org.treeList.slice(),
             }]}
-            defaultExpandedKeys={['0']}
+            // defaultExpandedKeys={['0']}
             onSelect={this.onSelect}
             selectedKeys={org.selectedKeys.slice()}
+            expandedKeys={this.state.expandedKeys}
+            onExpand={this.onExpand}
           />
         </Sider>
         <Content style={{ paddingLeft: 24 }}>
