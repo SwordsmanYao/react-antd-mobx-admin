@@ -46,7 +46,7 @@ export default class Org extends Component {
         selectedKeys: selectedKeys,
         selectedRowKeys: [],
       });
-      
+
       this.setState({
         expandedKeys: Array.from(new Set(this.state.expandedKeys).add(selectedKeys[0])),
       });
@@ -184,6 +184,7 @@ export default class Org extends Component {
             selectedKeys={org.selectedKeys.slice()}
             expandedKeys={this.state.expandedKeys}
             onExpand={this.onExpand}
+            autoExpandParent={false}
           />
         </Sider>
         <Content style={{ paddingLeft: 24 }}>
